@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:id="@+id/browser_relative"
+    tools:context=".Activities.MainBrowser"
+    tools:openDrawer="start">
+
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/club_list_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
+
+        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/browser_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.AppBarLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="55sp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:id="@+id/browser_player_holder">
+
+                </FrameLayout>
+
+                <WebView
+                    android:id="@+id/display_browser"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                </WebView>
+
+            </LinearLayout>
+
+            <terranovaproductions.newcomicreader.FloatingActionMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/browser_fam"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_fab_main"
+                    fab:backgroundTint="@android:color/holo_blue_light"
+                    fab:fabSize="normal" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_sender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="社团消息"
+                    android:src="@drawable/ic_chat_"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="18sp" />
+
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_my_home_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="我的主页"
+                    android:src="@drawable/ic_me"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_my_club"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="我的社团"
+                    android:src="@drawable/ic_club"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_add_club_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="添加社团活动"
+                    android:src="@drawable/ic_add_activity"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="搜索"
+                    android:src="@drawable/ic_search"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_go_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="十一圈主页"
+                    android:src="@drawable/ic_home"
+                    fab:fabSize="mini"
+                    fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
+
+            </terranovaproductions.newcomicreader.FloatingActionMenu>
+        </android.support.design.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+            <ListView
+                android:id="@+id/club_list"
+                android:layout_width="320sp"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:choiceMode="singleChoice">
+
+            </ListView>
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

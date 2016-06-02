@@ -1,0 +1,1 @@
+include ':app', 'fresco', ':disklrucache-2.0.2', 'FloatingActionMenu', 'AndroidSweetSheet', ':universal-image-loader-1.9.5', ':core-3.2.2-SNAPSHOT', ':zxing-android-core-3.2.1'
