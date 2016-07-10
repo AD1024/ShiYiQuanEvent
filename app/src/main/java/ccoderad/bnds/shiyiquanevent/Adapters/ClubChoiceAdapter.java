@@ -40,7 +40,6 @@ import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
  */
 public class ClubChoiceAdapter extends BaseAdapter {
     private final String HOME_URL = "http://www.shiyiquan.net/";
-    private ImagePipeline mImagePipeline;
     LayoutInflater mInflater;
     List<ClubModel> mData;
     SweetSheet mParent;
@@ -54,7 +53,6 @@ public class ClubChoiceAdapter extends BaseAdapter {
         mData = datas;
         mParent = parent;
         outer = wb;
-        mImagePipeline = Fresco.getImagePipeline();
         mCache = new LruCache<>((int) (Runtime.getRuntime().freeMemory()/4));
     }
 

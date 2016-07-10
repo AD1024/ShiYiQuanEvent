@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingStart="120sp">
+                android:paddingLeft="120dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

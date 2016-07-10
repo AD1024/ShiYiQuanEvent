@@ -1,8 +1,6 @@
 package ccoderad.bnds.shiyiquanevent.Activities;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -11,9 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.util.LruCache;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,7 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -106,8 +101,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private View VideoPlayerView;
     private FrameLayout PlayerHolder;
     private WebChromeClient.CustomViewCallback mPlayerCallBack;
-    private boolean mHaveCache=false;
-    private LruCache<String,Bitmap> mCacheStub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +113,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         isPortait = true;
         PlayerHolder = (FrameLayout) findViewById(R.id.browser_player_holder);
-        Intent bindIntent = new Intent(this, EventUpdateService.class);
+        /*Intent bindIntent = new Intent(this, EventUpdateService.class);
         startService(bindIntent);
         ServiceConnection sc = new ServiceConnection() {
             @Override
@@ -134,16 +127,20 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
             }
         };
-        bindService(bindIntent, sc, BIND_AUTO_CREATE);
+        bindService(bindIntent, sc, BIND_AUTO_CREATE);*/
         getIntents();
     }
 
     private void getIntents() {
         Intent it = getIntent();
         String Content = it.getStringExtra("QR_CONTENT");
+//        Log.i("CONTENT_URI",Content);
         if (Content == null) return;
         if (!Content.equals("")) {
-            mDisplay.loadUrl(Content);
+            if(!Content.contains("shiyiquan")){
+                Toast.makeText(this,"啊哦，好像不是十一圈的链接哟",Toast.LENGTH_LONG).show();
+                mDisplay.loadUrl(HOME_URL);
+            }else mDisplay.loadUrl(Content);
         }
     }
 
@@ -199,7 +196,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
         toolbar = (Toolbar) findViewById(R.id.browser_toolbar);
         toolbar.setTitle("十一圈");
-        toolbar.setSubtitle("V1.0");
+        toolbar.setSubtitle("V1.1");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -413,7 +410,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                     @Override
                     public void onResponse(JSONArray response) {
                         if (ClubLoaded && mMyClubs.size() != 0) return;
-                        Log.i("JSONRequestLog", "Enter" + response.length());
                         ClubLoaded = true;
                         for (int i = 0; i < response.length(); i++) {
                             ClubModel bean = new ClubModel();
@@ -435,8 +431,8 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                                         bean.status = "社员";
                                         break;
                                 }
-                                Log.i("Info-" + Integer.toString(i), bean.status + "\n" + bean.club_name + "\n" + bean.sname);
-                                Log.i("AvatarMed", bean.mediumAvatarURL);
+                               // Log.i("Info-" + Integer.toString(i), bean.status + "\n" + bean.club_name + "\n" + bean.sname);
+                               // Log.i("AvatarMed", bean.mediumAvatarURL);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -495,14 +491,8 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         View v = LayoutInflater.from(this).inflate(R.layout.club_chat_choice_list, null);
         ListView Lv = (ListView) v.findViewById(R.id.club_chat_choice_list);
         Choiceadapter = new ClubChoiceAdapter(this, mMyClubs, mChatChoice, mDisplay);
-        if(mHaveCache) Choiceadapter.passCache(mCacheStub);
         Lv.setAdapter(Choiceadapter);
-        mChatChoice.setDelegate(new CustomDelegate(true, CustomDelegate.AnimationType.AlphaAnimation).setCustomView(v));
-        mCacheStub = Choiceadapter.getCache();
-        if(mCacheStub.size()!=0){
-            Log.i("CacheLog","Cache Size:"+mCacheStub.size());
-            mHaveCache=true;
-        }
+        mChatChoice.setDelegate(new CustomDelegate(true, CustomDelegate.AnimationType.DuangAnimation).setCustomView(v));
     }
 
 

@@ -1,9 +1,12 @@
 package ccoderad.bnds.shiyiquanevent.Activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,10 +43,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +67,20 @@ import ccoderad.bnds.shiyiquanevent.Beans.IntentResult;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.utils.IntentIntegrator;
+import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
+import ccoderad.bnds.shiyiquanevent.utils.Utils;
+
 import com.google.zxing.client.android.*;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
     final long MAX_MEM = 30* ByteConstants.MB;
     final long MAX_LOW_MEM = 10* ByteConstants.MB;
     final long MAX_VERY_LOW_MEM = 5* ByteConstants.MB;
-
+    final long MAX_STRING_CACHE = 3*ByteConstants.MB;
+    private final String REQ_URL = "http://shiyiquan.net/api/?category=event&time=latest";
+    private final String CACHE_FILE_NAME="cacheEvent.json";
     private ListView mListView;
     private SwipeRefreshLayout mRefersh;
     private long time=0;
@@ -73,20 +93,31 @@ public class MainActivity extends AppCompatActivity
     private ImagePipelineConfig mImageCachePiplineConfig;
     private  FloatingActionButton fab;
     private DatabaseHelper mHelper;
+    private boolean mIsConnected;
+    private File cacheFile;
+    private File favedEvents;
+    private JSONArray mRawData;
+    private List<EventBean> favd_stub;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mCache = null;
+        mIsConnected = isNetWorkAvailable();
+
+        initDiskLruCache();
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        setTitle("十一活动");
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +128,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         mListView = (ListView) findViewById(R.id.event_list);
         mListView.setOnItemClickListener(this);
+        favd_stub = new ArrayList<>();
+
         //ListView Motion Listener:
         /*
         * It is used to detect the direction of sliding of the listview
@@ -118,7 +151,8 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-        //Interaction of FAB
+
+
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,30 +163,93 @@ public class MainActivity extends AppCompatActivity
                                     Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = false;
                     alter.setImageResource(R.drawable.ic_favorite_border);
+                    InputStream is;
+                    String saved;
+                    try {
+                        is = new FileInputStream(favedEvents);
+                        saved = ReadStringFromInputStream(is);
+                        JSONArray array;
+                        if(saved.isEmpty()){
+                            array = new JSONArray();
+                        }else{
+                            array = new JSONArray(saved);
+                        }
+                        array.remove(position);
+                        saved=array.toString();
+                        PrintStream stream = new PrintStream(new FileOutputStream(favedEvents));
+                        favedEvents.createNewFile();
+                        stream.print(saved);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Snackbar.make(view, "已关注" + mData.get(position).eventTitle,
                                     Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = true;
                     alter.setImageResource(R.drawable.ic_favorite);
+                    if(!favedEvents.exists()){
+                        try {
+                            favedEvents.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    InputStream is;
+                    String saved;
+                    try {
+                        is = new FileInputStream(favedEvents);
+                        saved=ReadStringFromInputStream(is);
+                        JSONArray array;
+                        if(saved.isEmpty()){
+                            array = new JSONArray();
+                        }else{
+                            array = new JSONArray(saved);
+                        }
+                        array.put(position,mRawData.get(position));
+                        saved=array.toString();
+                        favedEvents.createNewFile();
+                        PrintStream printer = new PrintStream(new FileOutputStream(favedEvents));
+                        printer.print(saved);
+                        Log.i("Fav","Fav_Saved!");
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
             }
         });
+
         mRefersh = (SwipeRefreshLayout) findViewById(R.id.event_refresh);
         mRefersh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //Cancel current asynctack and start a new fetching
-                mTask.cancel(true);
-                mTask=new GetEventTask();
-                mTask.execute("http://shiyiquan.net/api/?category=event&time=latest");
+                mIsConnected=isNetWorkAvailable();
+                if(mIsConnected) {
+                    mTask.cancel(true);
+                    mTask = new GetEventTask();
+                    mTask.execute(REQ_URL);
+                }else{
+                    ReadFromCache();
+                    mRefersh.setRefreshing(false);
+                }
             }
         });
+
         mTask=new GetEventTask();
-        mTask.execute("http://shiyiquan.net/api/?category=event&time=latest");
+
         mData = new ArrayList<>();
         mRefersh.setColorSchemeColors(Color.rgb(10, 180, 226), Color.rgb(3, 133, 167));
         mRefersh.setSize(25);
+
         mImageCacheConfig = DiskCacheConfig.newBuilder(this)
                 .setBaseDirectoryPath(Environment.getExternalStorageDirectory().getAbsoluteFile())
                 .setBaseDirectoryName("ShiyiquanEvent")
@@ -161,9 +258,136 @@ public class MainActivity extends AppCompatActivity
                 .setMaxCacheSizeOnVeryLowDiskSpace(MAX_VERY_LOW_MEM)
                 .build();
         mImageCachePiplineConfig = ImagePipelineConfig.newBuilder(this).setMainDiskCacheConfig(mImageCacheConfig).build();
+        cacheFile = new Utils().getCacheFile(this,"event");
+        if(!cacheFile.exists())
+            cacheFile.mkdir();
+        favedEvents = new File(cacheFile,"FavedEvents.json");
 
+        if(!favedEvents.exists()) try {
+            favedEvents.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LoadFav();
+
+        if(mIsConnected) {
+            mTask.execute(REQ_URL);
+        }else{
+            ReadFromCache();
+        }
+    }
+
+    private void LoadFav(){
+        InputStream is;
+        try {
+            is = new FileInputStream(favedEvents);
+            String res = ReadStringFromInputStream(is);
+            JSONArray array = new JSONArray(res);
+            favd_stub = new Utils().parseEvent(array);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Name:Read String From InputStream
+     * */
+    private String ReadStringFromInputStream(InputStream is){
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        String tmp="";String ans="";
+        try {
+            while((tmp=br.readLine())!=null){
+                ans+=tmp;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ans;
+    }
+
+    /**
+     * Name:SaveToCache
+     * Function:Save Latest Event information to disk
+     * */
+    private void SaveToCache(JSONArray data){
+        String cacheString = data.toString();
+        File cacheJSON = new File(cacheFile,CACHE_FILE_NAME);
+        if(cacheJSON.exists()) cacheJSON.delete();
+        try {
+            cacheJSON.createNewFile();
+            PrintStream printer = new PrintStream(new FileOutputStream(cacheJSON));
+            printer.print(cacheString);
+            printer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("CACHEING_ERROR","UnhandledError Occurs");
+        }
+    }
+    /**
+     * Name:ReadFromCache
+     * Function:Read data from external cache
+     * */
+    private void ReadFromCache(){
+        File cacheEvent = new File(cacheFile,CACHE_FILE_NAME);
+        if(!cacheEvent.exists()){
+            Log.e("FILE_NOT_FOUND","cacheEvent.json NOT FOUND");
+        }
+        InputStream in=null;
+        List<EventBean> mcacheData = new ArrayList<>();
+        try {
+            in = new FileInputStream(cacheEvent);
+            String result = ReadStringFromInputStream(in);
+            JSONArray cachedData = new JSONArray(result);
+            mcacheData=parseEvent(cachedData);
+            mListView.setAdapter(new EventListAdapter(MainActivity.this,mcacheData));
+            setTitle("十一活动");
+            mData=mcacheData;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     //ListView OnItemCLickListener
+
+    /**
+     * This Function is used to judge wether the network is available
+     * @return NetWorkkStat
+     * */
+    private boolean isNetWorkAvailable(){
+        Context currContext = this;
+        if(currContext!=null){
+            ConnectivityManager manager = (ConnectivityManager) currContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netWorkInfo = manager.getActiveNetworkInfo();
+            if(netWorkInfo!=null){
+                return netWorkInfo.isAvailable();
+            }
+
+        }
+
+        return false;
+    }
+
+    /**
+     * Name:initDiskLruCache
+     * Function:Initialize the DiskLruCache
+     * */
+
+    private void initDiskLruCache(){
+        Utils util = new Utils();
+        File cacheFile = util.getCacheFile(this,"string");
+        if(!cacheFile.exists()) cacheFile.mkdir();
+        try {
+            Log.i("DISK_LRU_INIT","INITING");
+            mCache=DiskLruCache.open(cacheFile,util.getAppVersion(this),1,MAX_STRING_CACHE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -206,6 +430,63 @@ public class MainActivity extends AppCompatActivity
     }
     //End OF listener
 
+    private boolean writeCache(InputStream is,OutputStream cache){
+        BufferedOutputStream out;
+        out = new BufferedOutputStream(cache,8*1024);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        String tmp ="";
+        String result="";
+        try {
+            while((tmp=br.readLine())!=null){
+                result+=tmp;
+            }
+            Log.i("WriteByte",result);
+            out.write(result.getBytes());
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<EventBean> parseEvent(JSONArray jsonArray){
+        JSONObject jsonObject;
+        mRawData = jsonArray;
+        List<EventBean> ans = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (mTask.isCancelled()) {
+                    return null;
+                }
+                EventBean bean = new EventBean();
+                jsonObject = jsonArray.getJSONObject(i);
+                JSONObject content = jsonObject.getJSONObject("data");
+                bean.eventTitle = content.getString("subject");
+                bean.eventContent = content.getString("content");
+                bean.eventLocation = content.getString("location");
+                bean.sponsorName = jsonObject.getString("sponsor_fname");
+                bean.eventAvatar = jsonObject.getString("avatar");
+                bean.eventDate = jsonObject.getString("day_set");
+                bean.eventTime = jsonObject.getString("time_set");
+                bean.eventDuration = jsonObject.getString("time_last");
+                bean.eventFollower = jsonObject.getInt("follower");
+                bean.parseUrl();
+                for(int j=0;j<favd_stub.size();j++){
+                    if(bean.eventTitle.equals(favd_stub.get(j).eventTitle)){
+                        bean.isFaved=true;
+                        break;
+                    }
+                }
+                ans.add(bean);
+            }
+            return ans;
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return ans;
+    }
+
     class GetEventTask extends AsyncTask<String,Void,List<EventBean>>{
         @Override
         protected void onPreExecute() {
@@ -218,34 +499,22 @@ public class MainActivity extends AppCompatActivity
             List<EventBean> ans = new ArrayList<>();
             try {
                 InputStream is = new URL(params[0]).openStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
-                String tmp="";
-                String result = "";
-                while((tmp=br.readLine())!=null){
-                    result+=tmp;
+                String key= new MD5Util().HASH(params[0]);
+                DiskLruCache.Editor editor=mCache.edit(key);
+                OutputStream cacheStream;
+                cacheStream=editor.newOutputStream(0);
+                if(writeCache(new URL(params[0]).openStream(),cacheStream)){
+                    Log.i("DISK_CACHE:","Saved Successfully");
+                    editor.commit();
+                }else{
+                    Log.e("DISK_CACHE","ABORT WRITTING!");
+                    editor.abort();
                 }
+                mCache.flush();
+                String result = ReadStringFromInputStream(is);
                 JSONArray jsonArray = new JSONArray(result);
-                JSONObject jsonObject;
-                for(int i=0;i<jsonArray.length();i++){
-                    if(mTask.isCancelled()){
-                        return null;
-                    }
-                    EventBean bean = new EventBean();
-                    jsonObject = jsonArray.getJSONObject(i);
-                    JSONObject content = jsonObject.getJSONObject("data");
-                    bean.eventTitle = content.getString("subject");
-                    bean.eventContent = content.getString("content");
-                    bean.eventLocation = content.getString("location");
-                    bean.sponsorName = jsonObject.getString("sponsor_fname");
-                    bean.eventAvatar = jsonObject.getString("avatar");
-                    bean.eventDate = jsonObject.getString("day_set");
-                    bean.eventTime = jsonObject.getString("time_set");
-                    bean.eventDuration = jsonObject.getString("time_last");
-                    bean.eventFollower = jsonObject.getInt("follower");
-                    bean.parseUrl();
-                    ans.add(bean);
-                }
+                SaveToCache(jsonArray);
+                ans=parseEvent(jsonArray);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("NetWorkError","CheckNetWork");
@@ -262,6 +531,11 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(eventBeans);
             if(mRefersh.isRefreshing()){
                 mRefersh.setRefreshing(false);
+            }
+            if(eventBeans.size()==0){
+                setTitle("加载失败了呢...QAQ");
+                Toast.makeText(MainActivity.this,"网络好像有点问题",Toast.LENGTH_LONG).show();
+                return;
             }
             setTitle("十一活动");
             for(int i=0;i<eventBeans.size();i++){
@@ -317,14 +591,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id){
             case R.id.go_to_browser:
-                startActivity(new Intent(MainActivity.this,MainBrowser.class));
+                if(isNetWorkAvailable())
+                    startActivity(new Intent(MainActivity.this,MainBrowser.class));
+                else{
+                    Toast.makeText(this,"无网络连接，请连接网络后再操作",Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.go_to_about_me:
                 startActivity(new Intent(MainActivity.this,about_me.class));
                 break;
             case R.id.go_to_scan:
-                startActivity(new Intent(this,CaptureActivity.class));
+                if(isNetWorkAvailable()) {
+                    startActivity(new Intent(this, CaptureActivity.class));
+                }else{
+                    Toast toast =Toast.makeText(this,"无网络连接，请连接网络后再试",Toast.LENGTH_LONG);
+                    toast.show();
+                }
                 //startActivity(new Intent(this,CaptrueActivity.class));
+                break;
+            case R.id.go_to_faved_events:
+                startActivity(new Intent(this,FavEventActivity.class));
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

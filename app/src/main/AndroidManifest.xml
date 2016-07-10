@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,8 +29,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:hardwareAccelerated="true"
             android:name=".Activities.MainBrowser"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.about_me"
@@ -39,19 +40,20 @@
             android:name=".Activities.OpenSourceInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_open_source_info"
-            android:theme="@style/FullscreenTheme"></activity>
-
-        <activity android:name="com.google.zxing.client.android.CaptureActivity"
-            android:label="QScan"
-            />
-        <activity android:name="com.google.zxing.client.android.encode.EncodeActivity"
-            android:label="编码设置"
-            />
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:label="QScan" />
+        <activity
+            android:name="com.google.zxing.client.android.encode.EncodeActivity"
+            android:label="编码设置" />
 
         <service
             android:name=".Services.EventUpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".Activities.FavEventActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

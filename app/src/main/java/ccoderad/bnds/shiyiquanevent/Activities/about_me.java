@@ -2,6 +2,8 @@ package ccoderad.bnds.shiyiquanevent.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -73,27 +75,10 @@ public class about_me extends AppCompatActivity {
                 .build(); //Link start!~
         ImageLoader.getInstance().init(config);
         final ImageView myAvatar = (ImageView) findViewById(R.id.my_avatar);
-        ImageLoader.getInstance().loadImage("http://shiyiquan.net/media/images/avatar/club-hcc-computer-community.png", new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
+//        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.mipmap.club_hcc_computer_community);
+//        Bitmap show = drawable.getBitmap();
+//        show = new ImageTools().fastblur(show,10);
+        myAvatar.setImageResource(R.mipmap.club_hcc_computer_community);
 
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                bitmap = new ImageTools().fastblur(bitmap,10);
-                myAvatar.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        });
     }
 }

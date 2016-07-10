@@ -23,6 +23,9 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    maven{
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 
@@ -40,4 +43,5 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.0.0-alpha2'
     compile project(':core-3.2.2-SNAPSHOT')
     compile project(':zxing-android-core-3.2.1')
+    compile 'com.quinny898.library.persistentsearch:library:1.1.0-SNAPSHOT'
 }

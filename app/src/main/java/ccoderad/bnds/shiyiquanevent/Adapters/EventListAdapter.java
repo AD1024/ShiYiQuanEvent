@@ -78,6 +78,9 @@ public class EventListAdapter extends BaseAdapter {
             Vh = (ViewHolder) convertView.getTag();
         }
         EventBean bean = mData.get(position);
+        if(bean.isFaved){
+            Vh.mFav.setImageResource(R.drawable.ic_favorite);
+        }
         Vh.mTitle.setText(bean.eventTitle);
         Vh.mSponsor.setText(bean.sponsorName);
         Vh.mTime.setText(bean.eventTime);
