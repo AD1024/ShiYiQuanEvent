@@ -1,5 +1,6 @@
 package ccoderad.bnds.shiyiquanevent.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -15,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.json.JSONArray;
@@ -67,7 +71,8 @@ import ccoderad.bnds.shiyiquanevent.Adapters.ClubChoiceAdapter;
 import ccoderad.bnds.shiyiquanevent.Adapters.ClubListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.ClubModel;
 import ccoderad.bnds.shiyiquanevent.R;
-import ccoderad.bnds.shiyiquanevent.Services.EventUpdateService;
+import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
+import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import terranovaproductions.newcomicreader.FloatingActionMenu;
 
 public class MainBrowser extends AppCompatActivity implements FloatingActionMenu.OnMenuItemClickListener, DrawerLayout.DrawerListener {
@@ -96,11 +101,8 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private List<String> AdminedClubURLs = new ArrayList<>();
     private ImageLoaderConfiguration mConfiguration;
     private final String HOME_URL = "http://shiyiquan.net/";
-    private EventUpdateService.EventListenerBinder mBinder;
-    private boolean isPortait;
-    private View VideoPlayerView;
-    private FrameLayout PlayerHolder;
-    private WebChromeClient.CustomViewCallback mPlayerCallBack;
+    private DisplayImageOptions mDisplayOption;
+    private ValueCallback<Uri> mUploadMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,30 +113,12 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         init();
         Toast.makeText(this, "连按三次返回可回到活动界面", Toast.LENGTH_LONG).show();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        isPortait = true;
-        PlayerHolder = (FrameLayout) findViewById(R.id.browser_player_holder);
-        /*Intent bindIntent = new Intent(this, EventUpdateService.class);
-        startService(bindIntent);
-        ServiceConnection sc = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mBinder = (EventUpdateService.EventListenerBinder) service;
-                mBinder.modifyParent(MainBrowser.this);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-        bindService(bindIntent, sc, BIND_AUTO_CREATE);*/
         getIntents();
     }
 
     private void getIntents() {
         Intent it = getIntent();
         String Content = it.getStringExtra("QR_CONTENT");
-//        Log.i("CONTENT_URI",Content);
         if (Content == null) return;
         if (!Content.equals("")) {
             if(!Content.contains("shiyiquan")){
@@ -168,10 +152,24 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
     private ImageLoaderConfiguration buildConfig4UIL() {
         File cacheDir = StorageUtils.getOwnCacheDirectory(this, "ShiyiquanImgs/Cache");
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheOnDisk(true) //cache on disk
+                .cacheInMemory(false) //cache in memory
+                .preProcessor(new BitmapProcessor() {
+                    @Override
+                    public Bitmap process(Bitmap bitmap) {
+                        return ImageTools
+                                .fastblur(ImageTools
+                                        .CompressBitmap(bitmap
+                                                , Bitmap.CompressFormat.PNG), 5);
+                    }
+                })
+                .displayer(new FadeInBitmapDisplayer(300))  //delay when displaying
+                .bitmapConfig(Bitmap.Config.RGB_565).build(); //This will reduce memory consumption
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(this)
                 .memoryCacheExtraOptions(480, 800)  // maxwidth, max height
-                .threadPoolSize(3)//线程池内加载的数量
+                .threadPoolSize(3)                  //线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // You can pass your own memory cache implementation
@@ -179,12 +177,13 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 .diskCacheFileCount(100)
                 .memoryCacheSize(30 * ByteConstants.MB)
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .defaultDisplayImageOptions(options)
                 .diskCache(new UnlimitedDiskCache(cacheDir))
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .tasksProcessingOrder(QueueProcessingType.FIFO)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
-//                .writeDebugLogs() // Remove for releaseapp
-                .build(); //Link start!~
+                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)
+                .build(); //Link start!
+        mDisplayOption=options;
         return config;
     }
 
@@ -245,6 +244,14 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mDisplay.loadUrl("http://www.shiyiquan.net/");
         mDisplay.setWebChromeClient(new WebChromeClient() {
 
+            public void openFileChooser(ValueCallback<Uri> uploadMsg,
+                                        String acceptType, String capture) {
+                mUploadMessage = uploadMsg;
+                startActivityForResult(BGAPhotoPickerActivity.newIntent(MainBrowser.this,null,1,null,false),1000);
+
+
+            }
+
             @Override
             public void onReceivedTitle(WebView view, String title) {
 //                super.onReceivedTitle(view, title);
@@ -255,11 +262,16 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mDisplay.getSettings().setJavaScriptEnabled(true);
         mDisplay.getSettings().setDomStorageEnabled(true);
         mDisplay.getSettings().setAppCacheEnabled(true);
+        mDisplay.getSettings().setSupportMultipleWindows(true);
         mDisplay.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
                 /*
+                if(url.equalsIgnoreCase("app:upload")){
+                    startActivityForResult(BGAPhotoPickerActivity.newIntent(MainBrowser.this,null,1,null,false),1000);
+                    return true;
+                }
+
                 reserved
                 if (url.contains("logout")) {
                     SharedPreferences.Editor editor = host_id_provider.edit();
@@ -281,54 +293,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             }
         });
 
-        mDisplay.setWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                //return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
-                Intent jumpSelection = new Intent(Intent.ACTION_GET_CONTENT);
-                jumpSelection.addCategory(Intent.CATEGORY_OPENABLE);
-                jumpSelection.setType("image/*");
-                Intent it = new Intent(Intent.ACTION_CHOOSER);
-                it.putExtra(Intent.EXTRA_INTENT, jumpSelection);
-                it.putExtra(Intent.EXTRA_TITLE, "选择文件来上传~");
-                startActivityForResult(it, 2);
-                return true;
-            }
-
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                // super.onShowCustomView(view, callback);
-                if (isPortait) {
-                    isPortait = false;
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                }
-                mDisplay.setVisibility(View.GONE);
-                if (VideoPlayerView != null) {
-                    callback.onCustomViewHidden();
-                    return;
-                }
-                PlayerHolder.addView(view);
-                VideoPlayerView = view;
-                mPlayerCallBack = callback;
-                PlayerHolder.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onHideCustomView() {
-                //super.onHideCustomView();
-                if (VideoPlayerView != null) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    VideoPlayerView.setVisibility(View.GONE);
-                    PlayerHolder.removeView(VideoPlayerView);
-                    VideoPlayerView = null;
-                    PlayerHolder.setVisibility(View.GONE);
-                    mPlayerCallBack.onCustomViewHidden();
-                    mDisplay.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         mRelation.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -346,6 +310,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 }
             }
         });
+
         spawnId();
         updateId();
         taskMain = new Runnable() {
@@ -490,7 +455,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private void LoadClub2Choice() {
         View v = LayoutInflater.from(this).inflate(R.layout.club_chat_choice_list, null);
         ListView Lv = (ListView) v.findViewById(R.id.club_chat_choice_list);
-        Choiceadapter = new ClubChoiceAdapter(this, mMyClubs, mChatChoice, mDisplay);
+        Choiceadapter = new ClubChoiceAdapter(this, mMyClubs, mChatChoice, mDisplay,mDisplayOption);
         Lv.setAdapter(Choiceadapter);
         mChatChoice.setDelegate(new CustomDelegate(true, CustomDelegate.AnimationType.DuangAnimation).setCustomView(v));
     }
@@ -615,6 +580,16 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1000 && resultCode== Activity.RESULT_OK){
+            String filedir = BGAPhotoPickerActivity.getSelectedImages(data).get(0);
+            Uri callback = Uri.parse(filedir);
+            mUploadMessage.onReceiveValue(callback);
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
     }
@@ -641,57 +616,5 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
     }
     //DrawerListener
-
-
-    class xChromeClient extends WebChromeClient {
-
-        ValueCallback<Uri[]> mMsg;
-
-        @Override
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            //return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
-            mMsg = filePathCallback;
-            Intent jumpSelection = new Intent(Intent.ACTION_GET_CONTENT);
-            jumpSelection.addCategory(Intent.CATEGORY_OPENABLE);
-            jumpSelection.setType("image/*");
-            Intent it = new Intent(Intent.ACTION_CHOOSER);
-            it.putExtra(Intent.EXTRA_INTENT, jumpSelection);
-            it.putExtra(Intent.EXTRA_TITLE, "选择文件来上传~");
-            startActivityForResult(it, 2);
-            return true;
-        }
-
-        @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
-            // super.onShowCustomView(view, callback);
-            if (isPortait) {
-                isPortait = false;
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-            mDisplay.setVisibility(View.GONE);
-            if (VideoPlayerView != null) {
-                callback.onCustomViewHidden();
-                return;
-            }
-            PlayerHolder.addView(view);
-            VideoPlayerView = view;
-            mPlayerCallBack = callback;
-            PlayerHolder.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onHideCustomView() {
-            //super.onHideCustomView();
-            if (VideoPlayerView != null) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                VideoPlayerView.setVisibility(View.GONE);
-                PlayerHolder.removeView(VideoPlayerView);
-                VideoPlayerView = null;
-                PlayerHolder.setVisibility(View.GONE);
-                mPlayerCallBack.onCustomViewHidden();
-                mDisplay.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 
 }
