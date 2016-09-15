@@ -23,6 +23,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.mingle.sweetpick.SweetSheet;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -44,9 +45,10 @@ public class ClubChoiceAdapter extends BaseAdapter {
     List<ClubModel> mData;
     SweetSheet mParent;
     WebView outer;
+    DisplayImageOptions myOption;
     Context Parent;
     private LruCache<String,Bitmap> mCache;
-    public ClubChoiceAdapter(Context context,List<ClubModel> datas,SweetSheet parent,WebView wb){
+    public ClubChoiceAdapter(Context context, List<ClubModel> datas, SweetSheet parent, WebView wb, DisplayImageOptions cacheOption){
         Fresco.initialize(context);
         Parent = context;
         mInflater = LayoutInflater.from(context);
@@ -54,6 +56,7 @@ public class ClubChoiceAdapter extends BaseAdapter {
         mParent = parent;
         outer = wb;
         mCache = new LruCache<>((int) (Runtime.getRuntime().freeMemory()/4));
+        myOption = cacheOption;
     }
 
     public LruCache<String,Bitmap> getCache(){
@@ -99,7 +102,7 @@ public class ClubChoiceAdapter extends BaseAdapter {
         final String key = mData.get(position).LargeAvatarURL;
         if(mCache.get(mData.get(position).LargeAvatarURL)==null) {
             ImageLoader.getInstance()
-                    .loadImage(mData.get(position).LargeAvatarURL, new ImageLoadingListener() {
+                    .loadImage(mData.get(position).LargeAvatarURL, myOption, new ImageLoadingListener() {
                         @Override
                         public void onLoadingStarted(String s, View view) {
 
