@@ -25,7 +25,7 @@ import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
  */
 public class Utils {
 
-    public File getCacheFileDir(Context parent){
+    public static File getCacheFileDir(Context parent){
         String cacheName="";
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !Environment.isExternalStorageRemovable()){
             cacheName = parent.getExternalCacheDir().getPath();
@@ -35,7 +35,7 @@ public class Utils {
         return new File(cacheName);
     }
 
-    public File getCacheFile(Context parent,String fileNameToAdd){
+    public static File getCacheFile(Context parent,String fileNameToAdd){
         File dir = getCacheFileDir(parent);
         String cacheFile = dir.getPath();
         cacheFile+=File.separator+fileNameToAdd;
@@ -43,7 +43,7 @@ public class Utils {
         return new File(cacheFile);
     }
 
-    public int getAppVersion(Context parent){
+    public static int getAppVersion(Context parent){
         try {
             PackageInfo info = parent.getPackageManager().getPackageInfo(parent.getPackageName(),0);
             return  info.versionCode;
@@ -55,7 +55,7 @@ public class Utils {
     /**
      * Name:Read String From InputStream
      * */
-    public String ReadStringFromInputStream(InputStream is){
+    public static String ReadStringFromInputStream(InputStream is){
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
         String tmp="";String ans="";
@@ -69,7 +69,7 @@ public class Utils {
         return ans;
     }
 
-    public List<EventBean> parseEvent(JSONArray jsonArray){
+    public static List<EventBean> parseEvent(JSONArray jsonArray){
         JSONObject jsonObject;
         List<EventBean> ans = new ArrayList<>();
         try {

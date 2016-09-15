@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5Util {
 
-    public String HASH(String key) {
+    public static String HASH(String key) {
         String cacheKey;
         try {
             final MessageDigest mDigest = MessageDigest.getInstance("MD5");
@@ -20,7 +20,7 @@ public class MD5Util {
         return cacheKey;
     }
 
-    private String bytesToHexString(byte[] bytes) {
+    private static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(0xFF & bytes[i]);
