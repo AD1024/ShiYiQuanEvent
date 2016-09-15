@@ -12,7 +12,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ic_logo"
         android:layout_width="100sp"
         android:layout_height="100sp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20sp"
         android:text="十一圈Event"
+        android:id="@+id/user_name_holder"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
