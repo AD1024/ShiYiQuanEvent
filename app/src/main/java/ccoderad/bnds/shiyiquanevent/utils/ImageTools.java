@@ -23,7 +23,7 @@ public class ImageTools {
      * @return boolean isDeepColor
      */
 
-    public boolean isDeepColor(Bitmap bi) {
+    public static boolean isDeepColor(Bitmap bi) {
         int sgray[] = new int[256];
         for (int i = 0; i < 256; i++) {
             sgray[i] = 0;
@@ -65,7 +65,7 @@ public class ImageTools {
      * @param
      * @return bitmap Result
      */
-    public Bitmap fastblur(Bitmap sentBitmap, int radius) {
+    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
 
         // Stack Blur v1.0 from
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
@@ -274,7 +274,7 @@ public class ImageTools {
      * @param bitmap Unpressed
      * @return compressed
      */
-    public Bitmap CompressBitmap(Bitmap bitmap, Bitmap.CompressFormat Format) {
+    public static Bitmap CompressBitmap(Bitmap bitmap, Bitmap.CompressFormat Format) {
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         int beginRate = 100;
         //Param 1 ：Format ，Param 2： Quality，100-high，0-low  ，Param 3：Data stream used to store the compressed
@@ -299,7 +299,7 @@ public class ImageTools {
      * @param matrix
      * @return Bitmap
      */
-    public Bitmap toBitmap(BitMatrix bitMatrix) {
+    public static Bitmap toBitmap(BitMatrix bitMatrix) {
 
         int w = bitMatrix.getWidth();
         int h = bitMatrix.getHeight();
