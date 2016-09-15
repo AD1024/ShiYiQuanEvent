@@ -1,13 +1,17 @@
 package ccoderad.bnds.shiyiquanevent.Activities;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,11 +20,15 @@ import com.quinny898.library.persistentsearch.SearchResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +75,56 @@ public class FavEventActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, "啊哦，你还没收藏任何活动呢", Toast.LENGTH_LONG).show();
         }
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                new AlertDialog.Builder(FavEventActivity.this)
+                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(FavEventActivity.this,"呜呜呜，竟然抛弃伦家",Toast.LENGTH_LONG).show();
+                        EventBean del = mData.get(position);
+                        File cacheFav = new File(new Utils().getCacheFile(FavEventActivity.this,"event"),FAV_FILE);
+                        InputStream in;
+                        try {
+                            in = new FileInputStream(cacheFav);
+                            String result = new Utils().ReadStringFromInputStream(in);
+                            JSONArray saved;
+                            if(result.isEmpty()) saved = new JSONArray();
+                            else saved = new JSONArray(result);
+                            JSONObject obj;
+                            JSONObject data;
+                            for(int i=0;i<saved.length();i++){
+                                if(saved.get(i).equals(null)) continue;
+                                obj = saved.getJSONObject(i);
+                                data=obj.getJSONObject("data");
+                                if(data.getString("content").equals(del.eventContent)
+                                        && obj.getString("sponsor_fname").equals(del.sponsorName)){
+                                    saved.remove(i);break;
+                                }
+                            }
+                            PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
+                            cacheFav.createNewFile();
+                            writer.close();
+                            in.close();
+                            writer.print(saved.toString());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).setNegativeButton("保留", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setTitle("删除Or保留QwQ?").setMessage("要和宝宝说再见了吗QAQ?").show();
+                return false;
+            }
+        });
     }
 
     private void LoadFavData() {
@@ -113,10 +171,13 @@ public class FavEventActivity extends AppCompatActivity {
                 hideSearch();
             }
         });
+        mListView.setPadding(10,30,10,0);
+        kv = new HashMap<String, String>();
+        mListView.setVisibility(View.INVISIBLE);
         mSearchBox.setSearchListener(new SearchBox.SearchListener() {
             @Override
             public void onSearchOpened() {
-                kv = new HashMap<String, String>();
+
             }
 
             @Override
@@ -132,6 +193,10 @@ public class FavEventActivity extends AppCompatActivity {
             @Override
             public void onSearchTermChanged(String s) {
 
+                if(s.equals("") || s.equals(" ")){
+                    mSearchBox.clearSearchable();
+                }
+
                 for (int i = 0; i < mData.size(); i++) {
                     EventBean bean = mData.get(i);
                     if (bean.eventTitle.contains(s) && !s.isEmpty() && !s.equals(" ")) {
@@ -141,7 +206,7 @@ public class FavEventActivity extends AppCompatActivity {
                                     getResources().getDrawable(R.drawable.ic_history_blue_grey_500_18dp));
                             result.viewType = 0;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventTitle, "1");
+                            kv.put(bean.eventTitle, null);
                         }
                     }
 
@@ -150,7 +215,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(bean.eventLocation, getResources().getDrawable(R.drawable.ic_location));
                             result.viewType = 1;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventLocation, "1");
+                            kv.put(bean.eventLocation, null);
                         }
                     }
 
@@ -159,7 +224,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(bean.eventDate, getResources().getDrawable(R.drawable.ic_date));
                             result.viewType = 2;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventDate,"1");
+                            kv.put(bean.eventDate,null);
                         }
                     }
 
@@ -168,7 +233,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(bean.sponsorName, getResources().getDrawable(R.drawable.ic_sponsor_in_search));
                             result.viewType = 3;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.sponsorName,"1");
+                            kv.put(bean.sponsorName,null);
                         }
                     }
                 }
@@ -238,7 +303,9 @@ public class FavEventActivity extends AppCompatActivity {
     }
 
     protected void hideSearch() {
+        mListView.setVisibility(View.VISIBLE);
         mSearchBox.hideCircularly(this);
+        mListView.setPadding(10,0,10,0);
         mToolbar.setTitle("我的收藏");
         mListView.setAdapter(new EventListAdapter(this, mData));
     }
