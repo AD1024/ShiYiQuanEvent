@@ -59,6 +59,5 @@ dependencies {
     compile 'cn.bingoogolapple:bga-adapter:1.1.0@aar'
     compile 'cn.bingoogolapple:bga-photopicker:1.1.2@aar'
 
-
     compile 'com.quinny898.library.persistentsearch:library:1.1.0-SNAPSHOT'
 }
