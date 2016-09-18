@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10sp"
+    tools:context="ccoderad.bnds.shiyiquanevent.Activities.SettingActivity">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/setting_skip_splash"
+        android:layout_width="match_parent"
+        android:layout_height="85sp"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_settings_skip_splash"
+                android:textSize="15sp"
+                android:paddingTop="33sp"
+                android:paddingLeft="10sp"
+                android:layout_weight="4"/>
+
+            <Switch
+                android:id="@+id/setting_switch_skip_splash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingEnd="7sp"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/setting_clear_pic_cache"
+        android:layout_width="match_parent"
+        android:layout_height="65sp"
+        android:layout_marginTop="10sp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/setting_clear_pic_cache"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/setting_clear_event_cache"
+        android:layout_width="match_parent"
+        android:layout_height="65sp"
+        android:layout_marginTop="10sp"
+        android:foreground="?android:attr/selectableItemBackground">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/setting_clear_event_cache"
+            android:gravity="center"
+            />
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
