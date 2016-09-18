@@ -26,8 +26,7 @@
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.MainBrowser"
             android:hardwareAccelerated="true"
@@ -61,11 +60,18 @@
             android:label="扫扫码"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.SplashScreen" android:label="十一圈Event" android:theme="@style/FullscreenTheme">
+        <activity
+            android:name=".Activities.SplashScreen"
+            android:label="十一圈Event"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Activities.SettingActivity" android:label="@string/action_settings">
         </activity>
     </application>
 
