@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">十一活动</string>
+    <string name="action_settings">设置</string>
+    <string name="action_sign_in">登录或注册</string>
+    <string name="action_sign_in_short">登录</string>
+    <string name="app_picker_name"></string>
+    <string name="button_cancel">取消</string>
+    <string name="button_ok">确定</string>
+    <string name="button_open_browser">打开浏览器</string>
+    <string name="button_product_search"></string>
+    <string name="history_title">历史记录</string>
+    <string name="history_empty">空</string>
+    <string name="error_field_required">必填项</string>
+    <string name="error_incorrect_password">密码错误</string>
+    <string name="error_invalid_email">非法地址</string>
+    <string name="error_invalid_password">密码太短啦</string>
+    <string name="history_clear_one_history_text">清除</string>
+    <string name="history_clear_text">清除历史</string>
+    <string name="title_activity_about_me">关于我</string>
+    <string name="title_activity_aacc">登录</string>
+    <string name="title_activity_login">登录</string>
+    <string name="activity_settings_skip_splash">启动应用时直接进入主界面</string>
+    <string name="setting_clear_pic_cache">清除图片缓存</string>
+    <string name="setting_clear_event_cache">清除离线活动数据(不建议)</string>
+</resources>
