@@ -15,6 +15,10 @@
             android:title="扫一扫"
             android:icon="@drawable/ic_scan"/>
         <item
+            android:id="@+id/go_to_settings"
+            android:title="@string/action_settings"
+            android:icon="@drawable/ic_settings"/>
+        <item
             android:id="@+id/go_to_about_me"
             android:title="关于作者"
             android:icon="@drawable/ic_me" />
