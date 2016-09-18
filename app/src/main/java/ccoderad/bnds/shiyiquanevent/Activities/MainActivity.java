@@ -725,6 +725,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.go_to_faved_events:
                 startActivity(new Intent(this,FavEventActivity.class));
+                break;
+            case R.id.go_to_settings:startActivity(new Intent(this,SettingActivity.class));break;
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
