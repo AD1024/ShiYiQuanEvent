@@ -71,8 +71,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SettingActivity" android:label="@string/action_settings">
-        </activity>
+        <activity
+            android:name=".Activities.SettingActivity"
+            android:label="@string/action_settings" />
+        <activity
+            android:name=".Activities.ClubSquareActivity"
+            android:label="社团广场" />
+        <activity
+            android:name=".Activities.ClubInfoDetailActivity"
+            android:label="@string/title_activity_club_info_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
