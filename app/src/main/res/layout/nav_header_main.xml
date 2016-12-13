@@ -16,7 +16,7 @@
         android:layout_width="100sp"
         android:layout_height="100sp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/logo" />
+        android:src="@mipmap/logo_2" />
 
     <TextView
         android:layout_width="match_parent"

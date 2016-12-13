@@ -15,6 +15,11 @@
             android:title="扫一扫"
             android:icon="@drawable/ic_scan"/>
         <item
+            android:id="@+id/go_to_square"
+            android:title="社团广场"
+            android:icon="@drawable/ic_go_to_square"
+            />
+        <item
             android:id="@+id/go_to_settings"
             android:title="@string/action_settings"
             android:icon="@drawable/ic_settings"/>
@@ -22,8 +27,6 @@
             android:id="@+id/go_to_about_me"
             android:title="关于作者"
             android:icon="@drawable/ic_me" />
-
-
     </group>
 
     <!--<item android:title="Communicate">-->
