@@ -67,6 +67,7 @@ import java.util.List;
 import ccoderad.bnds.shiyiquanevent.Adapters.EventListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.Beans.IntentResult;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.utils.IntentIntegrator;
@@ -78,18 +79,20 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
-    final long MAX_MEM = 30* ByteConstants.MB;
-    final long MAX_LOW_MEM = 10* ByteConstants.MB;
-    final long MAX_VERY_LOW_MEM = 5* ByteConstants.MB;
-    final long MAX_STRING_CACHE = 3*ByteConstants.MB;
+
+    final long MAX_MEM = 30 * ByteConstants.MB;
+    final long MAX_LOW_MEM = 10 * ByteConstants.MB;
+    final long MAX_VERY_LOW_MEM = 5 * ByteConstants.MB;
+    final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
     final int LOGIN_REQCODE = 8080;
     final int LOGOUT_REQCODE=8090;
 
-    private final String REQ_URL = "http://shiyiquan.net/api/?category=event&time=latest";
+    private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest";
     private final String CACHE_FILE_NAME="cacheEvent.json";
-    private final String HOME_URL="http://shiyiquan.net/";
-    private static final String CurrentVersion = "4347808";
-    private static final String URL_PREFIX = "http://c.hcc.io/f/shiyiquan-release/?download_file=";
+    private final String HOME_URL= URLConstants.HOME_URL;
+    private static final String CurrentVersion = "20161126";
+    private static final String URL_PREFIX = "<!-- 安卓版本";
+
     private ListView mListView;
     private SwipeRefreshLayout mRefersh;
     private long time=0;
@@ -101,7 +104,6 @@ public class MainActivity extends AppCompatActivity
     private DiskCacheConfig mImageCacheConfig;
     private ImagePipelineConfig mImageCachePiplineConfig;
     private  FloatingActionButton fab;
-    private DatabaseHelper mHelper;
     private boolean mIsConnected;
     private File cacheFile;
     private File favedEvents;
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView LoginClick;
     private boolean Logined;
     private View Nav_Header_stub;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
@@ -332,10 +335,10 @@ public class MainActivity extends AppCompatActivity
             ReadFromCache();
         }
     }
+
     /*
     * Function: Check App Update By parsing HTML
     * */
-
     private class HTMLFetcher extends AsyncTask<String,Void,String>{
 
         @Override
@@ -352,7 +355,7 @@ public class MainActivity extends AppCompatActivity
                 int idx=HTML.indexOf(URL_PREFIX);
                 idx+=URL_PREFIX.length();
                 ret="";
-                for(int i=idx;HTML.charAt(i)>='0' && HTML.charAt(i)<='9';++i){
+                for(int i=idx;HTML.charAt(i)>='0' && HTML.charAt(i)<='9' || HTML.charAt(i)=='.';++i){
                     ret+=HTML.charAt(i);
                 }
             } catch (IOException e) {
@@ -365,18 +368,24 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(!s.equals(CurrentVersion)){
+            if(!s.equals(CurrentVersion) && !s.equals("NULL")){
                 Toast.makeText(MainActivity.this,"有新版本，请在十一圈官网下载",Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    /*
+    * Check App update
+    * */
     private String CheckUpdate(){
         HTMLFetcher fetcher = new HTMLFetcher();
         fetcher.execute(HOME_URL);
-        return  null;
+        return null;
     }
 
+    /*
+    * Load Favourite Event from disk cache
+    * */
     private void LoadFav(){
         InputStream is;
         try {
@@ -438,7 +447,7 @@ public class MainActivity extends AppCompatActivity
             printer.close();
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("CACHEING_ERROR","UnhandledError Occurs");
+            Log.e("CACHE_ERROR","UnhandledError Occurs");
         }
     }
     /**
@@ -482,7 +491,6 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
-
         return false;
     }
 
@@ -511,6 +519,7 @@ public class MainActivity extends AppCompatActivity
 
         View window = LayoutInflater.from(this).inflate(R.layout.event_alert,null);
         View Header = LayoutInflater.from(this).inflate(R.layout.event_alert_header,null);
+
         //ViewInjection
         TextView tvTitle = (TextView) window.findViewById(R.id.event_alert_title);
         TextView tvStart = (TextView) window.findViewById(R.id.event_alert_start);
@@ -520,6 +529,7 @@ public class MainActivity extends AppCompatActivity
         TextView tvSponsor = (TextView) window.findViewById(R.id.event_alert_sponsor);
         TextView tvLocation = (TextView) window.findViewById(R.id.event_alert_location);
         SimpleDraweeView pic = (SimpleDraweeView) window.findViewById(R.id.event_alert_pic);
+
         //DataAdaption
         EventBean bean = mData.get(position);
         tvTitle.setText(bean.eventTitle);
@@ -563,6 +573,9 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    /*
+    * Function: Parse JSONArray to List(Used in GetEventTask)
+    * */
     public List<EventBean> parseEvent(JSONArray jsonArray){
         JSONObject jsonObject;
         mRawData = jsonArray;
@@ -600,6 +613,10 @@ public class MainActivity extends AppCompatActivity
         return ans;
     }
 
+    /*
+    * ClassName: GetEventTask
+    * Function: Get Latest Function Data List
+    * */
     class GetEventTask extends AsyncTask<String,Void,List<EventBean>>{
         @Override
         protected void onPreExecute() {
@@ -647,27 +664,19 @@ public class MainActivity extends AppCompatActivity
             }
             if(eventBeans.size()==0){
                 setTitle("加载失败了呢...QAQ");
-                Toast.makeText(MainActivity.this,"网络好像有点问题",Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"进入没有网络的异次元啦QAQ",Toast.LENGTH_LONG).show();
                 return;
             }
             setTitle("十一活动");
-            /*
-            for(int i=0;i<eventBeans.size();i++){
-                if(eventBeans.get(i).sponsorName.length()>30){
-                    EventBean bean=eventBeans.get(i);
-                    String tar = bean.sponsorName.substring(0,20)+"\n"+"-"
-                            +bean.sponsorName.substring(20,bean.sponsorName.length());
-                    bean.sponsorName = tar;
-                    eventBeans.remove(i);
-                    eventBeans.add(i,bean);
-                }
-            }*/
             mData=eventBeans;
             EventListAdapter adapter = new EventListAdapter(MainActivity.this,eventBeans);
             mListView.setAdapter(adapter);
         }
     }
 
+    /*
+    * Back press Handler
+    * */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -698,6 +707,9 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+    * Navigation Item OnClick Handler
+    * */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -727,6 +739,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this,FavEventActivity.class));
                 break;
             case R.id.go_to_settings:startActivity(new Intent(this,SettingActivity.class));break;
+            case R.id.go_to_square:startActivity(new Intent(this,ClubSquareActivity.class));break;
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -734,6 +747,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /*
+    * Activity Result handler
+    * 8081: login request
+    * 8091: logout request
+    * 6666: scan QR request
+    * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -764,10 +783,12 @@ public class MainActivity extends AppCompatActivity
             return;
         }else if(requestCode==LOGOUT_REQCODE && resultCode==8091){
             TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
+            // Reset the label
             tvName.setText("十一圈Event-点击登录");
             Logined=false;
             return;
         }
+        // Handle QR Scan result
         if(requestCode==6666){
             if(resultCode==6666){
                 Intent it = new Intent(this,MainBrowser.class);

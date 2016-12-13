@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 
@@ -46,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private final String REQ_URL="http://shiyiquan.net/api/login";
     private final String HOME_URL="http://shiyiquan.net/";
-    private final String USER_AGENT="Andriod%20APP%207ac0ce241d0b78af164e58d7e712e053";
+
 
     private AutoCompleteTextView mUserName;
     private EditText mPassword;
@@ -95,7 +96,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         if(passData.isEmpty() || passData.length()<3) return false;
         else return true;
     }
-
+    /*
+    * @api: password
+    *       username
+    *       user-agent(secrete key)
+    * */
     private boolean attemptLogin(){
 
         if(!judgeEmail()){
@@ -110,9 +115,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
         final String userName = mUserName.getText().toString();
         final String password = mPassword.getText().toString();
-        Log.i("REQ",REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + USER_AGENT);
+        Log.i("REQ",REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT);
         StringRequest LoginReq = new StringRequest(Request.Method.GET,
-                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + USER_AGENT, new Response.Listener<String>() {
+                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if(response.equals("fail")){
@@ -143,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 InputStream is = new URL(REQ_URL
                         + "?username=" + userName
                         + "&password=" + password
-                        + "&user-agent=" + USER_AGENT)
+                        + "&user-agent=" + URLConstants.USER_AGENT)
                         .openStream();
                 jsonString=Utils.ReadStringFromInputStream(is);
                 is.close();
@@ -151,14 +156,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             }
             Log.i("Logining","Logining2");
             reqData = new JSONObject(jsonString);
-            /* Unused code block
-            File userInfoContainer = new File(mUserInfoStorage,"userInfo.json");
-            PrintStream writer = new PrintStream(new FileOutputStream(userInfoContainer));
-            userInfoContainer.createNewFile();
-            reqData.put("userName",userName);
-            writer.print(reqData.toString());
-            writer.close();
-            */
             mLoginStorageEditor.putBoolean("Logined",true);
             mLoginStorageEditor.putString("userName",userName);
             mLoginStorageEditor.putString("cookiePath",reqData.getString("path"));

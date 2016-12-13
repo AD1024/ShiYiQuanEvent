@@ -70,6 +70,7 @@ import java.util.List;
 import ccoderad.bnds.shiyiquanevent.Adapters.ClubChoiceAdapter;
 import ccoderad.bnds.shiyiquanevent.Adapters.ClubListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.ClubModel;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
@@ -100,7 +101,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private List<MenuEntity> myAdmined = new ArrayList<>();
     private List<String> AdminedClubURLs = new ArrayList<>();
     private ImageLoaderConfiguration mConfiguration;
-    private final String HOME_URL = "http://shiyiquan.net/";
+    private final String HOME_URL = URLConstants.HOME_URL;
     private DisplayImageOptions mDisplayOption;
     private ValueCallback<Uri> mUploadMessage;
 
@@ -168,7 +169,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 .bitmapConfig(Bitmap.Config.RGB_565).build(); //This will reduce memory consumption
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(this)
-                .memoryCacheExtraOptions(480, 800)  // maxwidth, max height
+                .memoryCacheExtraOptions(480, 800)  // max width, max height
                 .threadPoolSize(3)                  //线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -266,28 +267,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mDisplay.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                /*
-                if(url.equalsIgnoreCase("app:upload")){
-                    startActivityForResult(BGAPhotoPickerActivity.newIntent(MainBrowser.this,null,1,null,false),1000);
-                    return true;
-                }
-
-                reserved
-                if (url.contains("logout")) {
-                    SharedPreferences.Editor editor = host_id_provider.edit();
-                    editor.putBoolean("isLogged", false);
-                    mMyClubs.clear();
-                    myAdmined.clear();
-                    Choiceadapter.notifyDataSetChanged();
-                    mAdapter.notifyDataSetChanged();
-                }
-                if (url.contains("login")) {
-                    SharedPreferences.Editor editor = host_id_provider.edit();
-                    editor.putBoolean("isLogged", true);
-                    spawnId();
-                    updateId();
-                }
-                */
                 view.loadUrl(url);
                 return true;
             }
@@ -355,19 +334,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     void asyncGetClubInfo() {
         String URL_REQ = HOME_URL + "mobile/club/?host_id=" + host_id + "&time=" + newId();
         Log.i("CLUB_REQ", URL_REQ);
-
-        /*
-        StringRequest test = new StringRequest(URL_REQ, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("Response",response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });*/
 
         //Async Task->used to fetch info of the club that current user has engaged
         final JsonArrayRequest request = new JsonArrayRequest(URL_REQ,
