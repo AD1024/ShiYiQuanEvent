@@ -3,6 +3,8 @@ package ccoderad.bnds.shiyiquanevent.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 
@@ -95,5 +97,25 @@ public class Utils {
             e.printStackTrace();
         }
         return ans;
+    }
+
+    public static String Int2String(int x){
+        return Integer.toString(x);
+    }
+    /**
+     * This Function is used to judge wether the network is available
+     * @return NetWorkkStat
+     * */
+    public static boolean isNetWorkAvailable(Context context){
+        Context currContext = context;
+        if(currContext!=null){
+            ConnectivityManager manager = (ConnectivityManager) currContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netWorkInfo = manager.getActiveNetworkInfo();
+            if(netWorkInfo!=null){
+                return netWorkInfo.isAvailable();
+            }
+
+        }
+        return false;
     }
 }
