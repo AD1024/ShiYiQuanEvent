@@ -10,7 +10,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_about_me">about_me</string>
     <string name="large_text">
-        "来自北京市十一学校高一学部的\n学生开发者——AD1024\n"
+        "来自北京市十一学校高二学部的\n学生开发者——AD1024\n"
         "QQ:1797609811 E-Mail:yoyo991214@126.com\n"
         "欢迎对本App提出建设性建议及意见\n\n"
         "最后打个广告:欢迎加入HCC社团!\n\n"
@@ -328,5 +328,6 @@ limitations under the License.\n\n\n"
     <string name="activity_settings_skip_splash">Skip Splash Screen</string>
     <string name="setting_clear_pic_cache">Clear Picture Cache</string>
     <string name="setting_clear_event_cache">Clear Offline Event Information(Unrecommended)</string>
+    <string name="title_activity_club_info_detail">ClubInfoDetailActivity</string>
 
 </resources>
