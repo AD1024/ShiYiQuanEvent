@@ -126,7 +126,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="关注该活动:"/>
+                    android:text="收藏该活动:"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
