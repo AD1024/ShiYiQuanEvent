@@ -3,11 +3,17 @@ package ccoderad.bnds.shiyiquanevent.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Hashtable;
 
 /**
  * Created by CCoderAD on 16/5/13.
@@ -296,7 +302,7 @@ public class ImageTools {
     /**
      * 转换成图片
      *
-     * @param matrix
+     * @param bitMatrix
      * @return Bitmap
      */
     public static Bitmap toBitmap(BitMatrix bitMatrix) {
@@ -317,5 +323,22 @@ public class ImageTools {
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(data, 0, w, 0, 0, w, h);
         return bitmap;
+    }
+
+    @Nullable
+    public static Bitmap String2QR(String msg, BarcodeFormat QRFormat, int width, int height){
+        Hashtable<EncodeHintType,String> hint = new Hashtable<>();
+        hint.put(EncodeHintType.CHARACTER_SET,"UTF-8");
+        BitMatrix qr = null;
+        try {
+            qr = new MultiFormatWriter().encode(msg,QRFormat,width,height,hint);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+        if(qr == null){
+            return null;
+        }else{
+            return toBitmap(qr);
+        }
     }
 }
