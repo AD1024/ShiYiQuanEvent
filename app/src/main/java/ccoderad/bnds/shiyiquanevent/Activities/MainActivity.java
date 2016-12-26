@@ -40,17 +40,17 @@ import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,20 +62,19 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import ccoderad.bnds.shiyiquanevent.Adapters.EventListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
-import ccoderad.bnds.shiyiquanevent.Beans.IntentResult;
+import ccoderad.bnds.shiyiquanevent.DB.DataBaseManager;
+import ccoderad.bnds.shiyiquanevent.DB.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.R;
-import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
-import ccoderad.bnds.shiyiquanevent.utils.IntentIntegrator;
+import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
-
-import com.google.zxing.client.android.*;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
@@ -93,25 +92,32 @@ public class MainActivity extends AppCompatActivity
     private static final String CurrentVersion = "20161126";
     private static final String URL_PREFIX = "<!-- 安卓版本";
 
-    private ListView mListView;
-    private SwipeRefreshLayout mRefersh;
-    private long time=0;
-    private List<EventBean> mData;
-    private GetEventTask mTask;
-    private int mY=0;
-    private boolean isLongClicked=false;
     private DiskLruCache mCache;
     private DiskCacheConfig mImageCacheConfig;
+
     private ImagePipelineConfig mImageCachePiplineConfig;
     private  FloatingActionButton fab;
-    private boolean mIsConnected;
+
     private File cacheFile;
     private File favedEvents;
     private JSONArray mRawData;
+
     private List<EventBean> favd_stub;
-    private ImageView LoginClick;
+    private List<EventBean> mData;
+
     private boolean Logined;
+    private int mY=0;
+    private boolean isLongClicked=false;
+    private boolean mIsConnected;
+    private long time=0;
+
     private View Nav_Header_stub;
+    private ListView mListView;
+    private ImageView LoginClick;
+    private SwipeRefreshLayout mRefersh;
+
+    private GetEventTask mTask;
+    private DatabaseHelper mDataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,13 +128,17 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mIsConnected = isNetWorkAvailable();
+
+        mDataBaseHelper = DataBaseManager.getInstance(this);
+
         final SharedPreferences LoginInfo = getSharedPreferences("LoginInfo",MODE_PRIVATE);
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         View nav_header=navView.getHeaderView(0);
         Nav_Header_stub = nav_header;
+
         TextView userName = (TextView)nav_header.findViewById(R.id.user_name_holder);
+
         Logined = LoginInfo.getBoolean("Logined",false);
-        Log.i("InflateTextView:",userName.getText().toString());
         if(Logined){
             String set=userName.getText().toString()+"-"+LoginInfo.getString("userName","点击登录");
             userName.setText(set);
@@ -200,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                 isLongClicked=true;
                 ImageView alter = (ImageView) view.findViewById(R.id.event_list_item_fav);
                 if (mData.get(position).isFaved) {
-                    Snackbar.make(view, "已取消关注" + mData.get(position).eventTitle,
+                    Snackbar.make(view, "已取消收藏" + mData.get(position).eventTitle,
                                     Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = false;
                     alter.setImageResource(R.drawable.ic_favorite_border);
@@ -242,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                 } else {
-                    Snackbar.make(view, "已关注" + mData.get(position).eventTitle,
+                    Snackbar.make(view, "已收藏" + mData.get(position).eventTitle,
                                     Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = true;
                     alter.setImageResource(R.drawable.ic_favorite);
@@ -314,6 +324,7 @@ public class MainActivity extends AppCompatActivity
                 .setMaxCacheSizeOnLowDiskSpace(MAX_LOW_MEM)
                 .setMaxCacheSizeOnVeryLowDiskSpace(MAX_VERY_LOW_MEM)
                 .build();
+
         mImageCachePiplineConfig = ImagePipelineConfig.newBuilder(this).setMainDiskCacheConfig(mImageCacheConfig).build();
         cacheFile = Utils.getCacheFile(this,"event");
         if(!cacheFile.exists())
@@ -511,14 +522,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         if(isLongClicked){
             isLongClicked=false;
             return;
         }
 
-        View window = LayoutInflater.from(this).inflate(R.layout.event_alert,null);
-        View Header = LayoutInflater.from(this).inflate(R.layout.event_alert_header,null);
+//        View window = LayoutInflater.from(this).inflate(R.layout.event_alert,null);
+//        View Header = LayoutInflater.from(this).inflate(R.layout.event_alert_header,null);
+
+        View window = ViewTools.Inflate(this,R.layout.event_alert,null);
+        View Header = ViewTools.Inflate(this,R.layout.event_alert_header,null);
 
         //ViewInjection
         TextView tvTitle = (TextView) window.findViewById(R.id.event_alert_title);
@@ -543,10 +557,35 @@ public class MainActivity extends AppCompatActivity
         pic.setImageURI(Uri.parse(bean.eventAvatar));
         new AlertDialog.Builder(this).setView(window)
                 .setCustomTitle(Header)
-                .setPositiveButton("朕晓得了", new DialogInterface.OnClickListener() {
+                .setNegativeButton("朕晓得了", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        }).setPositiveButton("去看看",new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent jump = new Intent(MainActivity.this,MainBrowser.class);
+                jump.putExtra("QR_CONTENT",mData.get(position).eventURL);
+                startActivity(jump);
+            }
+        }).setNeutralButton("分享活动",new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                View viewQRShareAlert = ViewTools.Inflate(MainActivity.this,R.layout.alert_event_qr_share,null);
+                View QRShareTitle = ViewTools.Inflate(MainActivity.this,R.layout.event_qr_share_header,null);
 
+                ImageView EventQRImage = (ImageView) viewQRShareAlert.findViewById(R.id.event_share_qr_img);
+
+                TextView EventShareTitle = (TextView) viewQRShareAlert.findViewById(R.id.event_share_title);
+
+                EventShareTitle.setText(mData.get(position).eventTitle);
+
+                EventQRImage.setImageBitmap(ImageTools.String2QR(mData.get(position).eventURL, BarcodeFormat.QR_CODE,800,800));
+
+                new AlertDialog.Builder(MainActivity.this).setView(viewQRShareAlert)
+                        .setCustomTitle(QRShareTitle)
+                        .show();
             }
         }).show();
 
@@ -597,6 +636,7 @@ public class MainActivity extends AppCompatActivity
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
+                bean.eventURL = URLConstants.HOME_URL + URLConstants.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 for(int j=0;j<favd_stub.size();j++){
                     if(bean.eventTitle.equals(favd_stub.get(j).eventTitle)){

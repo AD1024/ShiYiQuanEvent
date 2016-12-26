@@ -14,9 +14,11 @@ public class EventBean implements Serializable {
     public String eventContent;
     public String eventLocation;
     public String eventAvatar;
+    public String eventURL;
     public int eventFollower;
     public boolean isFaved = false;
     private boolean isParsed = false;
+
     public void parseUrl(){
         if(!isParsed) {
             eventAvatar=eventAvatar.replace("medium","large");
