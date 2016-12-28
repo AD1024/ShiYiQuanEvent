@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,23 +33,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import ccoderad.bnds.shiyiquanevent.Adapters.ClubSquareAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.ClubDetailModel;
-import ccoderad.bnds.shiyiquanevent.Global.PreferencesConstants;
-import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.Global.PreferencesConstances;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 import ccoderad.bnds.shiyiquanevent.Listeners.ClubSuareItemClickListener;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
@@ -59,7 +52,7 @@ import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
 public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, ClubSuareItemClickListener {
     //Constants
-    private final String REQUEST_URL = URLConstants.HOME_URL + URLConstants.QUARE_URL+"?api=True";
+    private final String REQUEST_URL = URLConstances.HOME_URL + URLConstances.QUARE_URL+"?api=True";
 
     // Plugins
     private XRecyclerView mClubList;
@@ -96,8 +89,8 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mDataList = new ArrayList<>();
         mClubListAdapter = new ClubSquareAdapter(this,mDataList);
         mClubListAdapter.setOnClubItemClickListener(this);
-        mPreference = getSharedPreferences(PreferencesConstants.LOGIN_INFO,MODE_PRIVATE);
-        islogined = mPreference.getBoolean(PreferencesConstants.LOGIN_INFO,false);
+        mPreference = getSharedPreferences(PreferencesConstances.LOGIN_INFO,MODE_PRIVATE);
+        islogined = mPreference.getBoolean(PreferencesConstances.LOGIN_INFO,false);
         mBackTop = (FloatingActionButton) findViewById(R.id.club_square_fab);
         mClubList = (XRecyclerView) findViewById(R.id.club_square_list);
         View headerView = mInflater.inflate(R.layout.club_square_header,null);

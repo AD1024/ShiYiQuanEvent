@@ -1,16 +1,12 @@
 package ccoderad.bnds.shiyiquanevent.Beans;
 
-import android.util.Log;
-
-import java.io.Serializable;
-
-import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 
 /**
  * Created by CCoderAD on 16/5/12.
  */
 public class ClubModel{
-    private static String HOME_URL = URLConstants.HOME_URL;
+    private static String HOME_URL = URLConstances.HOME_URL;
     public String club_name;
     public String status;
     public String sname;

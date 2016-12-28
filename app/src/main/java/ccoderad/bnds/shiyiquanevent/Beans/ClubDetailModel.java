@@ -1,12 +1,10 @@
 package ccoderad.bnds.shiyiquanevent.Beans;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 
 /**
  * Created by CCoderAD on 2016/10/27.
@@ -52,7 +50,7 @@ public class ClubDetailModel implements Serializable{
     * Add Prefix of Club Home page
     * */
     public void ChangeHomePage(String uri){
-        if(!uri.contains(URLConstants.HOME_URL)){
+        if(!uri.contains(URLConstances.HOME_URL)){
             ClubHomePage = "http://shiyiquan.net" + uri;
         }
     }
