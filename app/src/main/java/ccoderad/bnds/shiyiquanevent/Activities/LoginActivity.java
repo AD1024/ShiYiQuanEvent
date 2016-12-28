@@ -3,13 +3,10 @@ package ccoderad.bnds.shiyiquanevent.Activities;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,22 +20,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 
@@ -115,9 +108,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
         final String userName = mUserName.getText().toString();
         final String password = mPassword.getText().toString();
-        Log.i("REQ",REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT);
+        Log.i("REQ",REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstances.USER_AGENT);
         StringRequest LoginReq = new StringRequest(Request.Method.GET,
-                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT, new Response.Listener<String>() {
+                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstances.USER_AGENT, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if(response.equals("fail")){
@@ -148,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 InputStream is = new URL(REQ_URL
                         + "?username=" + userName
                         + "&password=" + password
-                        + "&user-agent=" + URLConstants.USER_AGENT)
+                        + "&user-agent=" + URLConstances.USER_AGENT)
                         .openStream();
                 jsonString=Utils.ReadStringFromInputStream(is);
                 is.close();
