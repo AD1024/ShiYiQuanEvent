@@ -329,5 +329,15 @@ limitations under the License.\n\n\n"
     <string name="setting_clear_pic_cache">Clear Picture Cache</string>
     <string name="setting_clear_event_cache">Clear Offline Event Information(Unrecommended)</string>
     <string name="title_activity_club_info_detail">ClubInfoDetailActivity</string>
+    <string name="faved_event_no_fav">No Favorite Event</string>
+    <string name="content_update_info">
+        "新特性
+        1. 更新内容显示
+        2. 搜索已收藏活动功能增强(新加入搜索结果页面)
+
+        修复：
+        1. 活动收藏显示的Bug
+        2. 搜索框内容玄学bug"
+    </string>
 
 </resources>

@@ -23,4 +23,14 @@
     <string name="activity_settings_skip_splash">启动应用时直接进入主界面</string>
     <string name="setting_clear_pic_cache">清除图片缓存</string>
     <string name="setting_clear_event_cache">清除离线活动数据(不建议)</string>
+    <string name="faved_event_no_fav">没有收藏的活动呀~</string>
+    <string name="content_update_info">
+        "新特性
+        1. 更新内容显示
+        2. 搜索已收藏活动功能增强(新加入搜索结果页面)
+
+        修复：
+        1. 活动收藏显示的Bug
+        2. 搜索框内容玄学Bug"
+    </string>
 </resources>
