@@ -22,7 +22,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -41,8 +40,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.common.BitMatrix;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import org.json.JSONArray;
@@ -62,14 +59,14 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Random;
 
 import ccoderad.bnds.shiyiquanevent.Adapters.EventListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.DB.DataBaseManager;
 import ccoderad.bnds.shiyiquanevent.DB.DatabaseHelper;
-import ccoderad.bnds.shiyiquanevent.Global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
@@ -86,10 +83,10 @@ public class MainActivity extends AppCompatActivity
     final int LOGIN_REQCODE = 8080;
     final int LOGOUT_REQCODE=8090;
 
-    private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest";
+    private final String REQ_URL = URLConstances.HOME_URL + "api/?category=event&time=latest";
     private final String CACHE_FILE_NAME="cacheEvent.json";
-    private final String HOME_URL= URLConstants.HOME_URL;
-    private static final String CurrentVersion = "20161126";
+    private final String HOME_URL= URLConstances.HOME_URL;
+    private static final String CurrentVersion = "1.11";
     private static final String URL_PREFIX = "<!-- 安卓版本";
 
     private DiskLruCache mCache;
@@ -118,6 +115,53 @@ public class MainActivity extends AppCompatActivity
 
     private GetEventTask mTask;
     private DatabaseHelper mDataBaseHelper;
+    private boolean Paused = false;
+
+    private void ShowUpdateInfo(){
+        final SharedPreferences versionInfo = getSharedPreferences("VersionInfo",MODE_PRIVATE);
+        String version = versionInfo.getString("VersionCode","NoInfo");
+        View Header = ViewTools.Inflate(this,R.layout.update_info_header,null);
+        View window = ViewTools.Inflate(this,R.layout.update_info_msg,null);
+        TextView updateInfo = (TextView)window.findViewById(R.id.update_info_msg);
+        updateInfo.setText(R.string.content_update_info);
+
+        TextView headerText = (TextView) Header.findViewById(R.id.update_info_header_text);
+
+        headerText.setTextSize(25f);
+
+        headerText.setPadding(10,10,10,10);
+
+        int[] color = ImageTools.RandomColor();
+
+        Header.setBackgroundColor(Color.rgb(color[0],color[1],color[2]));
+
+        if(ImageTools.isDeepColor(color)){
+            headerText.setTextColor(Color.WHITE);
+        }else{
+            headerText.setTextColor(Color.BLACK);
+        }
+
+        if(!version.equals(CurrentVersion)){
+            new AlertDialog.Builder(this)
+                    .setView(window)
+                    .setCustomTitle(Header)
+                    .setPositiveButton("不再显示",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferences.Editor edit = versionInfo.edit();
+                            edit.putString("VersionCode",CurrentVersion);
+                            edit.apply();
+                        }
+                    })
+                    .setNegativeButton("好的",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +181,8 @@ public class MainActivity extends AppCompatActivity
         Nav_Header_stub = nav_header;
 
         TextView userName = (TextView)nav_header.findViewById(R.id.user_name_holder);
+
+        ShowUpdateInfo();
 
         Logined = LoginInfo.getBoolean("Logined",false);
         if(Logined){
@@ -636,7 +682,7 @@ public class MainActivity extends AppCompatActivity
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
-                bean.eventURL = URLConstants.HOME_URL + URLConstants.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
+                bean.eventURL = URLConstances.HOME_URL + URLConstances.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 for(int j=0;j<favd_stub.size();j++){
                     if(bean.eventTitle.equals(favd_stub.get(j).eventTitle)){
@@ -858,5 +904,25 @@ public class MainActivity extends AppCompatActivity
             mTask.cancel(true);
         }
         super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LoadFav();
+        if(Paused) {
+            if (mIsConnected) {
+                new GetEventTask().execute(REQ_URL);
+            } else {
+                ReadFromCache();
+            }
+            Paused = false;
+        }
     }
 }
