@@ -1,11 +1,14 @@
 package ccoderad.bnds.shiyiquanevent.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.ViewUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quinny898.library.persistentsearch.SearchBox;
@@ -29,30 +33,39 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ccoderad.bnds.shiyiquanevent.Adapters.EventListAdapter;
+import ccoderad.bnds.shiyiquanevent.Adapters.FavEventListAdapter;
 import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
+import ccoderad.bnds.shiyiquanevent.Global.SearchTypeConstances;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
+import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 public class FavEventActivity extends AppCompatActivity {
 
     private final String FAV_FILE = "FavedEvents.json";
 
+    private long timeGap = 0;
+
     private Toolbar mToolbar;
     SearchBox mSearchBox;
     private List<EventBean> mData;
     private ListView mListView;
-    private Map<String, String> kv;
+    private Map<String, Boolean> kv;
+    private TextView mNoFavIndicator;
+    FavEventListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav_event);
+        mNoFavIndicator = (TextView) findViewById(R.id.faved_event_none_indicator);
         mToolbar = (Toolbar) findViewById(R.id.favd_toolbar);
         mToolbar.inflateMenu(R.menu.faved_toolbar);
         mToolbar.setTitle("我的收藏");
@@ -63,17 +76,19 @@ public class FavEventActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 openSearch();
-                Log.i("OnClickTest", "Clicked");
                 return true;
             }
         });
         mToolbar.setTitleTextColor(Color.WHITE);
         this.setSupportActionBar(mToolbar);
         LoadFavData();
-        if (mData.size() > 0)
-            mListView.setAdapter(new EventListAdapter(this, mData));
-        else {
+        if (mData.size() > 0) {
+            mAdapter = new FavEventListAdapter(this, mData);
+            mListView.setAdapter(mAdapter);
+        }else {
             Toast.makeText(this, "啊哦，你还没收藏任何活动呢", Toast.LENGTH_LONG).show();
+            mNoFavIndicator.setVisibility(View.VISIBLE);
+
         }
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -105,9 +120,9 @@ public class FavEventActivity extends AppCompatActivity {
                             }
                             PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
                             cacheFav.createNewFile();
+                            writer.print(saved.toString());
                             writer.close();
                             in.close();
-                            writer.print(saved.toString());
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         } catch (JSONException e) {
@@ -115,11 +130,16 @@ public class FavEventActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        mData.remove(position);
+                        if(mData.size() == 0){
+                            mNoFavIndicator.setVisibility(View.VISIBLE);
+                        }
+                        mAdapter.notifyDataSetChanged();
                     }
                 }).setNegativeButton("保留", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        ViewTools.ToastInfo(FavEventActivity.this,"宝宝很开心！",false);
                     }
                 }).setTitle("删除Or保留QwQ?").setMessage("要和宝宝说再见了吗QAQ?").show();
                 return false;
@@ -162,7 +182,7 @@ public class FavEventActivity extends AppCompatActivity {
     }
 
     private void openSearch() {
-        mToolbar.setTitle("");
+        // mToolbar.setTitle("");
         mSearchBox.setLogoText("输入搜索内容(日期,地点,发起社团)");
         mSearchBox.revealFromMenuItem(R.id.searchButton, this);
         mSearchBox.setMenuListener(new SearchBox.MenuListener() {
@@ -172,12 +192,12 @@ public class FavEventActivity extends AppCompatActivity {
             }
         });
         mListView.setPadding(10,30,10,0);
-        kv = new HashMap<String, String>();
+        kv = new HashMap<String, Boolean>();
         mListView.setVisibility(View.INVISIBLE);
         mSearchBox.setSearchListener(new SearchBox.SearchListener() {
             @Override
             public void onSearchOpened() {
-
+                kv.clear();
             }
 
             @Override
@@ -188,14 +208,23 @@ public class FavEventActivity extends AppCompatActivity {
             @Override
             public void onSearchClosed() {
                 hideSearch();
+                mToolbar.setTitle("我的收藏");
             }
 
             @Override
             public void onSearchTermChanged(String s) {
-
-                if(s.equals("") || s.equals(" ")){
+                if(System.currentTimeMillis() - timeGap < 1500){
+                    timeGap = System.currentTimeMillis();
+                    return;
+                }
+                timeGap = System.currentTimeMillis();
+                if(TextUtils.isEmpty(s) || s.equals(" ")){
                     mSearchBox.clearSearchable();
                 }
+
+                kv.clear();
+
+                mSearchBox.clearSearchable();
 
                 for (int i = 0; i < mData.size(); i++) {
                     EventBean bean = mData.get(i);
@@ -204,36 +233,36 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(
                                     bean.eventTitle,
                                     getResources().getDrawable(R.drawable.ic_history_blue_grey_500_18dp));
-                            result.viewType = 0;
+                            result.viewType = SearchTypeConstances.TITLE;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventTitle, null);
+                            kv.put(bean.eventTitle, true);
                         }
                     }
 
                     if (bean.eventLocation.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.eventLocation)) {
                             SearchResult result = new SearchResult(bean.eventLocation, getResources().getDrawable(R.drawable.ic_location));
-                            result.viewType = 1;
+                            result.viewType = SearchTypeConstances.LOCATION;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventLocation, null);
+                            kv.put(bean.eventLocation, true);
                         }
                     }
 
                     if (bean.eventDate.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.eventDate)) {
                             SearchResult result = new SearchResult(bean.eventDate, getResources().getDrawable(R.drawable.ic_date));
-                            result.viewType = 2;
+                            result.viewType = SearchTypeConstances.DATE;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventDate,null);
+                            kv.put(bean.eventDate,true);
                         }
                     }
 
                     if (bean.sponsorName.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.sponsorName)) {
                             SearchResult result = new SearchResult(bean.sponsorName, getResources().getDrawable(R.drawable.ic_sponsor_in_search));
-                            result.viewType = 3;
+                            result.viewType = SearchTypeConstances.CLUB;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.sponsorName,null);
+                            kv.put(bean.sponsorName,true);
                         }
                     }
                 }
@@ -250,46 +279,50 @@ public class FavEventActivity extends AppCompatActivity {
                         searchs.add(bean);
                     }
                 }
-                mListView.setAdapter(new EventListAdapter(FavEventActivity.this, searchs));
+                Intent intent = new Intent(FavEventActivity.this,FavEventSearchResultActivity.class);
+                intent.putExtra("SearchData",(Serializable) searchs);
+                intent.putExtra("ViewType",SearchTypeConstances.UNIVERSAL);
+                startActivity(intent);
             }
 
             @Override
             public void onResultClick(SearchResult searchResult) {
                 hideSearch();
+                List<EventBean> mSearchData = new ArrayList<EventBean>();
                 switch (searchResult.viewType) {
-                    case 0:
+                    case SearchTypeConstances.TITLE:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventTitle.equals(searchResult.title)) {
-                                mListView.smoothScrollToPosition(i);
-                                break;
+                                mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case 1:
+                    case SearchTypeConstances.LOCATION:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventLocation.equals(searchResult.title)) {
-                                mListView.smoothScrollToPosition(i);
-                                break;
+                                mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case 2:
+                    case SearchTypeConstances.DATE:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventDate.equals(searchResult.title)) {
-                                mListView.smoothScrollToPosition(i);
-                                break;
+                                mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case 3:
+                    case SearchTypeConstances.CLUB:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).sponsorName.equals(searchResult.title)) {
-                                mListView.smoothScrollToPosition(i);
-                                break;
+                                mSearchData.add(mData.get(i));
                             }
                         }
                         break;
                 }
+                Intent jump = new Intent(FavEventActivity.this,FavEventSearchResultActivity.class);
+                jump.putExtra("SearchData",(Serializable)mSearchData);
+                jump.putExtra("ViewType",searchResult.viewType);
+                startActivity(jump);
             }
         });
     }
@@ -298,6 +331,7 @@ public class FavEventActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mSearchBox.getSearchOpen()) {
             hideSearch();
+            mToolbar.setTitle("我的收藏");
         } else
             super.onBackPressed();
     }
@@ -307,6 +341,6 @@ public class FavEventActivity extends AppCompatActivity {
         mSearchBox.hideCircularly(this);
         mListView.setPadding(10,0,10,0);
         mToolbar.setTitle("我的收藏");
-        mListView.setAdapter(new EventListAdapter(this, mData));
+        mListView.setAdapter(mAdapter);
     }
 }
