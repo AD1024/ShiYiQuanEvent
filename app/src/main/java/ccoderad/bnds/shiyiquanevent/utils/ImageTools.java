@@ -20,6 +20,27 @@ import java.util.Hashtable;
  */
 public class ImageTools {
 
+    /*
+    * return: random color [1: R, 2: G, 3: B]
+    * */
+    public static int[] RandomColor(){
+        int[] color = new int[3];
+        for(int i=0;i<color.length;++i){
+            color[i] = (int)(1+Math.random()*256);
+        }
+        return color;
+    }
+
+    /*
+    * Deep color Identifier for pure color
+    * */
+    public static boolean isDeepColor(int R,int G,int B){
+        return (int)(R * 0.299 + G * 0.587 + B * 0.114) <= 510;
+    }
+
+    public static boolean isDeepColor(int[] color){
+        return (int)(color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) <= 510;
+    }
 
     /**
      * Deep Color Identifier
@@ -61,7 +82,6 @@ public class ImageTools {
             }
         }
         sum *= 100;
-//        Log.i("ImageToolCalc:", Double.toString(sum));
         return sum >= 420;
     }
 
