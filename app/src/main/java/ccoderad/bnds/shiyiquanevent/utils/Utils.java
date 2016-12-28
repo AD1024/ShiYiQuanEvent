@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ccoderad.bnds.shiyiquanevent.Beans.EventBean;
+import ccoderad.bnds.shiyiquanevent.Global.URLConstances;
 
 /**
  * Created by CCoderAD on 16/7/9.
@@ -89,6 +90,7 @@ public class Utils {
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
+                bean.eventURL = URLConstances.HOME_URL + URLConstances.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 ans.add(bean);
             }
