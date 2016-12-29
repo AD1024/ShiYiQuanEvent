@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/about_me_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activities.about_me">
+    tools:context=".activities.AboutMeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

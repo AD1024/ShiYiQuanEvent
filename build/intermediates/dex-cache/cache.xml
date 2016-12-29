@@ -142,7 +142,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="8bd927df822b59a954fec69e865d81f08dd86b2c">
+        sha1="1bd055be2e3c21b1ee06af171e9b4ebefdaa0daf">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_1f7e43f470b9b81158d477204dfb942d3050a091/classes.dex" />
     </item>
     <item
@@ -304,7 +304,7 @@
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="365238497268618e036d40db96269aa46a031d8b">
+        sha1="57633b2457dc451d695a892c82ef3e22b102fddf">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_36d5e5498643f9bfe14206abbbbd3806665992e3/classes.dex" />
     </item>
     <item

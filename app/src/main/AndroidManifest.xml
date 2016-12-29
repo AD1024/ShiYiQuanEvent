@@ -24,19 +24,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.MainBrowser"
+            android:name=".activities.MainBrowser"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.about_me"
+            android:name=".activities.AboutMeActivity"
             android:label="@string/title_activity_about_me"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.OpenSourceInfoActivity"
+            android:name=".activities.OpenSourceInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_open_source_info"
             android:theme="@style/FullscreenTheme" />
@@ -47,21 +47,21 @@
             android:name="com.google.zxing.client.android.encode.EncodeActivity"
             android:label="编码设置" />
         <activity
-            android:name=".Activities.FavEventActivity"
+            android:name=".activities.FavEventActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="登录十一圈" />
         <activity
-            android:name=".Activities.UserInfoActivity"
+            android:name=".activities.UserInfoActivity"
             android:label="个人中心" />
         <activity
-            android:name=".Activities.ScannerActivity"
+            android:name=".activities.ScannerActivity"
             android:label="扫扫码"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activities.SplashScreen"
+            android:name=".activities.SplashScreen"
             android:label="十一圈Event"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -72,16 +72,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.SettingActivity"
+            android:name=".activities.SettingActivity"
             android:label="@string/action_settings" />
         <activity
-            android:name=".Activities.ClubSquareActivity"
+            android:name=".activities.ClubSquareActivity"
             android:label="社团广场" />
         <activity
-            android:name=".Activities.ClubInfoDetailActivity"
+            android:name=".activities.ClubInfoDetailActivity"
             android:label="@string/title_activity_club_info_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.FavEventSearchResultActivity"
+        <activity android:name=".activities.FavEventSearchResultActivity"
             android:label="搜索结果">
         </activity>
     </application>

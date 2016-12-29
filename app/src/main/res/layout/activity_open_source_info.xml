@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#363636"
-    tools:context=".Activities.OpenSourceInfoActivity">
+    tools:context=".activities.OpenSourceInfoActivity">
 
     <ScrollView
         android:layout_width="wrap_content"

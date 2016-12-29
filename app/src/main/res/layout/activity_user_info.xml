@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ccoderad.bnds.shiyiquanevent.Activities.UserInfoActivity">
+    tools:context="ccoderad.bnds.shiyiquanevent.activities.UserInfoActivity">
 
     <ScrollView
         android:layout_width="match_parent"

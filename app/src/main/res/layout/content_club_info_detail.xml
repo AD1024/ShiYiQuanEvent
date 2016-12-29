@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ccoderad.bnds.shiyiquanevent.Activities.ClubInfoDetailActivity"
+    tools:context="ccoderad.bnds.shiyiquanevent.activities.ClubInfoDetailActivity"
     tools:showIn="@layout/activity_club_info_detail">
 
     <LinearLayout

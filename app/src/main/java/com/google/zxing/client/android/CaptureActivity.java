@@ -37,7 +37,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -53,7 +52,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -71,7 +69,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Map;
 
-import ccoderad.bnds.shiyiquanevent.Activities.MainBrowser;
+import ccoderad.bnds.shiyiquanevent.activities.MainBrowser;
 import ccoderad.bnds.shiyiquanevent.R;
 
 /**
