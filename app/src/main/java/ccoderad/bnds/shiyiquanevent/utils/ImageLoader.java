@@ -19,12 +19,13 @@ import java.net.URL;
 public class ImageLoader {
     private ImageView mImageView;
     private String mURL;
-    private LruCache<String,Bitmap> mLruCache;
+    private LruCache<String, Bitmap> mLruCache;
+
     //Init Vars and LRUCache
-    public ImageLoader(){
+    public ImageLoader() {
         int MaxMem = (int) Runtime.getRuntime().maxMemory();
-        MaxMem/=4;
-        mLruCache=new LruCache<String,Bitmap>(MaxMem){
+        MaxMem /= 4;
+        mLruCache = new LruCache<String, Bitmap>(MaxMem) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
                 return value.getByteCount();
@@ -32,41 +33,42 @@ public class ImageLoader {
         };
     }
 
-    public void addBitmap(String url,Bitmap bitmap){
-        if(getBitmap(url)==null){
-            mLruCache.put(url,bitmap);
+    public void addBitmap(String url, Bitmap bitmap) {
+        if (getBitmap(url) == null) {
+            mLruCache.put(url, bitmap);
         }
     }
 
-    public Bitmap getBitmap(String url){
+    public Bitmap getBitmap(String url) {
         return mLruCache.get(url);
     }
 
-    public void startLoad(String url,ImageView imageView){
+    public void startLoad(String url, ImageView imageView) {
         mURL = url;
         mImageView = imageView;
         Bitmap bitmap = getBitmap(mURL);
-        if(bitmap == null){
-            new LoadTask(mImageView,mURL).execute(mURL);
-        }else{
+        if (bitmap == null) {
+            new LoadTask(mImageView, mURL).execute(mURL);
+        } else {
             mImageView.setImageBitmap(bitmap);
         }
 
     }
 
-    class LoadTask extends AsyncTask<String,Void,Bitmap>{
+    class LoadTask extends AsyncTask<String, Void, Bitmap> {
         ImageView mImageView;
         String mURL;
-        public LoadTask(ImageView imageView,String url){
+
+        public LoadTask(ImageView imageView, String url) {
             mURL = url;
-            mImageView=imageView;
+            mImageView = imageView;
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            if(mImageView.getTag().equals(mURL)) {
-                addBitmap(mURL,bitmap);
+            if (mImageView.getTag().equals(mURL)) {
+                addBitmap(mURL, bitmap);
                 mImageView.setImageBitmap(bitmap);
             }
         }
@@ -80,11 +82,11 @@ public class ImageLoader {
                 url = new URL(params[0]);
                 is = url.openStream();
 //               BufferedInputStream bis = new BufferedInputStream(is);
-                bitmap=BitmapFactory.decodeStream(is);
+                bitmap = BitmapFactory.decodeStream(is);
                 is.close();
-                if(bitmap!=null){
-                    bitmap=new ImageTools().fastblur(bitmap,8);
-                    mLruCache.put(mURL,bitmap);
+                if (bitmap != null) {
+                    bitmap = new ImageTools().fastblur(bitmap, 8);
+                    mLruCache.put(mURL, bitmap);
                 }
                 return bitmap;
             } catch (MalformedURLException e) {

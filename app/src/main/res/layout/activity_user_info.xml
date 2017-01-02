@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,26 +17,36 @@
             android:orientation="vertical"
             android:padding="10sp">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/user_info_avatar"
+                android:layout_width="140sp"
+                android:layout_height="140sp"
+                android:layout_gravity="center"
+                fresco:placeholderImage="@mipmap/logo"
+                fresco:roundAsCircle="true" />
+
+            <TextView
+                android:id="@+id/user_info_userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/logo" />
+                android:paddingTop="20sp"
+                android:text="DummyUserName"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/user_info_userEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="20sp"
-                android:textSize="20sp"
-                android:text="DummyUserEmail@email.com" />
+                android:paddingTop="10sp"
+                android:text="DummyUserEmail@email.com"
+                android:textSize="15sp" />
 
             <Button
+                android:id="@+id/user_info_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/user_info_logout"
                 android:text="登出" />
         </LinearLayout>
-
 
     </ScrollView>
 

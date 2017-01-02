@@ -33,7 +33,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/logo"/>
+                android:src="@mipmap/logo" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -78,19 +78,20 @@
                     style="?android:textAppearanceSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="65sp"
                     android:layout_marginTop="16dp"
                     android:text="登录"
-                    android:layout_marginLeft="65sp"
                     android:textStyle="bold" />
+
                 <Button
+                    android:id="@+id/login_register"
+                    style="?android:textAppearanceSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="注册"
-                    style="?android:textAppearanceSmall"
-                    android:textStyle="bold"
-                    android:id="@+id/login_register"
                     android:layout_marginLeft="40sp"
-                    android:layout_marginTop="16sp"/>
+                    android:layout_marginTop="16sp"
+                    android:text="注册"
+                    android:textStyle="bold" />
             </LinearLayout>
 
 

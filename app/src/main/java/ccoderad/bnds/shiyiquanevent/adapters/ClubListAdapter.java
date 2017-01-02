@@ -23,7 +23,7 @@ public class ClubListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ClubModel> mData;
 
-    public ClubListAdapter(Context context,List<ClubModel> clubData){
+    public ClubListAdapter(Context context, List<ClubModel> clubData) {
         mInflater = LayoutInflater.from(context);
         mData = clubData;
     }
@@ -46,14 +46,14 @@ public class ClubListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder vh;
-        if(convertView==null){
+        if (convertView == null) {
             vh = new ViewHolder();
-            convertView= mInflater.inflate(R.layout.club_list_item,null);
+            convertView = mInflater.inflate(R.layout.club_list_item, null);
             vh.tvFname = (TextView) convertView.findViewById(R.id.club_list_item_name);
             vh.tvStatus = (TextView) convertView.findViewById(R.id.club_list_item_status);
             vh.avatar = (SimpleDraweeView) convertView.findViewById(R.id.club_list_avatar);
             convertView.setTag(vh);
-        }else{
+        } else {
             vh = (ViewHolder) convertView.getTag();
         }
         vh.tvFname.setText(mData.get(position).club_name);
@@ -63,7 +63,7 @@ public class ClubListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView tvFname;
         TextView tvStatus;
         SimpleDraweeView avatar;

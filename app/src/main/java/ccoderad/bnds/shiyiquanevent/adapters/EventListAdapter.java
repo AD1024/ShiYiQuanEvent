@@ -22,11 +22,13 @@ public class EventListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ViewHolder Vh;
-    public EventListAdapter(Context context,List<EventBean> Data){
+
+    public EventListAdapter(Context context, List<EventBean> Data) {
         mData = Data;
         mContext = context;
         mInflater = LayoutInflater.from(context);
     }
+
     /*
     private String getEndTime(String Start,String Duraion){
         String ans = "";
@@ -61,9 +63,9 @@ public class EventListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView==null){
+        if (convertView == null) {
             Vh = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.event_list_item,null);
+            convertView = mInflater.inflate(R.layout.event_list_item, null);
             Vh.mDate = (TextView) convertView.findViewById(R.id.event_list_item_date);
             Vh.mDuration = (TextView) convertView.findViewById(R.id.event_list_duration);
             Vh.mSponsor = (TextView) convertView.findViewById(R.id.event_list_item_sponsor);
@@ -74,11 +76,11 @@ public class EventListAdapter extends BaseAdapter {
             Vh.mFav = (ImageView) convertView.findViewById(R.id.event_list_item_fav);
             Vh.mLocation = (TextView) convertView.findViewById(R.id.event_list_item_location);
             convertView.setTag(Vh);
-        }else{
+        } else {
             Vh = (ViewHolder) convertView.getTag();
         }
         EventBean bean = mData.get(position);
-        if(bean.isFaved){
+        if (bean.isFaved) {
             Vh.mFav.setImageResource(R.drawable.ic_favorite);
         }
         Vh.mTitle.setText(bean.eventTitle);
@@ -92,13 +94,13 @@ public class EventListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView mTitle;
         TextView mSponsor;
         TextView mDate;
         TextView mTime;
         TextView mDuration;
-//        TextView mEndTime;
+        //        TextView mEndTime;
         TextView mFollower;
         TextView mLocation;
         ImageView mFav;

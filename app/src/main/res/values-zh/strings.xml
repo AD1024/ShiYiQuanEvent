@@ -25,12 +25,20 @@
     <string name="setting_clear_event_cache">清除离线活动数据(不建议)</string>
     <string name="faved_event_no_fav">没有收藏的活动呀~</string>
     <string name="content_update_info">
-        "新特性
+        "新特性:
         1. 更新内容显示
         2. 搜索已收藏活动功能增强(新加入搜索结果页面)
+        3. 可以显示自己的头像和姓名啦~ PS:头像可以设置显示的画质哟
+
+        优化:
+        1. 社团消息列表图片加载卡顿的问题
+        2. 高压各类图片，减少存储空间的消耗
 
         修复：
         1. 活动收藏显示的Bug
-        2. 搜索框内容玄学Bug"
+        2. 搜索框内容玄学bug
+        3. 主页面菜单项的设置选项点击无效的Bug
+        "
     </string>
+    <string name="setting_high_quality_avatar_indicator">显示高质量头像图片</string>
 </resources>

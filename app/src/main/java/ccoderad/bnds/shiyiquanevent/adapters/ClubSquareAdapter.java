@@ -22,17 +22,20 @@ public class ClubSquareAdapter extends RecyclerView.Adapter<ClubSquareViewHolder
     private Context mParent;
     private LayoutInflater mInflater;
     private ClubSquareItemClickListener mListener;
-    public ClubSquareAdapter(Context context, List<ClubDetailModel> DataSet){
+
+    public ClubSquareAdapter(Context context, List<ClubDetailModel> DataSet) {
         mParent = context;
         mDataList = DataSet;
         mInflater = LayoutInflater.from(context);
     }
-    public void setOnClubItemClickListener(ClubSquareItemClickListener listener){
+
+    public void setOnClubItemClickListener(ClubSquareItemClickListener listener) {
         mListener = listener;
     }
+
     @Override
     public ClubSquareViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ClubSquareViewHolder Holder = new ClubSquareViewHolder(mInflater.inflate(R.layout.club_square_info_card,parent,false),mListener);
+        ClubSquareViewHolder Holder = new ClubSquareViewHolder(mInflater.inflate(R.layout.club_square_info_card, parent, false), mListener);
         return Holder;
     }
 

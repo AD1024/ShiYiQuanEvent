@@ -22,8 +22,8 @@ public class CacheUtils {
     /*
     * Clear cache and write new data into cache
     * */
-    public static void flushToCache(File path,String data){
-        if(path.exists()) path.delete();
+    public static void flushToCache(File path, String data) {
+        if (path.exists()) path.delete();
         try {
             path.createNewFile();
             PrintStream writer = new PrintStream(new FileOutputStream(path));
@@ -33,12 +33,13 @@ public class CacheUtils {
             e.printStackTrace();
         }
     }
+
     /*
     * Read cache from a file as a String
     * */
-    public static String readStringFromCache(File path){
+    public static String readStringFromCache(File path) {
         String ret = "";
-        if(path.exists()){
+        if (path.exists()) {
             try {
                 InputStream is = new FileInputStream(path);
                 ret = Utils.ReadStringFromInputStream(is);

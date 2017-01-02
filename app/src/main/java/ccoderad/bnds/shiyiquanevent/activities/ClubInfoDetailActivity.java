@@ -30,7 +30,7 @@ public class ClubInfoDetailActivity extends AppCompatActivity {
     private String mFullDescription;
     private String mLikeNumber;
 
-    void init(){
+    void init() {
         mTextViewClubName = (TextView) findViewById(R.id.club_info_detail_club_name);
         mLikeNumberText = (TextView) findViewById(R.id.club_info_detail_like_number);
         mFollowNumberText = (TextView) findViewById(R.id.club_info_detail_follow_nuhmber);
@@ -54,9 +54,9 @@ public class ClubInfoDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent IntentJump = new Intent(ClubInfoDetailActivity.this,MainBrowser.class);
-                IntentJump.putExtra("QR_CONTENT",CLUB_HOME);
-                Log.i("ClubURL",Data.ClubHomePage);
+                Intent IntentJump = new Intent(ClubInfoDetailActivity.this, MainBrowser.class);
+                IntentJump.putExtra("QR_CONTENT", CLUB_HOME);
+                Log.i("ClubURL", Data.ClubHomePage);
                 startActivity(IntentJump);
             }
         });

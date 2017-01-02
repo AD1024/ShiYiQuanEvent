@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/browser_relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/browser_relative"
     tools:context=".activities.MainBrowser"
     tools:openDrawer="start">
 
@@ -132,14 +132,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start">
+
             <ListView
                 android:id="@+id/club_list"
                 android:layout_width="320sp"
                 android:layout_height="match_parent"
                 android:background="#ffffff"
-                android:choiceMode="singleChoice">
+                android:choiceMode="singleChoice"></ListView>
 
-            </ListView>
+            <LinearLayout
+                android:id="@+id/browser_club_list_indicator_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="请先" />
+
+                <Button
+                    android:id="@+id/browser_club_list_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="登录" />
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

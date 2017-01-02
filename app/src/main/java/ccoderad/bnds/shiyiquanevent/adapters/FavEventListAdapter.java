@@ -21,11 +21,13 @@ public class FavEventListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ViewHolder Vh;
-    public FavEventListAdapter(Context context,List<EventBean> Data){
+
+    public FavEventListAdapter(Context context, List<EventBean> Data) {
         mData = Data;
         mContext = context;
         mInflater = LayoutInflater.from(context);
     }
+
     @Override
     public int getCount() {
         return mData.size();
@@ -43,9 +45,9 @@ public class FavEventListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView==null){
+        if (convertView == null) {
             Vh = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.fav_event_item,null);
+            convertView = mInflater.inflate(R.layout.fav_event_item, null);
             Vh.mDate = (TextView) convertView.findViewById(R.id.fav_event_list_item_date);
             Vh.mDuration = (TextView) convertView.findViewById(R.id.fav_event_list_duration);
             Vh.mSponsor = (TextView) convertView.findViewById(R.id.fav_event_list_item_sponsor);
@@ -54,7 +56,7 @@ public class FavEventListAdapter extends BaseAdapter {
             Vh.mFollower = (TextView) convertView.findViewById(R.id.fav_event_list_item_follower);
             Vh.mLocation = (TextView) convertView.findViewById(R.id.fav_event_list_item_location);
             convertView.setTag(Vh);
-        }else{
+        } else {
             Vh = (ViewHolder) convertView.getTag();
         }
         EventBean bean = mData.get(position);
@@ -68,7 +70,7 @@ public class FavEventListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView mTitle;
         TextView mSponsor;
         TextView mDate;

@@ -3,34 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
+        android:id="@+id/alert_club_qr_title_container"
         android:layout_width="match_parent"
         android:layout_height="60sp"
         android:layout_gravity="center"
-        android:paddingLeft="10sp"
         android:background="#1cecbf"
-        android:id="@+id/alert_club_qr_title_container">
+        android:paddingLeft="10sp">
+
         <TextView
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="扫一扫参观社团"
             android:textColor="#FFF"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
     </LinearLayout>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="20sp"
-        android:textStyle="bold"
         android:id="@+id/alert_club_qr_club_name"
-        android:textSize="20sp"
-        android:layout_gravity="center"/>
-    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="20sp"
-        android:id="@+id/alert_club_qr_QR_CODE"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/alert_club_qr_QR_CODE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="20sp" />
 
 </LinearLayout>

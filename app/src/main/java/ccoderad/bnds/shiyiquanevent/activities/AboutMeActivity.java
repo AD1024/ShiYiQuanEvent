@@ -27,6 +27,7 @@ public class AboutMeActivity extends AppCompatActivity {
 
 
     private CardView openSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

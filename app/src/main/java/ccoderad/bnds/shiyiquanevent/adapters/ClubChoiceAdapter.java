@@ -3,6 +3,7 @@ package ccoderad.bnds.shiyiquanevent.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.util.LruCache;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -16,6 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.BasePostprocessor;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.imagepipeline.request.Postprocessor;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -46,24 +53,18 @@ public class ClubChoiceAdapter extends BaseAdapter {
     WebView outer;
     DisplayImageOptions myOption;
     Context Parent;
-    private LruCache<String,Bitmap> mCache;
-    public ClubChoiceAdapter(Context context, List<ClubModel> datas, SweetSheet parent, WebView wb, DisplayImageOptions cacheOption){
+
+    Postprocessor mImagePostProcessor;
+    PipelineDraweeController mController;
+
+    public ClubChoiceAdapter(Context context, List<ClubModel> datas, SweetSheet parent, WebView wb, DisplayImageOptions cacheOption) {
         Fresco.initialize(context);
         Parent = context;
         mInflater = LayoutInflater.from(context);
         mData = datas;
         mParent = parent;
         outer = wb;
-        mCache = new LruCache<>((int) (Runtime.getRuntime().freeMemory()/4));
         myOption = cacheOption;
-    }
-
-    public LruCache<String,Bitmap> getCache(){
-        return this.mCache;
-    }
-
-    public void passCache(LruCache<String,Bitmap> mData){
-        this.mCache=mData;
     }
 
     @Override
@@ -84,61 +85,44 @@ public class ClubChoiceAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder vh;
-        if(convertView==null){
+        if (convertView == null) {
             vh = new ViewHolder();
-            convertView= mInflater.inflate(R.layout.club_chat_choice_list_item,null);
+            convertView = mInflater.inflate(R.layout.club_chat_choice_list_item, null);
             vh.tvClubname = (TextView) convertView.findViewById(R.id.chat_club_name);
             vh.goToChat = (ImageButton) convertView.findViewById(R.id.go_to_chat);
             vh.goToShare = (ImageButton) convertView.findViewById(R.id.go_to_share);
-            vh.mBackGround = (ImageView) convertView.findViewById(R.id.choice_list_background);
+            vh.mBackGround = (SimpleDraweeView) convertView.findViewById(R.id.choice_list_background);
             convertView.setTag(vh);
-        }else{
+        } else {
             vh = (ViewHolder) convertView.getTag();
         }
         final ImageView mImage = vh.mBackGround;
         mImage.setTag(mData.get(position).LargeAvatarURL);
-        final TextView mText = vh.tvClubname;
-        final String key = mData.get(position).LargeAvatarURL;
-        if(mCache.get(mData.get(position).LargeAvatarURL)==null) {
-            ImageLoader.getInstance()
-                    .loadImage(mData.get(position).LargeAvatarURL, myOption, new ImageLoadingListener() {
-                        @Override
-                        public void onLoadingStarted(String s, View view) {
 
-                        }
+        ImageRequest mImageRequest;
+        // Configuration For Simple Drawee View
+        mImagePostProcessor = new BasePostprocessor() {
 
-                        @Override
-                        public void onLoadingFailed(String s, View view, FailReason failReason) {
-
-                        }
-
-                        @Override
-                        public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                            ImageTools tool = new ImageTools();
-                            Log.i("Start Analyze:", s);
-                            Bitmap set = tool.fastblur(new ImageTools().CompressBitmap(bitmap, Bitmap.CompressFormat.PNG), 5);
-                            mCache.put(key,set);
-                            if (mImage.getTag().equals(s)) {
-                                mImage.setImageBitmap(set);
-                                if (tool.isDeepColor(set)) {
-                                    mText.setTextColor(Color.WHITE);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onLoadingCancelled(String s, View view) {
-
-                        }
-                    });
-        }else{
-            mImage.setImageBitmap(mCache.get(key));
-            if(new ImageTools().isDeepColor(mCache.get(key))){
-                mText.setTextColor(Color.WHITE);
-            }else{
-                mText.setTextColor(Color.rgb(120,120,120));
+            @Override
+            public void process(Bitmap bitmap) {
+                bitmap = ImageTools.fastblur(bitmap, 15);
             }
-        }
+
+            @Override
+            public String getName() {
+//                return super.getName();
+                return "BlurProcessor";
+            }
+        };
+        mImageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mData.get(position).LargeAvatarURL))
+                .setPostprocessor(mImagePostProcessor)
+                .build();
+        mController = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                .setImageRequest(mImageRequest)
+                .setOldController(vh.mBackGround.getController())
+                .build();
+        vh.mBackGround.setController(mController);
+
         vh.tvClubname.setText(mData.get(position).club_name);
         vh.goToChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,22 +130,21 @@ public class ClubChoiceAdapter extends BaseAdapter {
                 if (mParent.isShow()) {
                     mParent.dismiss();
                 }
-                Hashtable<EncodeHintType,String> hint = new Hashtable<EncodeHintType, String>();
-                hint.put(EncodeHintType.CHARACTER_SET,"UTF-8");
-                BitMatrix qr=null;
+                Hashtable<EncodeHintType, String> hint = new Hashtable<EncodeHintType, String>();
+                hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+                BitMatrix qr = null;
                 try {
-                    qr = new MultiFormatWriter().encode(HOME_URL+"club/"+mData.get(position).sname, BarcodeFormat.QR_CODE,800,800,hint);
+                    qr = new MultiFormatWriter().encode(HOME_URL + "club/" + mData.get(position).sname, BarcodeFormat.QR_CODE, 800, 800, hint);
                 } catch (WriterException e) {
                     e.printStackTrace();
                 }
                 ImageTools tools = new ImageTools();
-                View vv = mInflater.inflate(R.layout.alert_club_qr,null);
+                View vv = mInflater.inflate(R.layout.alert_club_qr, null);
                 TextView tvCbName = (TextView) vv.findViewById(R.id.alert_club_qr_club_name);
                 ImageView ivQR = (ImageView) vv.findViewById(R.id.alert_club_qr_QR_CODE);
                 ivQR.setImageBitmap(tools.toBitmap(qr));
                 tvCbName.setText(mData.get(position).club_name);
                 new AlertDialog.Builder(Parent).setView(vv).show();
-                //outer.loadUrl(HOME_URL + "user/" + "?redirect=sender_div");
             }
         });
         vh.goToShare.setOnClickListener(new View.OnClickListener() {
@@ -183,11 +166,11 @@ public class ClubChoiceAdapter extends BaseAdapter {
         return convertView;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView tvClubname;
         ImageButton goToChat;
         ImageButton goToShare;
-        ImageView mBackGround;
+        SimpleDraweeView mBackGround;
     }
 
 }

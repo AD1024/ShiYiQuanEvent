@@ -52,7 +52,7 @@ import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
 public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, ClubSquareItemClickListener {
     //Constants
-    private final String REQUEST_URL = URLConstances.HOME_URL + URLConstances.QUARE_URL+"?api=True";
+    private final String REQUEST_URL = URLConstances.HOME_URL + URLConstances.QUARE_URL + "?api=True";
 
     // Plugins
     private XRecyclerView mClubList;
@@ -78,22 +78,22 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     private File eventCacheDir;
     private JSONArray mCacheData;
 
-    Map<String,String> mRecoder;
+    Map<String, String> mRecoder;
 
     /*
     * Initializer
     * */
-    private void Initialize(){
+    private void Initialize() {
 
         mInflater = LayoutInflater.from(this);
         mDataList = new ArrayList<>();
-        mClubListAdapter = new ClubSquareAdapter(this,mDataList);
+        mClubListAdapter = new ClubSquareAdapter(this, mDataList);
         mClubListAdapter.setOnClubItemClickListener(this);
-        mPreference = getSharedPreferences(PreferencesConstances.LOGIN_INFO,MODE_PRIVATE);
-        islogined = mPreference.getBoolean(PreferencesConstances.LOGIN_INFO,false);
+        mPreference = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
+        islogined = mPreference.getBoolean(PreferencesConstances.LOGIN_INFO, false);
         mBackTop = (FloatingActionButton) findViewById(R.id.club_square_fab);
         mClubList = (XRecyclerView) findViewById(R.id.club_square_list);
-        View headerView = mInflater.inflate(R.layout.club_square_header,null);
+        View headerView = mInflater.inflate(R.layout.club_square_header, null);
         mRecoder = new HashMap<>();
 
         // View Injection
@@ -103,7 +103,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mClubCategory = (Spinner) findViewById(R.id.club_square_category);
         mSearchClub.setOnClickListener(this);
         mClubList.setAdapter(mClubListAdapter);
-        mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mClubList.setLayoutManager(mLayoutManager);
         mClubList.addItemDecoration(new BGASpaceItemDecoration(10));
         mClubList.setLoadingMoreEnabled(true);
@@ -125,14 +125,14 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
-            case R.id.club_square_list_header_btn:{
+        switch (id) {
+            case R.id.club_square_list_header_btn: {
                 // Stub
                 String ClubName = mClubNameSearch.getText().toString();
-                if(!TextUtils.isEmpty(ClubName)){
+                if (!TextUtils.isEmpty(ClubName)) {
                     // Stub
 
-                }else{
+                } else {
                     // Stub
                 }
                 break;
@@ -141,36 +141,37 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     }
 
     @NonNull
-    private String GetClubType(){
+    private String GetClubType() {
         String TypeName = mClubCategory.getSelectedItem().toString();
-        if(TypeName.equals("全部")){
+        if (TypeName.equals("全部")) {
             return "all";
-        }else if(TypeName.equals("同好")){
+        } else if (TypeName.equals("同好")) {
             return "intrest";
-        }else if(TypeName.equals("流行文化")){
+        } else if (TypeName.equals("流行文化")) {
             return "pop_culture";
-        }else if(TypeName.equals("科技")){
+        } else if (TypeName.equals("科技")) {
             return "technology";
-        }else if(TypeName.equals("传媒")){
+        } else if (TypeName.equals("传媒")) {
             return "media";
-        }else if(TypeName.equals("体育")){
+        } else if (TypeName.equals("体育")) {
             return "sport";
-        }else if(TypeName.equals("艺术")){
+        } else if (TypeName.equals("艺术")) {
             return "art";
-        }else if(TypeName.equals("校园")){
+        } else if (TypeName.equals("校园")) {
             return "campus";
-        }else if(TypeName.equals("慈善")){
+        } else if (TypeName.equals("慈善")) {
             return "charity";
-        }else{
+        } else {
             return "other";
         }
     }
-    private void GetSquareData(){
+
+    private void GetSquareData() {
         mClubList.setLoadingMoreEnabled(true);
         setTitle("少女祈祷中...");
         String RequestURL = "";
         RequestURL = REQUEST_URL + "&index=" + Utils.Int2String(mIndex) + "&category=" + GetClubType();
-        Log.i("RequestURL",RequestURL);
+        Log.i("RequestURL", RequestURL);
         JsonArrayRequest mRequest = new JsonArrayRequest(RequestURL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -179,11 +180,11 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("ErrorFetchingData",error.toString());
-                Toast.makeText(ClubSquareActivity.this,"好似出现了些小问题QAQ",Toast.LENGTH_LONG);
-                if(Utils.isNetWorkAvailable(ClubSquareActivity.this)){
+                Log.e("ErrorFetchingData", error.toString());
+                Toast.makeText(ClubSquareActivity.this, "好似出现了些小问题QAQ", Toast.LENGTH_LONG);
+                if (Utils.isNetWorkAvailable(ClubSquareActivity.this)) {
                     setTitle("AD1024被折寿1s");
-                }else{
+                } else {
                     setTitle("进入了没有网络的异次元...");
                 }
             }
@@ -191,16 +192,16 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mRequestQueue.add(mRequest);
     }
 
-    private void WriteCache(JSONArray Data){
+    private void WriteCache(JSONArray Data) {
         File eventCacheDir = new File(mCacheDir, CacheUtils.CLUB_SQUARE_CACHE_DIR_NAME);
-        if(!eventCacheDir.exists()) eventCacheDir.mkdir();
-        File eventCache = new File(eventCacheDir,CacheUtils.CLUB_SQUARE_CACHE_NAME);
-        CacheUtils.flushToCache(eventCache,Data.toString());
+        if (!eventCacheDir.exists()) eventCacheDir.mkdir();
+        File eventCache = new File(eventCacheDir, CacheUtils.CLUB_SQUARE_CACHE_NAME);
+        CacheUtils.flushToCache(eventCache, Data.toString());
     }
 
     @Nullable
-    private JSONArray ReadCache(){
-        File cacheFile = new File(eventCacheDir,CacheUtils.EVENT_CACHE_NAME);
+    private JSONArray ReadCache() {
+        File cacheFile = new File(eventCacheDir, CacheUtils.EVENT_CACHE_NAME);
         try {
             JSONArray ret = new JSONArray(CacheUtils.readStringFromCache(cacheFile));
             return ret;
@@ -210,12 +211,12 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         return null;
     }
 
-    private void HandleSquareData(JSONArray DataSet){
+    private void HandleSquareData(JSONArray DataSet) {
         WriteCache(DataSet);
         JSONObject ClubData;
         JSONArray Followee;
         JSONObject Info;
-        for(int i=0;i<DataSet.length();++i){
+        for (int i = 0; i < DataSet.length(); ++i) {
             try {
                 // Get Out One Club Data
                 ClubData = DataSet.getJSONObject(i);
@@ -228,7 +229,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
 
                 // Handle Followees' data
                 Followee = ClubData.getJSONArray("followee");
-                for(int j=0;j<Followee.length();++j){
+                for (int j = 0; j < Followee.length(); ++j) {
                     infoData.Followee.add(Followee.getString(j));
                 }
 
@@ -240,10 +241,10 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
                 infoData.ClubDescription = Info.getString("full_intro"); // full intro
 
                 // Put into mRecoder to judge the page id
-                if(mRecoder.containsKey(infoData.club_name)){
+                if (mRecoder.containsKey(infoData.club_name)) {
                     mClubList.refreshComplete();
                     mClubList.loadMoreComplete();
-                    Toast.makeText(ClubSquareActivity.this,"到头啦",Toast.LENGTH_LONG);
+                    Toast.makeText(ClubSquareActivity.this, "到头啦", Toast.LENGTH_LONG);
                     mClubList.setLoadingMoreEnabled(false);
                     setTitle("社团广场");
                 }
@@ -256,7 +257,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
 
                 // Handle Avatar URL and HomePage URL
                 infoData.parseURL();
-                infoData.ChangeHomePage("/club/"+infoData.sname);
+                infoData.ChangeHomePage("/club/" + infoData.sname);
 
                 // Insert data
                 mDataList.add(infoData);
@@ -275,23 +276,26 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     * */
     @Override
     public void onRefresh() {
-        mDataList.clear();mIndex = 1;
+        mDataList.clear();
+        mIndex = 1;
         GetSquareData();
         mClubListAdapter.notifyDataSetChanged();
 
     }
+
     @Override
     public void onLoadMore() {
         mIndex++;
         GetSquareData();
         mClubListAdapter.notifyDataSetChanged();
     }
+
     @Override
     public void onClubItemClick(View v, int position) {
         Bundle Data = new Bundle();
-        ClubDetailModel model = mDataList.get(position-1);
-        Data.putSerializable("ClubData",model);
-        Intent it = new Intent(this,ClubInfoDetailActivity.class);
+        ClubDetailModel model = mDataList.get(position - 1);
+        Data.putSerializable("ClubData", model);
+        Intent it = new Intent(this, ClubInfoDetailActivity.class);
         it.putExtras(Data);
         startActivity(it);
     }
@@ -303,7 +307,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_square);
         Initialize();
-        if(!Utils.isNetWorkAvailable(this)){
+        if (!Utils.isNetWorkAvailable(this)) {
             JSONArray cacheData = ReadCache();
             if (cacheData != null) {
                 HandleSquareData(cacheData);

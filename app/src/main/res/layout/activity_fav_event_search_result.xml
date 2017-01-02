@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="5sp"
     android:paddingEnd="5sp"
+    android:paddingLeft="5sp"
     tools:context="ccoderad.bnds.shiyiquanevent.activities.FavEventSearchResultActivity">
 
     <ListView
+        android:id="@+id/fav_event_search_result_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fav_event_search_result_list">
+        android:layout_height="match_parent">
 
     </ListView>
 

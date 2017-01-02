@@ -22,7 +22,7 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
  * Created by CCoderAD on 16/9/14.
  * http://ad1024.github.io
  */
-public class ScannerActivity extends AppCompatActivity implements QRCodeView.Delegate{
+public class ScannerActivity extends AppCompatActivity implements QRCodeView.Delegate {
 
     private ZXingView mQRScanner;
     private Button btnOpenFlash;
@@ -49,25 +49,26 @@ public class ScannerActivity extends AppCompatActivity implements QRCodeView.Del
         btnOpenFlash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!bFlashOpen){
+                if (!bFlashOpen) {
                     mQRScanner.openFlashlight();
                     btnOpenFlash.setText("关闭闪光灯");
-                    bFlashOpen=true;
-                }else {
+                    bFlashOpen = true;
+                } else {
                     mQRScanner.closeFlashlight();
                     btnOpenFlash.setText("打开闪光灯");
-                    bFlashOpen=false;
+                    bFlashOpen = false;
                 }
             }
         });
         btnOpenGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(BGAPhotoPickerActivity.newIntent(ScannerActivity.this,null,1,null,false),CHOOSE_PICTURE_REQ);
+                startActivityForResult(BGAPhotoPickerActivity.newIntent(ScannerActivity.this, null, 1, null, false), CHOOSE_PICTURE_REQ);
             }
         });
         mQRScanner.startSpot();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -84,8 +85,8 @@ public class ScannerActivity extends AppCompatActivity implements QRCodeView.Del
     public void onScanQRCodeSuccess(String result) {
         Viberate(200);
         Intent retData = new Intent();
-        retData.putExtra("QRContent",result);
-        setResult(SUCCESS_RESULT_CODE,retData);
+        retData.putExtra("QRContent", result);
+        setResult(SUCCESS_RESULT_CODE, retData);
         finish();
     }
 
@@ -102,8 +103,8 @@ public class ScannerActivity extends AppCompatActivity implements QRCodeView.Del
         super.onDestroy();
     }
 
-    public void Viberate(long time){
-        Vibrator vibrator=(Vibrator)getSystemService(VIBRATOR_SERVICE);
+    public void Viberate(long time) {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(time);
     }
 
@@ -119,13 +120,13 @@ public class ScannerActivity extends AppCompatActivity implements QRCodeView.Del
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mQRScanner.showScanRect();
-        if(requestCode==CHOOSE_PICTURE_REQ && resultCode == Activity.RESULT_OK){
-            ParseTask task =  new ParseTask();
+        if (requestCode == CHOOSE_PICTURE_REQ && resultCode == Activity.RESULT_OK) {
+            ParseTask task = new ParseTask();
             task.execute(BGAPhotoPickerActivity.getSelectedImages(data).get(0));
         }
     }
 
-    private class ParseTask extends AsyncTask<String,Void,String>{
+    private class ParseTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -135,12 +136,12 @@ public class ScannerActivity extends AppCompatActivity implements QRCodeView.Del
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(TextUtils.isEmpty(s)){
-                Toast.makeText(ScannerActivity.this,"未发现二维码",Toast.LENGTH_SHORT).show();
-            }else{
+            if (TextUtils.isEmpty(s)) {
+                Toast.makeText(ScannerActivity.this, "未发现二维码", Toast.LENGTH_SHORT).show();
+            } else {
                 Intent it = new Intent();
-                it.putExtra("QRContent",s);
-                setResult(SUCCESS_RESULT_CODE,it);
+                it.putExtra("QRContent", s);
+                setResult(SUCCESS_RESULT_CODE, it);
                 ScannerActivity.this.finish();
             }
         }

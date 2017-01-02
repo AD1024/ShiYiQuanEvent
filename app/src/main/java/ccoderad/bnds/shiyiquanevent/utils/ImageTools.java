@@ -11,6 +11,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Hashtable;
@@ -23,10 +24,10 @@ public class ImageTools {
     /*
     * return: random color [1: R, 2: G, 3: B]
     * */
-    public static int[] RandomColor(){
+    public static int[] RandomColor() {
         int[] color = new int[3];
-        for(int i=0;i<color.length;++i){
-            color[i] = (int)(1+Math.random()*256);
+        for (int i = 0; i < color.length; ++i) {
+            color[i] = (int) (1 + Math.random() * 256);
         }
         return color;
     }
@@ -34,12 +35,12 @@ public class ImageTools {
     /*
     * Deep color Identifier for pure color
     * */
-    public static boolean isDeepColor(int R,int G,int B){
-        return (int)(R * 0.299 + G * 0.587 + B * 0.114) <= 510;
+    public static boolean isDeepColor(int R, int G, int B) {
+        return (int) (R * 0.299 + G * 0.587 + B * 0.114) <= 510;
     }
 
-    public static boolean isDeepColor(int[] color){
-        return (int)(color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) <= 510;
+    public static boolean isDeepColor(int[] color) {
+        return (int) (color[0] * 0.299 + color[1] * 0.587 + color[2] * 0.114) <= 510;
     }
 
     /**
@@ -346,18 +347,18 @@ public class ImageTools {
     }
 
     @Nullable
-    public static Bitmap String2QR(String msg, BarcodeFormat QRFormat, int width, int height){
-        Hashtable<EncodeHintType,String> hint = new Hashtable<>();
-        hint.put(EncodeHintType.CHARACTER_SET,"UTF-8");
+    public static Bitmap String2QR(String msg, BarcodeFormat QRFormat, int width, int height) {
+        Hashtable<EncodeHintType, String> hint = new Hashtable<>();
+        hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
         BitMatrix qr = null;
         try {
-            qr = new MultiFormatWriter().encode(msg,QRFormat,width,height,hint);
+            qr = new MultiFormatWriter().encode(msg, QRFormat, width, height, hint);
         } catch (WriterException e) {
             e.printStackTrace();
         }
-        if(qr == null){
+        if (qr == null) {
             return null;
-        }else{
+        } else {
             return toBitmap(qr);
         }
     }

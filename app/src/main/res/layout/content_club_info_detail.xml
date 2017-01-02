@@ -13,13 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10sp">
+
         <TextView
+            android:id="@+id/club_info_detail_club_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/club_info_detail_club_name"
+            android:text="ClubName"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="ClubName"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -29,40 +30,40 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_favorite"/>
+                android:src="@drawable/ic_favorite" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="喜欢人数:"/>
+                android:text="喜欢人数:" />
+
             <TextView
+                android:id="@+id/club_info_detail_like_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/club_info_detail_like_number"
-                android:text="L"/>
+                android:text="L" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10sp"
-                android:text="关注人数:"/>
+                android:text="关注人数:" />
 
             <TextView
+                android:id="@+id/club_info_detail_follow_nuhmber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/club_info_detail_follow_nuhmber"
-                android:text="F"/>
+                android:text="F" />
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/club_info_detail_full_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/club_info_detail_full_description"
             android:paddingTop="10sp"
-            android:textSize="15sp"
-            android:text="Description"/>
-
+            android:text="Description"
+            android:textSize="15sp" />
 
 
     </LinearLayout>

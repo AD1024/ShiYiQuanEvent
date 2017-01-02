@@ -7,45 +7,47 @@
     android:fitsSystemWindows="true"
     android:padding="5sp"
     tools:context="ccoderad.bnds.shiyiquanevent.activities.ClubSquareActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingTop="30sp">
 
         <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/club_square_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/club_square_list">
-        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+            android:layout_height="match_parent"></com.jcodecraeer.xrecyclerview.XRecyclerView>
 
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/club_square_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_back_to_top"
-        android:id="@+id/club_square_fab"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16sp"
+        android:src="@drawable/ic_back_to_top"
         app:fabSize="normal"
-        app:layout_behavior="ccoderad.bnds.shiyiquanevent.behaviors.ScrollFabBehavior"
-        android:layout_gravity="bottom|end" />
+        app:layout_behavior="ccoderad.bnds.shiyiquanevent.behaviors.ScrollFabBehavior" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="社团分类:"
             android:textSize="15sp" />
+
         <Spinner
             android:id="@+id/club_square_category"
-            android:entries="@array/club_square_category_names"
-
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+
+            android:layout_height="wrap_content"
+            android:entries="@array/club_square_category_names">
 
         </Spinner>
     </LinearLayout>

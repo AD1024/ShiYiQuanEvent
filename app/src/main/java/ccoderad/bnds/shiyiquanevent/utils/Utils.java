@@ -28,43 +28,45 @@ import ccoderad.bnds.shiyiquanevent.global.URLConstances;
  */
 public class Utils {
 
-    public static File getCacheFileDir(Context parent){
-        String cacheName="";
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !Environment.isExternalStorageRemovable()){
+    public static File getCacheFileDir(Context parent) {
+        String cacheName = "";
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !Environment.isExternalStorageRemovable()) {
             cacheName = parent.getExternalCacheDir().getPath();
-        }else{
+        } else {
             cacheName = parent.getCacheDir().getPath();
         }
         return new File(cacheName);
     }
 
-    public static File getCacheFile(Context parent,String fileNameToAdd){
+    public static File getCacheFile(Context parent, String fileNameToAdd) {
         File dir = getCacheFileDir(parent);
         String cacheFile = dir.getPath();
-        cacheFile+=File.separator+fileNameToAdd;
-        Log.i("CacheFile:",cacheFile);
+        cacheFile += File.separator + fileNameToAdd;
+        Log.i("CacheFile:", cacheFile);
         return new File(cacheFile);
     }
 
-    public static int getAppVersion(Context parent){
+    public static int getAppVersion(Context parent) {
         try {
-            PackageInfo info = parent.getPackageManager().getPackageInfo(parent.getPackageName(),0);
-            return  info.versionCode;
+            PackageInfo info = parent.getPackageManager().getPackageInfo(parent.getPackageName(), 0);
+            return info.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return 1;
     }
+
     /**
      * Name:Read String From InputStream
-     * */
-    public static String ReadStringFromInputStream(InputStream is){
+     */
+    public static String ReadStringFromInputStream(InputStream is) {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
-        String tmp="";String ans="";
+        String tmp = "";
+        String ans = "";
         try {
-            while((tmp=br.readLine())!=null){
-                ans+=tmp;
+            while ((tmp = br.readLine()) != null) {
+                ans += tmp;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,13 +74,13 @@ public class Utils {
         return ans;
     }
 
-    public static List<EventBean> parseEvent(JSONArray jsonArray){
+    public static List<EventBean> parseEvent(JSONArray jsonArray) {
         JSONObject jsonObject;
         List<EventBean> ans = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 EventBean bean = new EventBean();
-                if(jsonArray.get(i) == null) continue;
+                if (jsonArray.get(i).equals(null)) continue;
                 jsonObject = jsonArray.getJSONObject(i);
                 JSONObject content = jsonObject.getJSONObject("data");
                 bean.eventTitle = content.getString("subject");
@@ -95,25 +97,27 @@ public class Utils {
                 ans.add(bean);
             }
             return ans;
-        }catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return ans;
     }
 
-    public static String Int2String(int x){
+    public static String Int2String(int x) {
         return Integer.toString(x);
     }
+
     /**
      * This Function is used to judge wether the network is available
+     *
      * @return NetWorkkStat
-     * */
-    public static boolean isNetWorkAvailable(Context context){
+     */
+    public static boolean isNetWorkAvailable(Context context) {
         Context currContext = context;
-        if(currContext!=null){
+        if (currContext != null) {
             ConnectivityManager manager = (ConnectivityManager) currContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netWorkInfo = manager.getActiveNetworkInfo();
-            if(netWorkInfo!=null){
+            if (netWorkInfo != null) {
                 return netWorkInfo.isAvailable();
             }
 

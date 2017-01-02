@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,7 +83,7 @@ public class FavEventActivity extends AppCompatActivity {
         if (mData.size() > 0) {
             mAdapter = new FavEventListAdapter(this, mData);
             mListView.setAdapter(mAdapter);
-        }else {
+        } else {
             Toast.makeText(this, "啊哦，你还没收藏任何活动呢", Toast.LENGTH_LONG).show();
             mNoFavIndicator.setVisibility(View.VISIBLE);
 
@@ -92,51 +93,52 @@ public class FavEventActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 new AlertDialog.Builder(FavEventActivity.this)
                         .setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(FavEventActivity.this,"呜呜呜，竟然抛弃伦家",Toast.LENGTH_LONG).show();
-                        EventBean del = mData.get(position);
-                        File cacheFav = new File(Utils.getCacheFile(FavEventActivity.this,"event"),FAV_FILE);
-                        InputStream in;
-                        try {
-                            in = new FileInputStream(cacheFav);
-                            String result = Utils.ReadStringFromInputStream(in);
-                            JSONArray saved;
-                            if(result.isEmpty()) saved = new JSONArray();
-                            else saved = new JSONArray(result);
-                            JSONObject obj;
-                            JSONObject data;
-                            for(int i=0;i<saved.length();i++){
-                                if(saved.get(i) == null) continue;
-                                obj = saved.getJSONObject(i);
-                                data=obj.getJSONObject("data");
-                                if(data.getString("content").equals(del.eventContent)
-                                        && obj.getString("sponsor_fname").equals(del.sponsorName)){
-                                    saved.remove(i);break;
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(FavEventActivity.this, "呜呜呜，竟然抛弃伦家", Toast.LENGTH_LONG).show();
+                                EventBean del = mData.get(position);
+                                File cacheFav = new File(Utils.getCacheFile(FavEventActivity.this, "event"), FAV_FILE);
+                                InputStream in;
+                                try {
+                                    in = new FileInputStream(cacheFav);
+                                    String result = Utils.ReadStringFromInputStream(in);
+                                    JSONArray saved;
+                                    if (result.isEmpty()) saved = new JSONArray();
+                                    else saved = new JSONArray(result);
+                                    JSONObject obj;
+                                    JSONObject data;
+                                    for (int i = 0; i < saved.length(); i++) {
+                                        if (saved.get(i) == null) continue;
+                                        obj = saved.getJSONObject(i);
+                                        data = obj.getJSONObject("data");
+                                        if (data.getString("content").equals(del.eventContent)
+                                                && obj.getString("sponsor_fname").equals(del.sponsorName)) {
+                                            saved.remove(i);
+                                            break;
+                                        }
+                                    }
+                                    PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
+                                    cacheFav.createNewFile();
+                                    writer.print(saved.toString());
+                                    writer.close();
+                                    in.close();
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
+                                mData.remove(position);
+                                if (mData.size() == 0) {
+                                    mNoFavIndicator.setVisibility(View.VISIBLE);
+                                }
+                                mAdapter.notifyDataSetChanged();
                             }
-                            PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
-                            cacheFav.createNewFile();
-                            writer.print(saved.toString());
-                            writer.close();
-                            in.close();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        mData.remove(position);
-                        if(mData.size() == 0){
-                            mNoFavIndicator.setVisibility(View.VISIBLE);
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }).setNegativeButton("保留", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton("保留", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ViewTools.ToastInfo(FavEventActivity.this,"宝宝很开心！",false);
+                        ViewTools.ToastInfo(FavEventActivity.this, "宝宝很开心！", false);
                     }
                 }).setTitle("删除Or保留QwQ?").setMessage("要和宝宝说再见了吗QAQ?").show();
                 return false;
@@ -145,20 +147,21 @@ public class FavEventActivity extends AppCompatActivity {
     }
 
     private void LoadFavData() {
-        File favFile = new File(new Utils().getCacheFile(this, "event"), FAV_FILE);
+        File favFile = new File(Utils.getCacheFile(this, "event"), FAV_FILE);
         InputStream is;
+        mData = new ArrayList<>();
         try {
             is = new FileInputStream(favFile);
-            String data = new Utils().ReadStringFromInputStream(is);
+            String data = Utils.ReadStringFromInputStream(is);
+            Log.i("FavData",data);
             JSONArray array = new JSONArray(data);
-            mData = new Utils().parseEvent(array);
+            mData = Utils.parseEvent(array);
             return;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mData = new ArrayList<>();
     }
 
     @Override
@@ -188,7 +191,7 @@ public class FavEventActivity extends AppCompatActivity {
                 hideSearch();
             }
         });
-        mListView.setPadding(10,30,10,0);
+        mListView.setPadding(10, 30, 10, 0);
         kv = new HashMap<String, Boolean>();
         mListView.setVisibility(View.INVISIBLE);
         mSearchBox.setSearchListener(new SearchBox.SearchListener() {
@@ -210,12 +213,12 @@ public class FavEventActivity extends AppCompatActivity {
 
             @Override
             public void onSearchTermChanged(String s) {
-                if(System.currentTimeMillis() - timeGap < 1500){
+                if (System.currentTimeMillis() - timeGap < 1500) {
                     timeGap = System.currentTimeMillis();
                     return;
                 }
                 timeGap = System.currentTimeMillis();
-                if(TextUtils.isEmpty(s) || s.equals(" ")){
+                if (TextUtils.isEmpty(s) || s.equals(" ")) {
                     mSearchBox.clearSearchable();
                 }
 
@@ -250,7 +253,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(bean.eventDate, getResources().getDrawable(R.drawable.ic_date));
                             result.viewType = SearchTypeConstances.DATE;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.eventDate,true);
+                            kv.put(bean.eventDate, true);
                         }
                     }
 
@@ -259,7 +262,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(bean.sponsorName, getResources().getDrawable(R.drawable.ic_sponsor_in_search));
                             result.viewType = SearchTypeConstances.CLUB;
                             mSearchBox.addSearchable(result);
-                            kv.put(bean.sponsorName,true);
+                            kv.put(bean.sponsorName, true);
                         }
                     }
                 }
@@ -276,9 +279,9 @@ public class FavEventActivity extends AppCompatActivity {
                         searchs.add(bean);
                     }
                 }
-                Intent intent = new Intent(FavEventActivity.this,FavEventSearchResultActivity.class);
-                intent.putExtra("SearchData",(Serializable) searchs);
-                intent.putExtra("ViewType",SearchTypeConstances.UNIVERSAL);
+                Intent intent = new Intent(FavEventActivity.this, FavEventSearchResultActivity.class);
+                intent.putExtra("SearchData", (Serializable) searchs);
+                intent.putExtra("ViewType", SearchTypeConstances.UNIVERSAL);
                 startActivity(intent);
             }
 
@@ -316,9 +319,9 @@ public class FavEventActivity extends AppCompatActivity {
                         }
                         break;
                 }
-                Intent jump = new Intent(FavEventActivity.this,FavEventSearchResultActivity.class);
-                jump.putExtra("SearchData",(Serializable)mSearchData);
-                jump.putExtra("ViewType",searchResult.viewType);
+                Intent jump = new Intent(FavEventActivity.this, FavEventSearchResultActivity.class);
+                jump.putExtra("SearchData", (Serializable) mSearchData);
+                jump.putExtra("ViewType", searchResult.viewType);
                 startActivity(jump);
             }
         });
@@ -336,7 +339,7 @@ public class FavEventActivity extends AppCompatActivity {
     protected void hideSearch() {
         mListView.setVisibility(View.VISIBLE);
         mSearchBox.hideCircularly(this);
-        mListView.setPadding(10,0,10,0);
+        mListView.setPadding(10, 0, 10, 0);
         mToolbar.setTitle("我的收藏");
         mListView.setAdapter(mAdapter);
     }

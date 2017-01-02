@@ -21,7 +21,7 @@ public class ClubSquareViewHolder extends RecyclerView.ViewHolder implements Vie
     public ClubSquareItemClickListener mListener;
 
 
-    public ClubSquareViewHolder(View itemView,ClubSquareItemClickListener listener) {
+    public ClubSquareViewHolder(View itemView, ClubSquareItemClickListener listener) {
         super(itemView);
         this.mListener = listener;
         ClubName = (TextView) itemView.findViewById(R.id.club_square_info_name);
@@ -32,8 +32,8 @@ public class ClubSquareViewHolder extends RecyclerView.ViewHolder implements Vie
 
     @Override
     public void onClick(View v) {
-        if(mListener!=null){
-            mListener.onClubItemClick(v,getPosition());
+        if (mListener != null) {
+            mListener.onClubItemClick(v, getPosition());
         }
     }
 }

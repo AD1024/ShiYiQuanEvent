@@ -5,41 +5,49 @@
     android:padding="5sp">
 
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/choice_list_background"
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:layout_toStartOf="@+id/go_to_chat"
+        android:scaleType="fitXY" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="150sp"
-        android:id="@+id/choice_list_background"
-        android:scaleType="fitXY"
-        android:layout_toStartOf="@+id/go_to_chat" />
+        android:background="#53000000" />
 
     <TextView
+        android:id="@+id/chat_club_name"
         android:layout_width="237dp"
         android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/chat_club_name"
-        android:text="名称"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_toStartOf="@+id/go_to_chat"
         android:layout_alignBottom="@+id/choice_list_background"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_toStartOf="@+id/go_to_chat"
+        android:gravity="center"
+        android:text="名称"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
     <ImageButton
+        android:id="@+id/go_to_chat"
         android:layout_width="80sp"
         android:layout_height="80sp"
-        android:src="@drawable/ic_club_card"
-        android:id="@+id/go_to_chat"
-        android:background="#18bcb7"
+        android:layout_alignBottom="@+id/choice_list_background"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/go_to_share"
-        android:layout_alignBottom="@+id/choice_list_background" />
+        android:background="#18bcb7"
+        android:src="@drawable/ic_club_card" />
+
     <ImageButton
+        android:id="@+id/go_to_share"
         android:layout_width="80sp"
         android:layout_height="80sp"
-        android:src="@drawable/ic_share"
-        android:id="@+id/go_to_share"
-        android:background="#08d683"
-        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/go_to_chat"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/go_to_chat" />
+        android:layout_alignParentTop="true"
+        android:background="#08d683"
+        android:src="@drawable/ic_share" />
 
 </RelativeLayout>

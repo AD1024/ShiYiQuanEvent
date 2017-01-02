@@ -27,27 +27,33 @@ public class FavEventSearchResultActivity extends AppCompatActivity {
         mSearchResultList = (ListView) findViewById(R.id.fav_event_search_result_list);
         Intent intent = getIntent();
         mSearchData = (List<EventBean>) intent.getSerializableExtra("SearchData");
-        mAdapter = new FavEventListAdapter(this,mSearchData);
+        mAdapter = new FavEventListAdapter(this, mSearchData);
         mSearchResultList.setAdapter(mAdapter);
-        ViewType = intent.getIntExtra("ViewType",-1);
-        switch (ViewType){
-            case -1:{
-                setTitle("Error呀QAQ");break;
+        ViewType = intent.getIntExtra("ViewType", -1);
+        switch (ViewType) {
+            case -1: {
+                setTitle("Error呀QAQ");
+                break;
             }
-            case SearchTypeConstances.TITLE:{
-                setTitle("标题搜索结果");break;
+            case SearchTypeConstances.TITLE: {
+                setTitle("标题搜索结果");
+                break;
             }
-            case SearchTypeConstances.LOCATION:{
-                setTitle("地点搜索结果");break;
+            case SearchTypeConstances.LOCATION: {
+                setTitle("地点搜索结果");
+                break;
             }
-            case SearchTypeConstances.DATE:{
-                setTitle("日期搜索结果");break;
+            case SearchTypeConstances.DATE: {
+                setTitle("日期搜索结果");
+                break;
             }
-            case SearchTypeConstances.CLUB:{
-                setTitle("发起社团搜索结果");break;
+            case SearchTypeConstances.CLUB: {
+                setTitle("发起社团搜索结果");
+                break;
             }
-            case SearchTypeConstances.UNIVERSAL:{
-                setTitle("综合查询结果");break;
+            case SearchTypeConstances.UNIVERSAL: {
+                setTitle("综合查询结果");
+                break;
             }
         }
     }

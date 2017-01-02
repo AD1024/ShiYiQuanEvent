@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="ccoderad.bnds.shiyiquanevent.activities.SplashScreen">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@mipmap/splash_screen"/>
+        android:src="@mipmap/splash_screen" />
 
 </LinearLayout>
