@@ -27,6 +27,7 @@ import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
@@ -48,6 +49,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
+        ToastUtil.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).diskCache(new UnlimitedDiskCache(StorageUtils.getOwnCacheDirectory(this, "ShiyiquanImgs/Cache"))).build());
@@ -87,6 +89,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 gEditor.putBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, isChecked);
                 gEditor.apply();
+                if(isChecked){
+                    ToastUtil.makeText("已切换高质量头像，重启应用生效",false);
+                }else{
+                    ToastUtil.makeText("已切换普通质量头像，重启应用生效",false);
+                }
             }
         });
     }
@@ -137,7 +144,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         ImagePipeline pipe = Fresco.getImagePipeline();
         pipe.clearDiskCaches();
         pipe.clearMemoryCaches();
-        Toast.makeText(this, "已清理图片缓存", Toast.LENGTH_SHORT).show();
+        ToastUtil.makeText("已清理图片缓存",false);
     }
 
     private void ClearEventCache() {
@@ -148,7 +155,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 del.delete();
             }
         }
-        Toast.makeText(this, "已删除活动缓存", Toast.LENGTH_SHORT).show();
+        ToastUtil.makeText("已删除活动缓存",false);
     }
 
     @Override
@@ -179,8 +186,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 gEditor.putBoolean(PreferencesConstances
                         .SETTING_HIGH_QUALITY_AVATAR_TAG, checked);
                 gEditor.apply();
+                if(checked){
+                    ToastUtil.makeText("已切换高质量头像，重启应用生效",false);
+                }else{
+                    ToastUtil.makeText("已切换普通质量头像，重启应用生效",false);
+                }
                 break;
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ToastUtil.cancel();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToastUtil.cancel();
     }
 }

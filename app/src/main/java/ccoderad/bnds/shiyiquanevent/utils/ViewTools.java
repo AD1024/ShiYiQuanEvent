@@ -12,10 +12,14 @@ import android.widget.Toast;
 
 public class ViewTools {
     public static View Inflate(Context context, int id, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(id, parent);
+        return LayoutInflater.from(context).inflate(id, parent,false);
     }
 
     public static void ToastInfo(Context context, String msg, boolean islong) {
-        Toast.makeText(context, msg, islong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+        Toast.makeText(context, msg, islong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    }
+
+    public static Toast MakeToast(Context context, String msg, boolean islong) {
+        return Toast.makeText(context, msg, islong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
     }
 }

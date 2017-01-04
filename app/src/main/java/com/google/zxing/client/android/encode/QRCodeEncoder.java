@@ -377,7 +377,7 @@ final class QRCodeEncoder {
   }
 
   private static String guessAppropriateEncoding(CharSequence contents) {
-    // Very crude at the moment
+    // Very crude at the MomentActivity
     for (int i = 0; i < contents.length(); i++) {
       if (contents.charAt(i) > 0xFF) {
         return "UTF-8";

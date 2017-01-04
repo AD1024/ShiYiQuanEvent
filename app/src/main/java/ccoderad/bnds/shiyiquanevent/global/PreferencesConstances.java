@@ -6,11 +6,16 @@ package ccoderad.bnds.shiyiquanevent.global;
 
 public class PreferencesConstances {
     public static final String LOGIN_INFO = "LoginInfo";
-    public static final String SKIP_SPLASH = "Skip_Splash";
     public static final String VERSION = "VersionInfo";
     public static final String HOST_ID_PREF = "HostId";
     public static final String HOST_ID_TAG = "host_id";
     public static final String LOGIN_STATUS = "Logined";
+    public static final String USER_SESSION_ID = "cookieSessionId";
+    public static final String USER_EXPIRE_TIME = "cookieExpireTime";
+    public static final String USER_HTTP_ONLY = "cookieHttpOnly";
+    public static final String USER_NEED_SYNC = "cookieNeedSync";
+    public static final String USER_PATH = "cookiePath";
+    public static final String CSRF_TOKEN_TAG = "csrf";
 
     public static final String USER_REAL_NAME_TAG = "userName";
     public static final String USER_NICK_NAME_TAG = "nickName";

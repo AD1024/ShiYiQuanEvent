@@ -36,12 +36,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
         String SQUARE_Create = "CREATE TABLE IF NOT EXISTS " + DataBaseConstances.SQUARE_TABLENAME
                 + "(" + DataBaseConstances.SQUARE_COLNAME[0] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[0] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[1] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[1] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[2] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[2] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[3] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[3] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[4] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[4] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[5] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[5] + " " + DataBaseConstances.NN
-                + "(" + DataBaseConstances.SQUARE_COLNAME[6] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[6] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[1] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[1] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[2] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[2] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[3] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[3] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[4] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[4] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[5] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[5] + " " + DataBaseConstances.NN
+                + "," + DataBaseConstances.SQUARE_COLNAME[6] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[6] + " " + DataBaseConstances.NN
                 + ")";
 
         /*Debug Code Block*/

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
+import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
 
 /**
@@ -74,6 +75,18 @@ public class Utils {
         return ans;
     }
 
+    public static String getCsrfToken(String HTML) {
+        String ret = "";
+        int prefixPos = HTML.indexOf(URLConstances.CSRF_PREFIX);
+        if (prefixPos < 0) {
+            return "error";
+        }
+        while (HTML.charAt(prefixPos) != '\'') {
+            ret += HTML.charAt(prefixPos++);
+        }
+        return ret;
+    }
+
     public static List<EventBean> parseEvent(JSONArray jsonArray) {
         JSONObject jsonObject;
         List<EventBean> ans = new ArrayList<>();
@@ -103,8 +116,59 @@ public class Utils {
         return ans;
     }
 
+    public static String cleanAvatarURL(String url, String middleFix) {
+        int pos = url.indexOf(middleFix);
+        if (pos < 0) return url;
+        return url.substring(0, pos) + url.substring(pos + middleFix.length());
+    }
+
+    public static List<MomentDataModel> parseMoment(JSONObject jsonObject) {
+        List<MomentDataModel> mRet = new ArrayList<>();
+        MomentDataModel mData;
+        JSONObject minorData, majorData;
+        JSONObject mRawData;
+        try {
+            JSONArray msgArray = jsonObject.getJSONArray("msglist");
+            for (int i = 0; i < msgArray.length(); ++i) {
+                mData = new MomentDataModel();
+                // Get Inner Data;
+                mRawData = msgArray.getJSONObject(i);
+                minorData = mRawData.getJSONObject("minor");
+                majorData = mRawData.getJSONObject("major");
+
+                // Parse Outter Data First
+                mData.timeStamp = mRawData.getDouble("time_stamp");
+                mData.platformText = mRawData.getString("platform");
+                mData.timeAgo = mRawData.getString("time_ago");
+                mData.headerText = mRawData.getString("head");
+                mData.tailText = mRawData.getString("tail");
+                mData.bodyText = mRawData.getString("body");
+
+                // Parse Major Data
+                mData.majorText = majorData.getString("text");
+                mData.majorAvatarURL = cleanAvatarURL(majorData.getString("image"), "/small");
+                mData.majorPageURL = (majorData.getString("link"));
+
+                // Parse Minor Data
+                mData.minorText = minorData.getString("text");
+                mData.minorPageURL = minorData.getString("link");
+                mData.minorAvatarURL = cleanAvatarURL(minorData.getString("image"), "/small");
+
+                // Add to list
+                mRet.add(mData);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return mRet;
+    }
+
     public static String Int2String(int x) {
         return Integer.toString(x);
+    }
+
+    public static String Double2String(double x) {
+        return Double.toString(x);
     }
 
     /**

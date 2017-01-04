@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +35,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -63,34 +68,34 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.EventListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.db.DataBaseManager;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
-import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
+import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
+    private static final String CurrentVersion = "1.13";
+    private static final String URL_PREFIX = "<!-- 安卓版本";
     final long MAX_MEM = 30 * ByteConstants.MB;
     final long MAX_LOW_MEM = 10 * ByteConstants.MB;
     final long MAX_VERY_LOW_MEM = 5 * ByteConstants.MB;
     final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
     final int LOGIN_REQCODE = 8080;
     final int LOGOUT_REQCODE = 8090;
-
     private final String REQ_URL = URLConstances.HOME_URL + "api/?category=event&time=latest";
     private final String CACHE_FILE_NAME = "cacheEvent.json";
     private final String HOME_URL = URLConstances.HOME_URL;
-    private static final String CurrentVersion = "1.12";
-    private static final String URL_PREFIX = "<!-- 安卓版本";
-
     private DiskLruCache mCache;
     private DiskCacheConfig mImageCacheConfig;
 
@@ -120,6 +125,8 @@ public class MainActivity extends AppCompatActivity
     private boolean Paused = false;
 
     private SharedPreferences SettingPref;
+
+    private RequestQueue mRequestQueue;
 
     private void ShowUpdateInfo() {
         final SharedPreferences versionInfo = getSharedPreferences("VersionInfo", MODE_PRIVATE);
@@ -170,6 +177,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
+        ToastUtil.initialize(this);
+        mRequestQueue = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -415,44 +424,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /*
-    * Function: Check App Update By parsing HTML
-    * */
-    private class HTMLFetcher extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String ret = "NULL";
-            try {
-                String HTML = "";
-                InputStream is = new URL(params[0]).openStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String tmp;
-                while ((tmp = br.readLine()) != null) {
-                    HTML += tmp;
-                }
-                int idx = HTML.indexOf(URL_PREFIX);
-                idx += URL_PREFIX.length();
-                ret = "";
-                for (int i = idx; HTML.charAt(i) >= '0' && HTML.charAt(i) <= '9' || HTML.charAt(i) == '.'; ++i) {
-                    ret += HTML.charAt(i);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.i("VerCode:", ret);
-            return ret;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (!s.equals(CurrentVersion) && !s.equals("NULL")) {
-                Toast.makeText(MainActivity.this, "有新版本，请在十一圈官网下载", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    /*
     * Check App update
     * */
     private String CheckUpdate() {
@@ -555,7 +526,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-    //ListView OnItemCLickListener
 
     /**
      * This Function is used to judge wether the network is available
@@ -574,6 +544,7 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
+    //ListView OnItemCLickListener
 
     /**
      * Name:initDiskLruCache
@@ -657,7 +628,6 @@ public class MainActivity extends AppCompatActivity
         }).show();
 
     }
-    //End OF listener
 
     private boolean writeCache(InputStream is, OutputStream cache) {
         BufferedOutputStream out;
@@ -678,6 +648,7 @@ public class MainActivity extends AppCompatActivity
         }
         return false;
     }
+    //End OF listener
 
     /*
     * Function: Parse JSONArray to List(Used in GetEventTask)
@@ -685,6 +656,7 @@ public class MainActivity extends AppCompatActivity
     public List<EventBean> parseEvent(JSONArray jsonArray) {
         JSONObject jsonObject;
         mRawData = jsonArray;
+        LoadFav();
         List<EventBean> ans = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -721,6 +693,273 @@ public class MainActivity extends AppCompatActivity
     }
 
     /*
+    * Back press Handler
+    * */
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (System.currentTimeMillis() - time > 2000) {
+            ToastUtil.makeText("再按一次退出", false);
+            time = System.currentTimeMillis();
+        } else if (!drawer.isDrawerOpen(GravityCompat.START)) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings: {
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*
+    * Navigation Item OnClick Handler
+    * */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.go_to_browser:
+                if (isNetWorkAvailable())
+                    startActivity(new Intent(MainActivity.this, MainBrowser.class));
+                else {
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作", false);
+                }
+                break;
+            case R.id.go_to_about_me:
+                startActivity(new Intent(MainActivity.this, AboutMeActivity.class));
+                break;
+            case R.id.go_to_scan:
+                if (isNetWorkAvailable()) {
+                    startActivityForResult(new Intent(this, ScannerActivity.class), 6666);
+                } else {
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作", false);
+                }
+                //startActivity(new Intent(this,CaptrueActivity.class));
+                break;
+            case R.id.go_to_faved_events:
+                startActivity(new Intent(this, FavEventActivity.class));
+                break;
+            case R.id.go_to_settings:
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+            case R.id.go_to_square:
+                if(isNetWorkAvailable()){
+                    startActivity(new Intent(this, ClubSquareActivity.class));
+                }else{
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作",false);
+                }
+                break;
+            case R.id.go_to_moment:{
+                if(isNetWorkAvailable()){
+                    startActivity(new Intent(this, MomentActivity.class));
+                }else{
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作",false);
+                }
+            }
+
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void updateCsrfToken(String rawHtml){
+        String csrfToken = Utils.getCsrfToken(rawHtml);
+        Log.i("CSRF",csrfToken);
+        if(csrfToken.equals("error") || TextUtils.isEmpty(csrfToken)) return;
+        PreferenceUtils.initialize(this,PreferencesConstances.LOGIN_INFO,MODE_PRIVATE);
+        PreferenceUtils.putString(PreferencesConstances.CSRF_TOKEN_TAG,csrfToken);
+    }
+
+    /*
+    * Activity Result handler
+    * 8081: login request
+    * 8091: logout request
+    * 6666: scan QR request
+    * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQCODE && resultCode == 8081) {
+            ToastUtil.makeText("登录成功啦", true);
+            Logined = true;
+            TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
+            SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
+            String indicatorText = LoginInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG, "NULL");
+            if (!indicatorText.equals("NULL")) {
+                tvName.setText("登录账户:" + indicatorText);
+            } else {
+                tvName.setText("十一圈Event-点击登录");
+            }
+
+            boolean isHighQuality = SettingPref.getBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
+            String AvatarUrl = LoginInfo.getString((isHighQuality ?
+                            PreferencesConstances.USER_RAW_AVATAR_URL_TAG
+                            : PreferencesConstances.USER_AVATAR_URL_TAG)
+                    , URLConstances.HOME_URL + URLConstances.DEFAULT_AVATAR_URL);
+            LoginClick.setImageURI(Uri.parse(URLConstances.HOME_URL_WITHOUT_DASH + AvatarUrl));
+            StringRequest csrfRequest = new StringRequest(HOME_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    updateCsrfToken(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+            mRequestQueue.add(csrfRequest);
+            SharedPreferences LoginStatus = getSharedPreferences("LoginInfo", MODE_PRIVATE);
+            if (LoginStatus.getBoolean("Logined", false) && LoginStatus.getBoolean("cookieNeedSync", false)) {
+                CookieSyncManager.createInstance(this);
+                CookieManager syncManager = CookieManager.getInstance();
+                String sessionId = LoginStatus.getString("cookieSessionId", null);
+                String path = LoginStatus.getString("cookiePath", null);
+                String expireTime = LoginStatus.getString("cookieExpireTime", null);
+                boolean HttpOnly = LoginStatus.getBoolean("cookieHttpOnly", true);
+                syncManager.setAcceptCookie(true);
+                StringBuilder cookieSyncer = new StringBuilder();
+                cookieSyncer.append(String.format("sessionid=%s", sessionId));
+                cookieSyncer.append(String.format(";path=%s", path));
+                cookieSyncer.append(String.format(";expires=%s", expireTime));
+                cookieSyncer.append(String.format(";HttpOnly=%s", HttpOnly));
+                Log.i("CookieSet", cookieSyncer.toString());
+                LoginStatus.edit().putBoolean("cookieNeedSync", false).apply();
+                syncManager.setCookie(HOME_URL, cookieSyncer.toString());
+            }
+            return;
+        } else if (requestCode == LOGOUT_REQCODE && resultCode == 8091) {
+            TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
+            // Reset the label
+            tvName.setText("十一圈Event-点击登录");
+            Resources r = this.getResources();
+            LoginClick.setImageURI(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                    + r.getResourcePackageName(R.mipmap.logo_2)
+                    + "/"
+                    + r.getResourceTypeName(R.mipmap.logo_2)
+                    + "/"
+                    + r.getResourceEntryName(R.mipmap.logo_2)));
+            Logined = false;
+            return;
+        }
+
+        // Handle QR Scan result
+        if (requestCode == 6666) {
+            if (resultCode == 6666) {
+                Intent it = new Intent(this, MainBrowser.class);
+                it.putExtra("QR_CONTENT", data.getStringExtra("QRContent"));
+                startActivity(it);
+            }
+        } else if (requestCode == 9999) {
+            ToastUtil.makeText("啊哦，扫描出错了呢", true);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mTask.cancel(true);
+        }
+        ToastUtil.cancel();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mTask.cancel(true);
+        }
+        ToastUtil.cancel();
+        super.onStop();
+    }
+
+
+    //Task recycler
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ToastUtil.cancel();
+        Paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ToastUtil.initialize(this);
+        LoadFav();
+        if (Paused) {
+            if (mIsConnected) {
+                new GetEventTask().execute(REQ_URL);
+            } else {
+                ReadFromCache();
+            }
+            Paused = false;
+        }
+    }
+
+    /*
+    * Function: Check App Update By parsing HTML
+    * */
+    private class HTMLFetcher extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String ret = "NULL";
+            try {
+                String HTML = "";
+                InputStream is = new URL(params[0]).openStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String tmp;
+                while ((tmp = br.readLine()) != null) {
+                    HTML += tmp;
+                }
+                updateCsrfToken(HTML);
+                int idx = HTML.indexOf(URL_PREFIX);
+                idx += URL_PREFIX.length();
+                ret = "";
+                for (int i = idx; HTML.charAt(i) >= '0' && HTML.charAt(i) <= '9' || HTML.charAt(i) == '.'; ++i) {
+                    ret += HTML.charAt(i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.i("VerCode:", ret);
+            return ret;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (!s.equals(CurrentVersion) && !s.equals("NULL")) {
+                ToastUtil.makeText("有新版本，请在十一圈官网下载", true);
+            }
+        }
+    }
+
+    /*
     * ClassName: GetEventTask
     * Function: Get Latest Function Data List
     * */
@@ -728,6 +967,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            if(!mRefersh.isRefreshing()){
+                mRefersh.setEnabled(false);
+            }
             setTitle("加载中...");
         }
 
@@ -771,209 +1013,16 @@ public class MainActivity extends AppCompatActivity
             }
             if (eventBeans.size() == 0) {
                 setTitle("加载失败了呢...QAQ");
-                Toast.makeText(MainActivity.this, "进入没有网络的异次元啦QAQ", Toast.LENGTH_LONG).show();
+                ToastUtil.makeText("进入没有网络的异次元啦QAQ", false);
                 return;
+            }
+            if(!mRefersh.isEnabled()){
+                mRefersh.setEnabled(true);
             }
             setTitle("十一活动");
             mData = eventBeans;
             EventListAdapter adapter = new EventListAdapter(MainActivity.this, eventBeans);
             mListView.setAdapter(adapter);
-        }
-    }
-
-    /*
-    * Back press Handler
-    * */
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (System.currentTimeMillis() - time > 2000) {
-            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
-            time = System.currentTimeMillis();
-        } else if (!drawer.isDrawerOpen(GravityCompat.START)) {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_settings: {
-                startActivity(new Intent(this, SettingActivity.class));
-                break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*
-    * Navigation Item OnClick Handler
-    * */
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.go_to_browser:
-                if (isNetWorkAvailable())
-                    startActivity(new Intent(MainActivity.this, MainBrowser.class));
-                else {
-                    Toast.makeText(this, "无网络连接，请连接网络后再操作", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.go_to_about_me:
-                startActivity(new Intent(MainActivity.this, AboutMeActivity.class));
-                break;
-            case R.id.go_to_scan:
-                if (isNetWorkAvailable()) {
-                    startActivityForResult(new Intent(this, ScannerActivity.class), 6666);
-                } else {
-                    Toast toast = Toast.makeText(this, "无网络连接，请连接网络后再试", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                //startActivity(new Intent(this,CaptrueActivity.class));
-                break;
-            case R.id.go_to_faved_events:
-                startActivity(new Intent(this, FavEventActivity.class));
-                break;
-            case R.id.go_to_settings:
-                startActivity(new Intent(this, SettingActivity.class));
-                break;
-            case R.id.go_to_square:
-                startActivity(new Intent(this, ClubSquareActivity.class));
-                break;
-
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    /*
-    * Activity Result handler
-    * 8081: login request
-    * 8091: logout request
-    * 6666: scan QR request
-    * */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOGIN_REQCODE && resultCode == 8081) {
-            Toast.makeText(this, "登录成功啦", Toast.LENGTH_SHORT).show();
-            Logined = true;
-            TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
-            SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
-            // tvName.setText("十一圈Event-"+getSharedPreferences("LoginInfo",MODE_PRIVATE).getString(PreferencesConstances.USER_REAL_NAME_TAG,"点击登录"));
-            // tvName.setText("十一圈Event-" + LoginInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG,"点击登录"));
-            String indicatorText = LoginInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG, "NULL");
-            if (!indicatorText.equals("NULL")) {
-                tvName.setText("登录账户:" + indicatorText);
-            } else {
-                tvName.setText("十一圈Event-点击登录");
-            }
-
-            boolean isHighQuality = SettingPref.getBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
-            String AvatarUrl = LoginInfo.getString((isHighQuality ?
-                            PreferencesConstances.USER_RAW_AVATAR_URL_TAG
-                            : PreferencesConstances.USER_AVATAR_URL_TAG)
-                    , URLConstances.HOME_URL + URLConstances.DEFAULT_AVATAR_URL);
-            LoginClick.setImageURI(Uri.parse(URLConstances.HOME_URL_WITHOUT_DASH + AvatarUrl));
-            SharedPreferences LoginStatus = getSharedPreferences("LoginInfo", MODE_PRIVATE);
-            if (LoginStatus.getBoolean("Logined", false) && LoginStatus.getBoolean("cookieNeedSync", false)) {
-                CookieSyncManager.createInstance(this);
-                CookieManager syncManager = CookieManager.getInstance();
-                String sessionId = LoginStatus.getString("cookieSessionId", null);
-                String path = LoginStatus.getString("cookiePath", null);
-                String expireTime = LoginStatus.getString("cookieExpireTime", null);
-                boolean HttpOnly = LoginStatus.getBoolean("cookieHttpOnly", true);
-                syncManager.setAcceptCookie(true);
-                StringBuilder cookieSyncer = new StringBuilder();
-                cookieSyncer.append(String.format("sessionid=%s", sessionId));
-                cookieSyncer.append(String.format(";path=%s", path));
-                cookieSyncer.append(String.format(";expires=%s", expireTime));
-                cookieSyncer.append(String.format(";HttpOnly=%s", HttpOnly));
-                Log.i("CookieSet", cookieSyncer.toString());
-                LoginStatus.edit().putBoolean("cookieNeedSync", false).apply();
-                syncManager.setCookie(HOME_URL, cookieSyncer.toString());
-            }
-            return;
-        } else if (requestCode == LOGOUT_REQCODE && resultCode == 8091) {
-            TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
-            // Reset the label
-            tvName.setText("十一圈Event-点击登录");
-            Resources r = this.getResources();
-            LoginClick.setImageURI(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
-                    + r.getResourcePackageName(R.mipmap.logo_2)
-                    + "/"
-                    + r.getResourceTypeName(R.mipmap.logo_2)
-                    + "/"
-                    + r.getResourceEntryName(R.mipmap.logo_2)));
-            Logined = false;
-            return;
-        }
-
-        // Handle QR Scan result
-        if (requestCode == 6666) {
-            if (resultCode == 6666) {
-                Intent it = new Intent(this, MainBrowser.class);
-                it.putExtra("QR_CONTENT", data.getStringExtra("QRContent"));
-                startActivity(it);
-            }
-        } else if (requestCode == 9999) {
-            Toast.makeText(this, "啊哦，扫描出错了呢", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    //Task recycler
-
-    @Override
-    protected void onDestroy() {
-        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mTask.cancel(true);
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStop() {
-        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mTask.cancel(true);
-        }
-        super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Paused = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LoadFav();
-        if (Paused) {
-            if (mIsConnected) {
-                new GetEventTask().execute(REQ_URL);
-            } else {
-                ReadFromCache();
-            }
-            Paused = false;
         }
     }
 }

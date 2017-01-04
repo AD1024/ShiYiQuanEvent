@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.quinny898.library.persistentsearch.SearchResult;
@@ -24,6 +23,7 @@ import com.quinny898.library.persistentsearch.SearchResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,10 +38,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.FavEventListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.global.SearchTypeConstances;
-import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
@@ -61,6 +62,7 @@ public class FavEventActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ToastUtil.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav_event);
         mNoFavIndicator = (TextView) findViewById(R.id.faved_event_none_indicator);
@@ -84,9 +86,7 @@ public class FavEventActivity extends AppCompatActivity {
             mAdapter = new FavEventListAdapter(this, mData);
             mListView.setAdapter(mAdapter);
         } else {
-            Toast.makeText(this, "啊哦，你还没收藏任何活动呢", Toast.LENGTH_LONG).show();
             mNoFavIndicator.setVisibility(View.VISIBLE);
-
         }
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -95,20 +95,21 @@ public class FavEventActivity extends AppCompatActivity {
                         .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(FavEventActivity.this, "呜呜呜，竟然抛弃伦家", Toast.LENGTH_LONG).show();
+                                ToastUtil.makeText("呜呜呜，竟然抛弃伦家", false);
                                 EventBean del = mData.get(position);
                                 File cacheFav = new File(Utils.getCacheFile(FavEventActivity.this, "event"), FAV_FILE);
                                 InputStream in;
                                 try {
                                     in = new FileInputStream(cacheFav);
                                     String result = Utils.ReadStringFromInputStream(in);
+                                    Log.i("Fav",result);
                                     JSONArray saved;
-                                    if (result.isEmpty()) saved = new JSONArray();
+                                    if (TextUtils.isEmpty(result)) saved = new JSONArray();
                                     else saved = new JSONArray(result);
                                     JSONObject obj;
                                     JSONObject data;
                                     for (int i = 0; i < saved.length(); i++) {
-                                        if (saved.get(i) == null) continue;
+                                        if (saved.get(i).equals(null)) continue;
                                         obj = saved.getJSONObject(i);
                                         data = obj.getJSONObject("data");
                                         if (data.getString("content").equals(del.eventContent)
@@ -117,8 +118,12 @@ public class FavEventActivity extends AppCompatActivity {
                                             break;
                                         }
                                     }
-                                    PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
+                                    Log.i("FavDelete",saved.toString());
+                                    if(cacheFav.exists()){
+                                        cacheFav.delete();
+                                    }
                                     cacheFav.createNewFile();
+                                    PrintStream writer = new PrintStream(new FileOutputStream(cacheFav));
                                     writer.print(saved.toString());
                                     writer.close();
                                     in.close();
@@ -138,7 +143,6 @@ public class FavEventActivity extends AppCompatActivity {
                         }).setNegativeButton("保留", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ViewTools.ToastInfo(FavEventActivity.this, "宝宝很开心！", false);
                     }
                 }).setTitle("删除Or保留QwQ?").setMessage("要和宝宝说再见了吗QAQ?").show();
                 return false;
@@ -153,7 +157,7 @@ public class FavEventActivity extends AppCompatActivity {
         try {
             is = new FileInputStream(favFile);
             String data = Utils.ReadStringFromInputStream(is);
-            Log.i("FavData",data);
+            Log.i("FavData", data);
             JSONArray array = new JSONArray(data);
             mData = Utils.parseEvent(array);
             return;
@@ -332,8 +336,16 @@ public class FavEventActivity extends AppCompatActivity {
         if (mSearchBox.getSearchOpen()) {
             hideSearch();
             mToolbar.setTitle("我的收藏");
-        } else
+        } else {
             super.onBackPressed();
+            ToastUtil.cancel();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ToastUtil.cancel();
     }
 
     protected void hideSearch() {

@@ -332,18 +332,18 @@ limitations under the License.\n\n\n"
     <string name="faved_event_no_fav">No Favorite Event</string>
     <string name="content_update_info">
         "新特性:
-        1. 更新内容显示
-        2. 搜索已收藏活动功能增强(新加入搜索结果页面)
-        3. 可以显示自己的头像和姓名啦~ PS:头像可以设置显示的画质哟
+        1. 头像添加背景图片(主页面)
+        2. 将滚动加载社团列表变为有界加载，节省流量(社团广场)
+        3. Toast消息不再重叠啦~~~（诸多界面）
 
         优化:
-        1. 社团消息列表图片加载卡顿的问题
-        2. 高压各类图片，减少存储空间的消耗
+        1. 添加一个半透明的黑色背景使社团名称能够看得更清楚(社团广场)
+        2. 删掉登录账户名称前面那个蜜汁减号(主页面导航栏)
 
-        修复：
-        1. 活动收藏显示的Bug
-        2. 搜索框内容玄学bug\n
-        3. 主页面菜单项的设置选项点击无效的Bug"
+        修复:
+        1. 收藏活动残留的Bug(活动收藏)
+        2. 跳过启动动画设置失效的Bug(设置)
+        3. 点击\"显示高质量头像图片\"卡片无效果的Bug"
     </string>
     <string name="setting_high_quality_avatar_indicator">Show High Quality Avatar</string>
 

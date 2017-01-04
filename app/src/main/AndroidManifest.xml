@@ -81,9 +81,12 @@
             android:name=".activities.ClubInfoDetailActivity"
             android:label="@string/title_activity_club_info_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.FavEventSearchResultActivity"
-            android:label="搜索结果">
-        </activity>
+        <activity
+            android:name=".activities.FavEventSearchResultActivity"
+            android:label="搜索结果"></activity>
+        <activity
+            android:name=".activities.MomentActivity"
+            android:label="天台"></activity>
     </application>
 
 </manifest>

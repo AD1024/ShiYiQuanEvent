@@ -20,6 +20,11 @@
             android:icon="@drawable/ic_go_to_square"
             />
         <item
+            android:id="@+id/go_to_moment"
+            android:title="天台动态"
+            android:icon="@drawable/ic_cloud"
+            />
+        <item
             android:id="@+id/go_to_settings"
             android:title="@string/action_settings"
             android:icon="@drawable/ic_settings"/>

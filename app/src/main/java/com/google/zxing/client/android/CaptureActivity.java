@@ -476,7 +476,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
           Toast.makeText(getApplicationContext(),
                          getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')',
                          Toast.LENGTH_SHORT).show();
-          // Wait a moment or else it will scan the same barcode continuously about 3 times
+          // Wait a MomentActivity or else it will scan the same barcode continuously about 3 times
           restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         } else {
           handleDecodeInternally(rawResult, resultHandler, barcode);

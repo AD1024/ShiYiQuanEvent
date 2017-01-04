@@ -28,7 +28,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -66,21 +65,21 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.Preferences;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubChoiceAdapter;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.ClubModel;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
-import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
-import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import terranovaproductions.newcomicreader.FloatingActionMenu;
 
 public class MainBrowser extends AppCompatActivity implements FloatingActionMenu.OnMenuItemClickListener, DrawerLayout.DrawerListener {
 
+    private final String HOME_URL = URLConstances.HOME_URL;
     private WebView mDisplay;
     private WebView mRelation;
     private Toolbar toolbar;
@@ -106,7 +105,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private List<MenuEntity> myAdmined = new ArrayList<>();
     private List<String> AdminedClubURLs = new ArrayList<>();
     private ImageLoaderConfiguration mConfiguration;
-    private final String HOME_URL = URLConstances.HOME_URL;
     private DisplayImageOptions mDisplayOption;
     private ValueCallback<Uri> mUploadMessage;
 
@@ -129,7 +127,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             });
         }
         init();
-        Toast.makeText(this, "连按三次返回可回到活动界面", Toast.LENGTH_LONG).show();
+        ToastUtil.makeText("连按三次返回可回到活动界面", false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getIntents();
     }
@@ -140,7 +138,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         if (Content == null) return;
         if (!Content.equals("")) {
             if (!Content.contains("shiyiquan")) {
-                Toast.makeText(this, "啊哦，好像不是十一圈的链接哟", Toast.LENGTH_LONG).show();
+                ToastUtil.makeText("啊哦，好像不是十一圈的链接哟", true);
                 mDisplay.loadUrl(HOME_URL);
             } else mDisplay.loadUrl(Content);
         }
@@ -428,7 +426,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainBrowser.this, "请检查网络连接", Toast.LENGTH_LONG).show();
+                ToastUtil.makeText("请检查网络连接", true);
             }
         });
         mQueue.add(request);
@@ -510,7 +508,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             //Club Info List
             case R.id.fab_sender:
                 if (mMyClubs.size() == 0) {
-                    Toast.makeText(this, "请先登录", Toast.LENGTH_LONG).show();
+                    ToastUtil.makeText("请先登录", true);
                     break;
                 }
                 LoadClub2Choice();
@@ -522,7 +520,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 if (adminedLoaded) {
                     if (myAdmined.size() != 0) {
                         mAddActivity.show();
-                    } else Toast.makeText(this, "你还不是任何社团的管理者", Toast.LENGTH_LONG).show();
+                    } else ToastUtil.makeText("你还不是任何社团的管理者", true);
                     break;
                 } else {
                     AddToAdminList();
@@ -554,7 +552,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             last_back_press = System.currentTimeMillis();
         } else {
             if (System.currentTimeMillis() - last_exit_press > 500) {
-                Toast.makeText(MainBrowser.this, "再按一次返回", Toast.LENGTH_SHORT).show();
+                ToastUtil.makeText("再按一次返回", false);
                 last_exit_press = System.currentTimeMillis();
             } else {
                 super.onBackPressed();
@@ -580,6 +578,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
     @Override
     protected void onStop() {
+        ToastUtil.cancel();
         super.onStop();
     }
 

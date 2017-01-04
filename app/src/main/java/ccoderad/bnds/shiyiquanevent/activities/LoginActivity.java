@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
 import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 
 
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ToastUtil.initialize(this);
         mReqQueue = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(LoginActivity.this, "登录失败，请检查网络", Toast.LENGTH_LONG).show();
+                ToastUtil.makeText("登录失败，请检查网络",true);
                 mPgBar.setVisibility(View.GONE);
             }
         });
@@ -155,11 +157,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             String originalAvatarURL = reqData.getString("avatar");
             mLoginStorageEditor.putBoolean(PreferencesConstances.LOGIN_STATUS, true);
             mLoginStorageEditor.putString(PreferencesConstances.USER_EMAIL_TAG, userName);
-            mLoginStorageEditor.putString("cookiePath", reqData.getString("path"));
-            mLoginStorageEditor.putString("cookieSessionId", reqData.getString("sessionid"));
-            mLoginStorageEditor.putString("cookieExpireTime", reqData.getString("expires"));
-            mLoginStorageEditor.putBoolean("cookieHttpOnly", reqData.getBoolean("httpOnly"));
-            mLoginStorageEditor.putBoolean("cookieNeedSync", true);
+            mLoginStorageEditor.putString(PreferencesConstances.USER_PATH, reqData.getString("path"));
+            mLoginStorageEditor.putString(PreferencesConstances.USER_SESSION_ID, reqData.getString("sessionid"));
+            mLoginStorageEditor.putString(PreferencesConstances.USER_EXPIRE_TIME, reqData.getString("expires"));
+            mLoginStorageEditor.putBoolean(PreferencesConstances.USER_HTTP_ONLY, reqData.getBoolean("httpOnly"));
+            mLoginStorageEditor.putBoolean(PreferencesConstances.USER_NEED_SYNC, true);
             mLoginStorageEditor.putString(PreferencesConstances.USER_REAL_NAME_TAG, reqData.getString("fname"));
             mLoginStorageEditor.putString(PreferencesConstances.USER_NICK_NAME_TAG, reqData.getString("sname"));
             mLoginStorageEditor.putString(PreferencesConstances.USER_AVATAR_URL_TAG, originalAvatarURL);
@@ -190,14 +192,26 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.login_register:
-                Toast.makeText(this, "App暂时不支持注册功能，请前往官网注册", Toast.LENGTH_LONG).show();
+                ToastUtil.makeText("App暂时不支持注册功能，请前往官网注册",false);
                 break;
             case R.id.login_signIn:
                 mPgBar.setVisibility(View.VISIBLE);
-                Toast.makeText(this, "登录中...", Toast.LENGTH_SHORT).show();
+                ToastUtil.makeText("登录中...",false);
                 attemptLogin();
                 break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ToastUtil.cancel();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ToastUtil.cancel();
     }
 }
 

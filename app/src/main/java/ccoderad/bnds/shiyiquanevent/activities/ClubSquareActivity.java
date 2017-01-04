@@ -2,14 +2,13 @@ package ccoderad.bnds.shiyiquanevent.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,21 +34,22 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubSquareAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
 import ccoderad.bnds.shiyiquanevent.global.URLConstances;
-import ccoderad.bnds.shiyiquanevent.listeners.ClubSquareItemClickListener;
-import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.listeners.RecyclerViewItemClickListener;
 import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
-public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, ClubSquareItemClickListener {
+public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, RecyclerViewItemClickListener {
     //Constants
     private final String REQUEST_URL = URLConstances.HOME_URL + URLConstances.QUARE_URL + "?api=True";
 
@@ -78,12 +77,14 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     private File eventCacheDir;
     private JSONArray mCacheData;
 
-    Map<String, String> mRecoder;
+    Set<String> mRecoder;
 
     /*
     * Initializer
     * */
     private void Initialize() {
+
+        ToastUtil.initialize(this);
 
         mInflater = LayoutInflater.from(this);
         mDataList = new ArrayList<>();
@@ -94,7 +95,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mBackTop = (FloatingActionButton) findViewById(R.id.club_square_fab);
         mClubList = (XRecyclerView) findViewById(R.id.club_square_list);
         View headerView = mInflater.inflate(R.layout.club_square_header, null);
-        mRecoder = new HashMap<>();
+        mRecoder = new HashSet<>();
 
         // View Injection
         mSearchClub = (Button) headerView.findViewById(R.id.club_square_list_header_btn);
@@ -129,12 +130,6 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
             case R.id.club_square_list_header_btn: {
                 // Stub
                 String ClubName = mClubNameSearch.getText().toString();
-                if (!TextUtils.isEmpty(ClubName)) {
-                    // Stub
-
-                } else {
-                    // Stub
-                }
                 break;
             }
         }
@@ -181,7 +176,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("ErrorFetchingData", error.toString());
-                Toast.makeText(ClubSquareActivity.this, "好似出现了些小问题QAQ", Toast.LENGTH_LONG);
+                ToastUtil.makeText("好似出现了些小问题QAQ", false);
                 if (Utils.isNetWorkAvailable(ClubSquareActivity.this)) {
                     setTitle("AD1024被折寿1s");
                 } else {
@@ -241,12 +236,15 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
                 infoData.ClubDescription = Info.getString("full_intro"); // full intro
 
                 // Put into mRecoder to judge the page id
-                if (mRecoder.containsKey(infoData.club_name)) {
+                if (mRecoder.contains(infoData.club_name)) {
                     mClubList.refreshComplete();
                     mClubList.loadMoreComplete();
-                    Toast.makeText(ClubSquareActivity.this, "到头啦", Toast.LENGTH_LONG);
+                    ToastUtil.makeText("到头啦", false);
                     mClubList.setLoadingMoreEnabled(false);
                     setTitle("社团广场");
+                    return;
+                } else {
+                    mRecoder.add(infoData.club_name);
                 }
 
                 // Handle Avatar Data
@@ -277,6 +275,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onRefresh() {
         mDataList.clear();
+        mRecoder.clear();
         mIndex = 1;
         GetSquareData();
         mClubListAdapter.notifyDataSetChanged();
@@ -333,5 +332,23 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToastUtil.cancel();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ToastUtil.cancel();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ToastUtil.cancel();
     }
 }
