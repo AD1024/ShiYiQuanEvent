@@ -22,7 +22,7 @@ import java.util.List;
 
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 
 /**
  * Created by CCoderAD on 16/7/9.
@@ -77,7 +77,7 @@ public class Utils {
 
     public static String getCsrfToken(String HTML) {
         String ret = "";
-        int prefixPos = HTML.indexOf(URLConstances.CSRF_PREFIX);
+        int prefixPos = HTML.indexOf(URLConstants.CSRF_PREFIX);
         if (prefixPos < 0) {
             return "error";
         }
@@ -105,7 +105,7 @@ public class Utils {
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
-                bean.eventURL = URLConstances.HOME_URL + URLConstances.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
+                bean.eventURL = URLConstants.HOME_URL + URLConstants.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 ans.add(bean);
             }
@@ -140,8 +140,9 @@ public class Utils {
                 mData.timeStamp = mRawData.getDouble("time_stamp");
                 mData.platformText = mRawData.getString("platform");
                 mData.timeAgo = mRawData.getString("time_ago");
-                mData.headerText = mRawData.getString("head");
-                mData.tailText = mRawData.getString("tail");
+                // Stub API : mData.headerText = mRawData.getString("head");
+
+                mData.tailText = mRawData.has("tail")?mRawData.getString("tail"):"";
                 mData.bodyText = mRawData.getString("body");
 
                 // Parse Major Data
