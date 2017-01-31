@@ -23,7 +23,6 @@ import com.quinny898.library.persistentsearch.SearchResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,10 +40,9 @@ import java.util.Map;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.FavEventListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
-import ccoderad.bnds.shiyiquanevent.global.SearchTypeConstances;
+import ccoderad.bnds.shiyiquanevent.global.SearchTypeConstants;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
-import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 public class FavEventActivity extends AppCompatActivity {
 
@@ -102,7 +100,7 @@ public class FavEventActivity extends AppCompatActivity {
                                 try {
                                     in = new FileInputStream(cacheFav);
                                     String result = Utils.ReadStringFromInputStream(in);
-                                    Log.i("Fav",result);
+                                    Log.i("Fav", result);
                                     JSONArray saved;
                                     if (TextUtils.isEmpty(result)) saved = new JSONArray();
                                     else saved = new JSONArray(result);
@@ -118,8 +116,8 @@ public class FavEventActivity extends AppCompatActivity {
                                             break;
                                         }
                                     }
-                                    Log.i("FavDelete",saved.toString());
-                                    if(cacheFav.exists()){
+                                    Log.i("FavDelete", saved.toString());
+                                    if (cacheFav.exists()) {
                                         cacheFav.delete();
                                     }
                                     cacheFav.createNewFile();
@@ -170,7 +168,11 @@ public class FavEventActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        openSearch();
+        if (item.getItemId() == 16908332) {
+            FavEventActivity.this.finish();
+        } else {
+            openSearch();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -237,7 +239,7 @@ public class FavEventActivity extends AppCompatActivity {
                             SearchResult result = new SearchResult(
                                     bean.eventTitle,
                                     getResources().getDrawable(R.drawable.ic_history_blue_grey_500_18dp));
-                            result.viewType = SearchTypeConstances.TITLE;
+                            result.viewType = SearchTypeConstants.TITLE;
                             mSearchBox.addSearchable(result);
                             kv.put(bean.eventTitle, true);
                         }
@@ -246,7 +248,7 @@ public class FavEventActivity extends AppCompatActivity {
                     if (bean.eventLocation.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.eventLocation)) {
                             SearchResult result = new SearchResult(bean.eventLocation, getResources().getDrawable(R.drawable.ic_location));
-                            result.viewType = SearchTypeConstances.LOCATION;
+                            result.viewType = SearchTypeConstants.LOCATION;
                             mSearchBox.addSearchable(result);
                             kv.put(bean.eventLocation, true);
                         }
@@ -255,7 +257,7 @@ public class FavEventActivity extends AppCompatActivity {
                     if (bean.eventDate.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.eventDate)) {
                             SearchResult result = new SearchResult(bean.eventDate, getResources().getDrawable(R.drawable.ic_date));
-                            result.viewType = SearchTypeConstances.DATE;
+                            result.viewType = SearchTypeConstants.DATE;
                             mSearchBox.addSearchable(result);
                             kv.put(bean.eventDate, true);
                         }
@@ -264,7 +266,7 @@ public class FavEventActivity extends AppCompatActivity {
                     if (bean.sponsorName.contains(s) && !s.isEmpty() && !s.equals(" ")) {
                         if (!judgeExistence(bean.sponsorName)) {
                             SearchResult result = new SearchResult(bean.sponsorName, getResources().getDrawable(R.drawable.ic_sponsor_in_search));
-                            result.viewType = SearchTypeConstances.CLUB;
+                            result.viewType = SearchTypeConstants.CLUB;
                             mSearchBox.addSearchable(result);
                             kv.put(bean.sponsorName, true);
                         }
@@ -285,7 +287,7 @@ public class FavEventActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(FavEventActivity.this, FavEventSearchResultActivity.class);
                 intent.putExtra("SearchData", (Serializable) searchs);
-                intent.putExtra("ViewType", SearchTypeConstances.UNIVERSAL);
+                intent.putExtra("ViewType", SearchTypeConstants.UNIVERSAL);
                 startActivity(intent);
             }
 
@@ -294,28 +296,28 @@ public class FavEventActivity extends AppCompatActivity {
                 hideSearch();
                 List<EventBean> mSearchData = new ArrayList<EventBean>();
                 switch (searchResult.viewType) {
-                    case SearchTypeConstances.TITLE:
+                    case SearchTypeConstants.TITLE:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventTitle.equals(searchResult.title)) {
                                 mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case SearchTypeConstances.LOCATION:
+                    case SearchTypeConstants.LOCATION:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventLocation.equals(searchResult.title)) {
                                 mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case SearchTypeConstances.DATE:
+                    case SearchTypeConstants.DATE:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).eventDate.equals(searchResult.title)) {
                                 mSearchData.add(mData.get(i));
                             }
                         }
                         break;
-                    case SearchTypeConstances.CLUB:
+                    case SearchTypeConstants.CLUB:
                         for (int i = 0; i < mData.size(); i++) {
                             if (mData.get(i).sponsorName.equals(searchResult.title)) {
                                 mSearchData.add(mData.get(i));
