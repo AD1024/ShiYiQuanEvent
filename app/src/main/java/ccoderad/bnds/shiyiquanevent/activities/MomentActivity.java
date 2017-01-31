@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,10 +28,12 @@ import java.util.List;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.MomentListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.listeners.RecyclerViewItemClickListener;
+import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
+import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
 public class MomentActivity extends AppCompatActivity implements RecyclerViewItemClickListener {
 
@@ -67,6 +68,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         mRecyclerView.setLoadingMoreEnabled(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this
                 ,LinearLayoutManager.VERTICAL,false));
+        mRecyclerView.addItemDecoration(new BGASpaceItemDecoration(10));
         // RecyclerView Listeners
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -101,13 +103,22 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
 
     }
 
+    private void setErrorMsg(String msg,boolean changeTitle){
+        ToastUtil.makeText(msg,false);
+        if(changeTitle){
+            setTitle(msg);
+        }
+    }
+
     private void handleRawMomentData(String data) {
         try {
+            Log.i("Moment Data",data);
             JSONObject dataObject = new JSONObject(data);
             List<MomentDataModel> mTemp = new ArrayList<>();
             mTemp = Utils.parseMoment(dataObject);
-            time_last = mTemp.get(0).timeStamp;
             Collections.reverse(mTemp);
+//            time_last = mTemp.get(0).timeStamp;
+            time_last = dataObject.getDouble("time_last");
             mDataList.addAll(mTemp);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,7 +126,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         if (mDataList.size() > 0) {
             mAdapter.notifyDataSetChanged();
         } else {
-            ToastUtil.makeText("出现了蜜汁错误QAQ", true);
+            setErrorMsg("出现了蜜汁错误QAQ",true);
         }
         mRecyclerView.refreshComplete();
         mRecyclerView.loadMoreComplete();
@@ -139,9 +150,9 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         Log.i("TimeLast",param);
         String reqUrl = "";
         if (param.equals("0.0")) {
-            reqUrl = URLConstances.MOMENT_URL;
+            reqUrl = URLConstants.MOMENT_URL;
         } else {
-            reqUrl = URLConstances.MOMENT_URL + "?time_update=" + param;
+            reqUrl = URLConstants.MOMENT_URL + "?time_update=" + param;
         }
         StringRequest request = new StringRequest(reqUrl, new Response.Listener<String>() {
             @Override
@@ -154,6 +165,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
                 ToastUtil.makeText("出现了蜜汁错误，请检查网络连接", false);
             }
         });
+        request.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
         mRequestQueue.add(request);
     }
 }
