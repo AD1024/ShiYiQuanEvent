@@ -1,5 +1,6 @@
 package ccoderad.bnds.shiyiquanevent.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +12,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,11 +31,13 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
+import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
@@ -113,9 +115,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
         final String userName = mUserName.getText().toString();
         final String password = mPassword.getText().toString();
-        Log.i("REQ", REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstances.USER_AGENT);
+        Log.i("REQ", REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT);
         StringRequest LoginReq = new StringRequest(Request.Method.GET,
-                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstances.USER_AGENT, new Response.Listener<String>() {
+                REQ_URL + "?username=" + userName + "&password=" + password + "&user-agent=" + URLConstants.USER_AGENT, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (response.equals("fail")) {
@@ -134,6 +136,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 mPgBar.setVisibility(View.GONE);
             }
         });
+        LoginReq.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
         mReqQueue.add(LoginReq);
         return true;
     }
@@ -146,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 InputStream is = new URL(REQ_URL
                         + "?username=" + userName
                         + "&password=" + password
-                        + "&user-agent=" + URLConstances.USER_AGENT)
+                        + "&user-agent=" + URLConstants.USER_AGENT)
                         .openStream();
                 jsonString = Utils.ReadStringFromInputStream(is);
                 is.close();
@@ -155,19 +158,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             Log.i("Logining", "Logining2");
             reqData = new JSONObject(jsonString);
             String originalAvatarURL = reqData.getString("avatar");
-            mLoginStorageEditor.putBoolean(PreferencesConstances.LOGIN_STATUS, true);
-            mLoginStorageEditor.putString(PreferencesConstances.USER_EMAIL_TAG, userName);
-            mLoginStorageEditor.putString(PreferencesConstances.USER_PATH, reqData.getString("path"));
-            mLoginStorageEditor.putString(PreferencesConstances.USER_SESSION_ID, reqData.getString("sessionid"));
-            mLoginStorageEditor.putString(PreferencesConstances.USER_EXPIRE_TIME, reqData.getString("expires"));
-            mLoginStorageEditor.putBoolean(PreferencesConstances.USER_HTTP_ONLY, reqData.getBoolean("httpOnly"));
-            mLoginStorageEditor.putBoolean(PreferencesConstances.USER_NEED_SYNC, true);
-            mLoginStorageEditor.putString(PreferencesConstances.USER_REAL_NAME_TAG, reqData.getString("fname"));
-            mLoginStorageEditor.putString(PreferencesConstances.USER_NICK_NAME_TAG, reqData.getString("sname"));
-            mLoginStorageEditor.putString(PreferencesConstances.USER_AVATAR_URL_TAG, originalAvatarURL);
+            mLoginStorageEditor.putBoolean(PreferencesConstants.LOGIN_STATUS, true);
+            mLoginStorageEditor.putString(PreferencesConstants.USER_EMAIL_TAG, userName);
+            mLoginStorageEditor.putString(PreferencesConstants.USER_PATH, reqData.getString("path"));
+            mLoginStorageEditor.putString(PreferencesConstants.USER_SESSION_ID, reqData.getString("sessionid"));
+            mLoginStorageEditor.putString(PreferencesConstants.USER_EXPIRE_TIME, reqData.getString("expires"));
+            mLoginStorageEditor.putBoolean(PreferencesConstants.USER_HTTP_ONLY, reqData.getBoolean("httpOnly"));
+            mLoginStorageEditor.putBoolean(PreferencesConstants.USER_NEED_SYNC, true);
+            mLoginStorageEditor.putString(PreferencesConstants.USER_REAL_NAME_TAG, reqData.getString("fname"));
+            mLoginStorageEditor.putString(PreferencesConstants.USER_NICK_NAME_TAG, reqData.getString("sname"));
+            mLoginStorageEditor.putString(PreferencesConstants.USER_AVATAR_URL_TAG, originalAvatarURL);
 
             int prefixPos = originalAvatarURL.indexOf(AVATAR_URL_LARGE_PREFIX);
-            mLoginStorageEditor.putString(PreferencesConstances.USER_RAW_AVATAR_URL_TAG
+            mLoginStorageEditor.putString(PreferencesConstants.USER_RAW_AVATAR_URL_TAG
                     , originalAvatarURL.substring(0, prefixPos)
                             + originalAvatarURL.substring(prefixPos + AVATAR_URL_LARGE_PREFIX.length()));
 
@@ -192,7 +195,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.login_register:
-                ToastUtil.makeText("App暂时不支持注册功能，请前往官网注册",false);
+                ViewTools.MakeToast(this,"正在转到注册页面",false);
+                Intent regIntent = new Intent(this,MainBrowser.class);
+                regIntent.putExtra("QR_CONTENT","http://shiyiquan.net/signup/");
+                startActivity(regIntent);
                 break;
             case R.id.login_signIn:
                 mPgBar.setVisibility(View.VISIBLE);
