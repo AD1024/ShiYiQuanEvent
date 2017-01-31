@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="10sp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/alert_update_download_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发现更新，是否下载?"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前版本:"
+            />
+        <TextView
+            android:id="@+id/alert_update_download_current_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="CurrentVersion"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更新版本:"
+            />
+        <TextView
+            android:id="@+id/alert_update_download_new_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="NewVersion"
+            />
+    </LinearLayout>
+
+</LinearLayout>
