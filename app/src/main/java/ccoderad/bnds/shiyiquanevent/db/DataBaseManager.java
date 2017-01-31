@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import ccoderad.bnds.shiyiquanevent.global.DataBaseConstances;
+import ccoderad.bnds.shiyiquanevent.global.DataBaseConstants;
 
 /**
  * Created by CCoderAD on 2016/12/16.
@@ -50,7 +50,7 @@ public class DataBaseManager {
             query += "values(";
             for(int i = 0;i < values.length -1;++i){
                 switch (colNames[i]){
-                    case DataBaseConstances.INT:{
+                    case DataBaseConstants.INT:{
                         query += values[i] + ",";break;
                     }
                     default:{
@@ -60,7 +60,7 @@ public class DataBaseManager {
             }
             int pos = colNames.length - 1;
             switch (colNames[pos]){
-                case DataBaseConstances.INT:{
+                case DataBaseConstants.INT:{
                     query += values[pos] + ")";
                     break;
                 }

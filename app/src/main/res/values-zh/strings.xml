@@ -29,6 +29,8 @@
         1. 头像添加背景图片(主页面)
         2. 将滚动加载社团列表变为有界加载，节省流量(社团广场)
         3. Toast消息不再重叠啦~~~（诸多界面）
+        4. 增加天台页面
+        5. 自动检查更新功能(可在设置中开启或关闭)
 
         优化:
         1. 添加一个半透明的黑色背景使社团名称能够看得更清楚(社团广场)
@@ -40,4 +42,5 @@
         3. 点击\"显示高质量头像图片\"卡片无效果的Bug"
     </string>
     <string name="setting_high_quality_avatar_indicator">显示高质量头像图片</string>
+    <string name="setting_enable_auto_update_check">启动后自动检查更新</string>
 </resources>

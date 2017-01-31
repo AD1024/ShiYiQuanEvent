@@ -1,5 +1,7 @@
 package ccoderad.bnds.shiyiquanevent.utils;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,6 +20,7 @@ public class CacheUtils {
     public static String EVENT_CACHE_NAME = "cacheEvent.json";
     public static String CLUB_SQUARE_CACHE_DIR_NAME = "ClubSquareCache";
     public static String CLUB_SQUARE_CACHE_NAME = "clubSquare.json";
+    public static String UPDATE_FILE_STORAGE_PATH = "ShiYiQuanEvent-Update";
 
     /*
     * Clear cache and write new data into cache
@@ -49,5 +52,10 @@ public class CacheUtils {
             }
         }
         return ret;
+    }
+
+    public static String getUpdateFileStoragePath(){
+        return Environment.getExternalStorageDirectory()
+                + File.separator + UPDATE_FILE_STORAGE_PATH + File.separator;
     }
 }

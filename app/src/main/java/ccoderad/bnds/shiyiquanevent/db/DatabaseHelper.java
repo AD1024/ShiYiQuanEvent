@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import ccoderad.bnds.shiyiquanevent.global.DataBaseConstances;
+import ccoderad.bnds.shiyiquanevent.global.DataBaseConstants;
 
 /**
  * Created by CCoderAD on 16/4/7.
@@ -18,30 +18,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public DatabaseHelper(Context context){
-        super(context, DataBaseConstances.QUAN_DATABASENAME,null, DataBaseConstances.QUAN_DATABASEVERSIONCODE);
+        super(context, DataBaseConstants.QUAN_DATABASENAME,null, DataBaseConstants.QUAN_DATABASEVERSIONCODE);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String Event_Create = "CREATE TABLE IF NOT EXISTS " + DataBaseConstances.EVENT_TABLENAME
-                + "(" + DataBaseConstances.EVENT_COLNAME[0] + " " + DataBaseConstances.EVENT_CREATE_PARAM[0] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[1] + " " + DataBaseConstances.EVENT_CREATE_PARAM[1] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[2] + " " + DataBaseConstances.EVENT_CREATE_PARAM[2] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[3] + " " + DataBaseConstances.EVENT_CREATE_PARAM[3] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[4] + " " + DataBaseConstances.EVENT_CREATE_PARAM[4] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[5] + " " + DataBaseConstances.EVENT_CREATE_PARAM[5] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[6] + " " + DataBaseConstances.EVENT_CREATE_PARAM[6] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[7] + " " + DataBaseConstances.EVENT_CREATE_PARAM[7] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.EVENT_COLNAME[8] + " " + DataBaseConstances.EVENT_CREATE_PARAM[8] + " " + DataBaseConstances.NN
+        String Event_Create = "CREATE TABLE IF NOT EXISTS " + DataBaseConstants.EVENT_TABLENAME
+                + "(" + DataBaseConstants.EVENT_COLNAME[0] + " " + DataBaseConstants.EVENT_CREATE_PARAM[0] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[1] + " " + DataBaseConstants.EVENT_CREATE_PARAM[1] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[2] + " " + DataBaseConstants.EVENT_CREATE_PARAM[2] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[3] + " " + DataBaseConstants.EVENT_CREATE_PARAM[3] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[4] + " " + DataBaseConstants.EVENT_CREATE_PARAM[4] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[5] + " " + DataBaseConstants.EVENT_CREATE_PARAM[5] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[6] + " " + DataBaseConstants.EVENT_CREATE_PARAM[6] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[7] + " " + DataBaseConstants.EVENT_CREATE_PARAM[7] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.EVENT_COLNAME[8] + " " + DataBaseConstants.EVENT_CREATE_PARAM[8] + " " + DataBaseConstants.NN
                 + ")";
-        String SQUARE_Create = "CREATE TABLE IF NOT EXISTS " + DataBaseConstances.SQUARE_TABLENAME
-                + "(" + DataBaseConstances.SQUARE_COLNAME[0] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[0] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[1] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[1] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[2] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[2] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[3] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[3] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[4] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[4] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[5] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[5] + " " + DataBaseConstances.NN
-                + "," + DataBaseConstances.SQUARE_COLNAME[6] + " " + DataBaseConstances.SQUARE_CREATE_PARAM[6] + " " + DataBaseConstances.NN
+        String SQUARE_Create = "CREATE TABLE IF NOT EXISTS " + DataBaseConstants.SQUARE_TABLENAME
+                + "(" + DataBaseConstants.SQUARE_COLNAME[0] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[0] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[1] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[1] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[2] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[2] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[3] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[3] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[4] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[4] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[5] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[5] + " " + DataBaseConstants.NN
+                + "," + DataBaseConstants.SQUARE_COLNAME[6] + " " + DataBaseConstants.SQUARE_CREATE_PARAM[6] + " " + DataBaseConstants.NN
                 + ")";
 
         /*Debug Code Block*/

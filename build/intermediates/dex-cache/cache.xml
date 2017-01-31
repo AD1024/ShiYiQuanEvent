@@ -20,15 +20,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/support-annotations-24.2.1_cfcb5a5a3764a633db8167a09bc9fcfd8d582337.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/cn.bingoogolapple/bga-qrcodecore/1.1.3/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1402312a1d966670b02d20ee697b2e1a56203c0b">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/cn.bingoogolapple-bga-qrcodecore-1.1.3_e4af38cb74b1a158660e39b40815683d1e1bdc6d/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/jars/classes.jar"
         jumboMode="false"
@@ -45,15 +36,6 @@
         revision="23.0.2"
         sha1="3158c15bb0ae97575debdb40cfcd8f0f9f244526">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-drawee-0.9.0_edbaed9e8b147bc1ff5980948def1b25e08a4734.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/fresco/0.9.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="ca51025f4a58fc7fb6cfaa85e7d09b7ae47e6187">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.fresco-fresco-0.9.0_0db614269190da236eaa638814424d528b7b3fee/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -128,51 +110,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-24.2.1_26eba34a461170eec2a6724d82982ec0b0d218fc.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-24.2.1_7dff1580c7922af03fb1e052651997188d726c1e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.github.zzz40500/AndroidSweetSheet/1.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="8e6e30a296f144126c62da545452456950e56b27">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.zzz40500-AndroidSweetSheet-1.1.0_633074273ae9d9ceaf141da32447d63042a98c59/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-24.2.1_4f85892535f131d480177a8bfe5dc83666decf3a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-24.2.1_ee29a8033af82b2f2f611be30f9beb5172b2ba30/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/cn.bingoogolapple/bga-zxing/1.1.3/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="73040e65336ec6ad0f44c231e000032e6e4217f0">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/cn.bingoogolapple-bga-zxing-1.1.3_470274bb13626373de9a7bab84a478f90045ff87/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.1.4/129874135e6081269ace2312092031558865de12/bolts-android-1.1.4.jar"
         jumboMode="false"
@@ -189,15 +126,6 @@
         revision="23.0.2"
         sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-design-24.2.1_f3f0adc27ffcb6e34c4a4e4584fd2f3ff707790c.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_14f0121a3b7ddb354710b0103d629eca093c4356/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -272,33 +200,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-24.2.1_9d66e2088c1b9067170882abb349e6cc35b5c578.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/cn.bingoogolapple/bga-adapter/1.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d2fc47d835e217890cbe631b0bb447786d8544aa">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/cn.bingoogolapple-bga-adapter-1.1.0_23ff1e3b3049bb4780eeedc01a9f13249fbb5e80/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.quinny898.library.persistentsearch/library/1.1.0-SNAPSHOT/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="4c7250baed60ef7694c1c55723750831f3dbee67">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.quinny898.library.persistentsearch-library-1.1.0-SNAPSHOT_3f1ebd112076481512c7afcf74082e69c6269822/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/fbcore/0.9.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="4ee95617ab850030c51486d02bc9d207b14419c6">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.fresco-fbcore-0.9.0_07137511b08fbc9167deb1d59271cb81152d2b2f/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
         jumboMode="false"
@@ -306,15 +207,6 @@
         revision="23.0.2"
         sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-24.2.1_e53150cbe399585b17285d63d049b5b88920b7b8.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.4.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d9ecde39b460470e655de6e47c05573d2d5a8bfb">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.4.0_745bcd0f0f9a2f751e9d5cac3d184e565d547b0a/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -326,15 +218,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-24.2.1_4224647ecd1ba0a89dc14f0da81fbf936f11163e.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.novaapps/FloatingActionMenu/1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="12ce9586bd948fff2dd381654c93e4c7ccbf068f">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.novaapps-FloatingActionMenu-1.0_989f87c985f5c0c301009a00fd81884ae9bafd8f/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.quinny898.library.persistentsearch/library/1.1.0-SNAPSHOT/jars/classes.jar"
         jumboMode="false"
@@ -344,15 +227,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.quinny898.library.persistentsearch-library-1.1.0-SNAPSHOT_3f1ebd112076481512c7afcf74082e69c6269822.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.2.1_432352acd5ba22c00593c7e2f8a1bc2ff85d59d0/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/fresco/0.9.0/jars/classes.jar"
         jumboMode="false"
@@ -360,60 +234,6 @@
         revision="23.0.2"
         sha1="ca51025f4a58fc7fb6cfaa85e7d09b7ae47e6187">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.facebook.fresco-fresco-0.9.0_0db614269190da236eaa638814424d528b7b3fee.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.1/support-annotations-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-24.2.1_cfcb5a5a3764a633db8167a09bc9fcfd8d582337/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="4e1a56083387367fe26b5484e1a8d44782ec081b">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_1f7e43f470b9b81158d477204dfb942d3050a091/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/drawee/0.9.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="3158c15bb0ae97575debdb40cfcd8f0f9f244526">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.fresco-drawee-0.9.0_edbaed9e8b147bc1ff5980948def1b25e08a4734/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_7a587d9f964fbb2c709a331cc36d799f859b9c2f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="867dad63c33388ff8c7644b236579355036d075f">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_91c029da49931fce73e423f1d8cc67a2a47cde2b/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_ba31bb93bd4b7ea8512fdbf60199edfcf98333dc/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -434,15 +254,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/cn.bingoogolapple-bga-zxing-1.1.3_470274bb13626373de9a7bab84a478f90045ff87.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-24.2.1_b73d938399ad70fbe4fd01342f2cb8bc4379f539/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/cn.bingoogolapple/bga-qrcodecore/1.1.3/jars/classes.jar"
         jumboMode="false"
@@ -461,24 +272,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.github.zzz40500-AndroidSweetSheet-1.1.0_633074273ae9d9ceaf141da32447d63042a98c59.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_0de5029434bc34e914d481eb2b1e4207c40fdca0/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-24.2.1_26eba34a461170eec2a6724d82982ec0b0d218fc/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/classes.jar"
         jumboMode="false"
@@ -486,15 +279,6 @@
         revision="23.0.2"
         sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-24.2.1_ee29a8033af82b2f2f611be30f9beb5172b2ba30.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline-base/0.9.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="39bd9f893c75eac9e76559cc4e96af6e417afdc5">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.fresco-imagepipeline-base-0.9.0_320d5e933d1bf266c2b77cea90806271d044772b/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -506,33 +290,6 @@
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/library-2.4.0_14f0121a3b7ddb354710b0103d629eca093c4356.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/design/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="e03f47f3d1017a093bb3239d4ec47c3447f40744">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-24.2.1_f3f0adc27ffcb6e34c4a4e4584fd2f3ff707790c/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.1.4/129874135e6081269ace2312092031558865de12/bolts-android-1.1.4.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="129874135e6081269ace2312092031558865de12">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-android-1.1.4_277829bf3f9ec1e3a45a0b28ef011fc9a364f8d7/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.jcodecraeer/xrecyclerview/1.2.7/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="0724e4d93c85866c8953b74776fa320efa122205">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.jcodecraeer-xrecyclerview-1.2.7_b2f8bc6c21bf3fff5ca35206547c92e568e79963/classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.2.1/jars/classes.jar"
         jumboMode="false"
@@ -540,69 +297,6 @@
         revision="23.0.2"
         sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-24.2.1_4f85892535f131d480177a8bfe5dc83666decf3a.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/cn.bingoogolapple/bga-photopicker/1.1.2/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="9b1ee0a70a3440e267e40a565b9ec91ca36d5bf6">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/cn.bingoogolapple-bga-photopicker-1.1.2_1aaf29cbe8ea496416808619d331f16789ec1c1d/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-24.2.1_c97bcc02232dc3dda34f8941d7564c27580010af/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-24.2.1_4224647ecd1ba0a89dc14f0da81fbf936f11163e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-24.2.1_9d66e2088c1b9067170882abb349e6cc35b5c578/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline/0.9.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="57528b5deee77bfa2188fc279fd45066366f17f5">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.fresco-imagepipeline-0.9.0_45ed6bcd23212004cd3999209fdad01a4d56218b/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/jars/libs/internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_30b39f098fc440df58af3498265db6622dcca241/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="f53add10e514bcea3c6d53de61991254aae14a04">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_36d5e5498643f9bfe14206abbbbd3806665992e3/classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -630,15 +324,6 @@
         revision="23.0.2"
         sha1="d2fc47d835e217890cbe631b0bb447786d8544aa">
         <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/pre-dexed/debug/cn.bingoogolapple-bga-adapter-1.1.0_23ff1e3b3049bb4780eeedc01a9f13249fbb5e80.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="23.0.2"
-        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
-        <dex dex="/Users/CCoderAD/AndroidStudioProjects/ShiYiQuanEvent/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_e53150cbe399585b17285d63d049b5b88920b7b8/classes.dex" />
     </item>
     <item
         is-multidex="false"

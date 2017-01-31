@@ -41,16 +41,11 @@
             android:label="@string/title_activity_open_source_info"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name="com.google.zxing.client.android.CaptureActivity"
-            android:label="QScan" />
-        <activity
-            android:name="com.google.zxing.client.android.encode.EncodeActivity"
-            android:label="编码设置" />
-        <activity
             android:name=".activities.FavEventActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:label="登录十一圈" />
         <activity
             android:name=".activities.UserInfoActivity"
@@ -59,6 +54,7 @@
             android:name=".activities.ScannerActivity"
             android:label="扫扫码"
             android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SplashScreen"
@@ -73,9 +69,11 @@
         </activity>
         <activity
             android:name=".activities.SettingActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:label="@string/action_settings" />
         <activity
             android:name=".activities.ClubSquareActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:label="社团广场" />
         <activity
             android:name=".activities.ClubInfoDetailActivity"
@@ -86,7 +84,9 @@
             android:label="搜索结果"></activity>
         <activity
             android:name=".activities.MomentActivity"
-            android:label="天台"></activity>
+            android:parentActivityName=".activities.MainActivity"
+            android:label="天台">
+        </activity>
     </application>
 
 </manifest>

@@ -7,107 +7,164 @@
     android:paddingTop="10sp"
     tools:context="ccoderad.bnds.shiyiquanevent.activities.SettingActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/setting_skip_splash"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="85sp"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:paddingLeft="10sp"
-                android:paddingTop="33sp"
-                android:text="@string/activity_settings_skip_splash"
-                android:textSize="15sp" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_skip_splash"
+                android:layout_width="match_parent"
+                android:layout_height="85sp"
+                android:foreground="?android:attr/selectableItemBackground">
 
-            <Switch
-                android:id="@+id/setting_switch_skip_splash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingEnd="7sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:paddingLeft="10sp"
+                        android:paddingTop="33sp"
+                        android:text="@string/activity_settings_skip_splash"
+                        android:textSize="15sp" />
+
+                    <Switch
+                        android:id="@+id/setting_switch_skip_splash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingEnd="7sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_enable_high_quality_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="85sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:paddingLeft="10sp"
+                        android:paddingTop="33sp"
+                        android:text="@string/setting_high_quality_avatar_indicator"
+                        android:textSize="15sp" />
+
+                    <Switch
+                        android:id="@+id/setting_high_quality_avatar_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingEnd="7sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_enable_auto_check_update"
+                android:layout_width="match_parent"
+                android:layout_height="85sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:paddingLeft="10sp"
+                        android:paddingTop="33sp"
+                        android:text="@string/setting_enable_auto_update_check"
+                        android:textSize="15sp" />
+
+                    <Switch
+                        android:id="@+id/setting_auto_check_update_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingEnd="7sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_clear_pic_cache"
+                android:layout_width="match_parent"
+                android:layout_height="65sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/setting_clear_pic_cache" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_clear_event_cache"
+                android:layout_width="match_parent"
+                android:layout_height="65sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/setting_clear_event_cache" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_check_update"
+                android:layout_width="match_parent"
+                android:layout_height="65sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="检查更新" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/setting_show_update_info"
+                android:layout_width="match_parent"
+                android:layout_height="65sp"
+                android:layout_marginTop="10sp"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="版本特性" />
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/setting_enable_high_quality_avatar"
-        android:layout_width="match_parent"
-        android:layout_height="85sp"
-        android:layout_marginTop="10sp"
-        android:foreground="?android:attr/selectableItemBackground">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:paddingLeft="10sp"
-                android:paddingTop="33sp"
-                android:text="@string/setting_high_quality_avatar_indicator"
-                android:textSize="15sp" />
-
-            <Switch
-                android:id="@+id/setting_high_quality_avatar_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingEnd="7sp" />
-
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/setting_clear_pic_cache"
-        android:layout_width="match_parent"
-        android:layout_height="65sp"
-        android:layout_marginTop="10sp"
-        android:foreground="?android:attr/selectableItemBackground">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/setting_clear_pic_cache" />
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/setting_clear_event_cache"
-        android:layout_width="match_parent"
-        android:layout_height="65sp"
-        android:layout_marginTop="10sp"
-        android:foreground="?android:attr/selectableItemBackground">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/setting_clear_event_cache" />
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/setting_show_update_info"
-        android:layout_width="match_parent"
-        android:layout_height="65sp"
-        android:layout_marginTop="10sp"
-        android:foreground="?android:attr/selectableItemBackground">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="版本特性" />
-    </android.support.v7.widget.CardView>
+    </ScrollView>
 
 </LinearLayout>

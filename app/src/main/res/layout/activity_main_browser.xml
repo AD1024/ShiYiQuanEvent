@@ -66,7 +66,7 @@
                     android:id="@+id/fab_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_fab_main"
+                    android:src="@drawable/ic_expand_menu"
                     fab:backgroundTint="@android:color/holo_blue_light"
                     fab:fabSize="normal" />
 
@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="添加社团活动"
-                    android:src="@drawable/ic_add_activity"
+                    android:src="@drawable/ic_circle_add"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
 
@@ -128,7 +128,7 @@
             </terranovaproductions.newcomicreader.FloatingActionMenu>
         </android.support.design.widget.CoordinatorLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start">
@@ -144,7 +144,7 @@
                 android:id="@+id/browser_club_list_indicator_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_centerInParent="true"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -153,12 +153,12 @@
                     android:layout_height="wrap_content"
                     android:text="请先" />
 
-                <Button
+                <TextView
                     android:id="@+id/browser_club_list_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="登录" />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

@@ -9,7 +9,7 @@ import java.util.List;
 
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.listeners.RecyclerViewItemClickListener;
 import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 import ccoderad.bnds.shiyiquanevent.viewholders.MomentListViewHolder;
@@ -44,9 +44,9 @@ public class MomentListAdapter extends RecyclerView.Adapter<MomentListViewHolder
     @Override
     public void onBindViewHolder(MomentListViewHolder holder, int position) {
         MomentDataModel data = mDataList.get(position);
-        holder.mMajorAvatar.setImageURI(Uri.parse(URLConstances.HOME_URL_WITHOUT_DASH + data.majorAvatarURL));
+        holder.mMajorAvatar.setImageURI(Uri.parse(URLConstants.HOME_URL_WITHOUT_DASH + data.majorAvatarURL));
         holder.tvMajor.setText(data.majorText);
-        holder.tvAction.setText(data.headerText + data.majorText
+        holder.tvAction.setText(data.majorText
                 + data.bodyText + data.minorText + data.tailText);
         holder.tvTimeAgo.setText(data.timeAgo);
         holder.tvPlatform.setText(data.platformText);

@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import ccoderad.bnds.shiyiquanevent.R;
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -17,8 +17,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
-        SharedPreferences pr = getSharedPreferences(PreferencesConstances.SETTING_PREF, MODE_PRIVATE);
-        if (!pr.getBoolean(PreferencesConstances.SETTING_SKIP_SPLASH_SCREEN_TAG, false)) {
+        SharedPreferences pr = getSharedPreferences(PreferencesConstants.SETTING_PREF, MODE_PRIVATE);
+        if (!pr.getBoolean(PreferencesConstants.SETTING_SKIP_SPLASH_SCREEN_TAG, false)) {
             Handler delay = new Handler();
             delay.postDelayed(new Runnable() {
                 @Override

@@ -5,10 +5,11 @@ package ccoderad.bnds.shiyiquanevent.beans;
  */
 
 public class MomentDataModel {
-    // header -> majorText -> bodyText -> minorText -> tailText
+    // deprecated: header -> majorText -> bodyText -> minorText -> tailText
+    // major.text -> body -> minor.text -> tail
     public String majorText;
     public String minorText;
-    public String headerText;
+    // public String headerText;
     public String bodyText;
     public String tailText;
     public String platformText;

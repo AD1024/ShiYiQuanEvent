@@ -15,7 +15,7 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/club_square_info_avatar"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="200sp"
             android:layout_gravity="center"
             fresco:fadeDuration="300"
@@ -29,8 +29,7 @@
             android:paddingLeft="5sp"
             android:text="ClubName"
             android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/club_square_info_description"

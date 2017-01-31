@@ -7,9 +7,12 @@
     tools:context=".activities.FavEventActivity">
 
     <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/favd_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:navigationIcon="@drawable/ic_back"
+        app:navigationIcon="@drawable/ic_back"
         android:background="?attr/colorPrimary"></android.support.v7.widget.Toolbar>
 
     <com.quinny898.library.persistentsearch.SearchBox
