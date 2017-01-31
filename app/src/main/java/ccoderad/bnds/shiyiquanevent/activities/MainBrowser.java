@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,10 +25,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -64,49 +65,103 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubChoiceAdapter;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.ClubModel;
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.MultiThreadConstants;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
+import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
+import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import terranovaproductions.newcomicreader.FloatingActionMenu;
 
 public class MainBrowser extends AppCompatActivity implements FloatingActionMenu.OnMenuItemClickListener, DrawerLayout.DrawerListener {
 
-    private final String HOME_URL = URLConstances.HOME_URL;
+    /*
+    * Primitive data type
+    * */
+    private long last_back_press = 0;
+    private long last_exit_press = 0;
+    private boolean ClubLoaded;
+    private boolean isLogin;
+    private boolean adminedLoaded;
+
+    private final String HOME_URL = URLConstants.HOME_URL;
+    private String host_id = "";
+
+    /*
+    * Adapters
+    * */
+    private ClubListAdapter mAdapter;
+    private ClubChoiceAdapter Choiceadapter;
+
+
+    /*
+    * Multi-thread related
+    * */
+    private Handler updateTask;
+    private Handler getClub;
+    private Runnable taskMain;
+    private Runnable firstFetchTask;
+
+    /*
+    * Java Library variables
+    * */
+    private List<ClubModel> mMyClubs; // Club information list
+    private List<String> AdminedClubURLs = new ArrayList<>(); // Club urls that is managed by the user
+    private List<MenuEntity> myAdmined = new ArrayList<>(); // Menu entities
+    private Map<String, Integer> mClubNameIndex; // There might be several
+    // identities maintained by a user.
+
+    /*
+    * Views
+    * */
     private WebView mDisplay;
     private WebView mRelation;
-    private Toolbar toolbar;
     private ListView mClubList;
     private SweetSheet mChatChoice;
     private SweetSheet mAddActivity;
-    private boolean ClubLoaded;
-    private boolean isLogin;
-    private String host_id = "";
-    private long last_back_press = 0;
-    private long last_exit_press = 0;
-    private LinearLayout mClubListIndicatorContainer;
-    private ClubListAdapter mAdapter;
-    private ClubChoiceAdapter Choiceadapter;
+    private Toolbar toolbar;
     private DrawerLayout mClubContainer;
+    private LinearLayout mClubListIndicatorContainer;
     private FloatingActionMenu mFunctionGroupContainer;
-    private Handler updateTask;
-    private RequestQueue mQueue;
-    private Runnable taskMain;
-    private SharedPreferences host_id_provider;
-    private List<ClubModel> mMyClubs;
-    private boolean adminedLoaded;
-    private List<MenuEntity> myAdmined = new ArrayList<>();
-    private List<String> AdminedClubURLs = new ArrayList<>();
+
+    /*
+    * Other variables
+    * */
     private ImageLoaderConfiguration mConfiguration;
+
     private DisplayImageOptions mDisplayOption;
+
     private ValueCallback<Uri> mUploadMessage;
+
+    private SharedPreferences host_id_provider;
+
+    private RequestQueue mQueue;
+
+    /*
+    * Halt the thread that loop to fetch information
+    * */
+    private final Handler handleStop = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MultiThreadConstants.RUNNABLE_HALT: {
+                    getClub.removeCallbacks(firstFetchTask);
+                    break;
+                }
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,17 +170,8 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mQueue = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_main_browser);
         mClubListIndicatorContainer = (LinearLayout) findViewById(R.id.browser_club_list_indicator_container);
-        Button loginNav = (Button) findViewById(R.id.browser_club_list_login);
-        isLogin = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE).getBoolean(PreferencesConstances.LOGIN_STATUS, false);
-        if (!isLogin) {
-            mClubListIndicatorContainer.setVisibility(View.VISIBLE);
-            loginNav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivityForResult(new Intent(MainBrowser.this, LoginActivity.class), 8080);
-                }
-            });
-        }
+        TextView loginNav = (TextView) findViewById(R.id.browser_club_list_login);
+        isLogin = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE).getBoolean(PreferencesConstants.LOGIN_STATUS, false);
         init();
         ToastUtil.makeText("连按三次返回可回到活动界面", false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -145,15 +191,15 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     }
 
     private void spawnId() {
-        if (!host_id_provider.getString(PreferencesConstances.HOST_ID_TAG, "None").equals("None")) {
-            host_id = host_id_provider.getString(PreferencesConstances.HOST_ID_TAG, "None");
+        if (!host_id_provider.getString(PreferencesConstants.HOST_ID_TAG, "None").equals("None")) {
+            host_id = host_id_provider.getString(PreferencesConstants.HOST_ID_TAG, "None");
             Log.i("SpawnIdLog", "Get Host id from localStorage:" + host_id);
         } else {
             host_id += "android_";
             host_id += Long.toString(System.currentTimeMillis());
             Log.i("Host_id", host_id);
             SharedPreferences.Editor editor = host_id_provider.edit();
-            editor.putString(PreferencesConstances.HOST_ID_TAG, host_id).apply();
+            editor.putString(PreferencesConstants.HOST_ID_TAG, host_id).apply();
         }
     }
 
@@ -227,6 +273,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mAddActivity.setDelegate(new ViewPagerDelegate());
 
         mMyClubs = new ArrayList<>();
+        mClubNameIndex = new HashMap<>();
 
         mAdapter = new ClubListAdapter(this, mMyClubs);
         mClubContainer = (DrawerLayout) findViewById(R.id.club_list_drawer);
@@ -239,7 +286,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mFunctionGroupContainer.setIsCircle(false);
         mFunctionGroupContainer.setmItemGap(30);
 
-        host_id_provider = getSharedPreferences(PreferencesConstances.HOST_ID_PREF, MODE_PRIVATE);
+        host_id_provider = getSharedPreferences(PreferencesConstants.HOST_ID_PREF, MODE_PRIVATE);
 
         mConfiguration = buildConfig4UIL();
         ImageLoader.getInstance().init(mConfiguration);
@@ -299,7 +346,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 if (url.equals(HOME_URL)) {
-                    updateId();
                     asyncGetClubInfo();
                 }
             }
@@ -315,19 +361,23 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             }
         };
 
-        Handler getClub = new Handler();
-        Runnable task = new Runnable() {
+        getClub = new Handler();
+        firstFetchTask = new Runnable() {
             @Override
             public void run() {
                 if (mMyClubs.size() == 0) {
+                    Log.i("FirstFetchTask", "Fetching Data");
                     asyncGetClubInfo();
-                    new Handler().postDelayed(this, 8 * 1000);
+                    getClub.postDelayed(this, 8 * 1000);
                 } else {
-                    return;
+                    Log.i("FirstFetchTask", "Data Fetched, halting");
+                    Message msg = new Message();
+                    msg.what = MultiThreadConstants.RUNNABLE_HALT;
+                    handleStop.sendMessage(msg);
                 }
             }
         };
-        getClub.post(task);
+        getClub.post(firstFetchTask);
 
         updateTask = new Handler();
         updateTask.post(taskMain);
@@ -363,26 +413,42 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 bean.club_name = jsonObject.getString("fname");
                                 bean.sname = jsonObject.getString("sname");
-                                String status = jsonObject.getString("status");
-                                bean.LargeAvatarURL = HOME_URL + "media/images/avatar/large/" + "club-" + bean.sname + ".png";
-                                bean.mediumAvatarURL = HOME_URL + "media/images/avatar/" + "club-" + bean.sname + ".png";
-                                switch (status) {
-                                    case "head":
-                                        bean.status = "社长";
-                                        break;
-                                    case "vice":
-                                        bean.status = "副社长";
-                                        break;
-                                    default:
-                                        bean.status = "社员";
-                                        break;
+                                if (mClubNameIndex.containsKey(bean.sname)) {
+                                    int idx = mClubNameIndex.get(bean.sname);
+                                    mMyClubs.get(idx).status
+                                            .add(jsonObject
+                                                    .getJSONArray("status")
+                                                    .getString(1));
+                                } else {
+                                    JSONArray status = jsonObject.getJSONArray("status");
+                                    bean.LargeAvatarURL = HOME_URL
+                                            + "media/images/avatar/large/"
+                                            + "club-" + bean.sname
+                                            + ".png";
+                                    bean.mediumAvatarURL = HOME_URL
+                                            + "media/images/avatar/"
+                                            + "club-"
+                                            + bean.sname
+                                            + ".png";
+                                /*
+                                * 0: Key : Status indicator(Might be useless for Client)
+                                * 1: Value: Real value of the status
+                                *
+                                * */
+                                    bean.status.add(status.getString(1));
+                                /*
+                                * Optimization for administrability(:P) check
+                                * */
+                                    if (status.getString(0).equals("head")
+                                            || status.getString(0).equals("vice")) {
+                                        bean.isAdmin = true;
+                                    }
+                                    mClubNameIndex.put(bean.sname, i);
+                                    mMyClubs.add(bean);
                                 }
-                                // Log.i("Info-" + Integer.toString(i), bean.status + "\n" + bean.club_name + "\n" + bean.sname);
-                                // Log.i("AvatarMed", bean.mediumAvatarURL);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            mMyClubs.add(bean);
                         }
 
                         //Notify the listview in drawer to update its views.
@@ -429,6 +495,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 ToastUtil.makeText("请检查网络连接", true);
             }
         });
+        request.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
         mQueue.add(request);
     }
 
@@ -447,7 +514,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         if (mMyClubs.size() != 0) {
             for (ClubModel club : mMyClubs
                     ) {
-                if (club.status.equals("社长") || club.status.equals("副社长")) {
+                if (club.isAdmin) {
                     AdminedClubURLs.add(HOME_URL + "/club/" + club.sname);
                     final MenuEntity M = new MenuEntity();
                     M.title = club.club_name;
@@ -568,11 +635,14 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             Uri callback = Uri.parse(filedir);
             mUploadMessage.onReceiveValue(callback);
         } else if (requestCode == 8080) {
-            mClubListIndicatorContainer.setVisibility(View.INVISIBLE);
-            spawnId();
-            updateId();
-            asyncGetClubInfo();
-            LoadClub2Choice();
+            isLogin = PreferenceUtils.getBool(this, PreferencesConstants.LOGIN_INFO, PreferencesConstants.LOGIN_STATUS, false);
+            if (isLogin) {
+                mClubListIndicatorContainer.setVisibility(View.INVISIBLE);
+                spawnId();
+                updateId();
+                asyncGetClubInfo();
+                LoadClub2Choice();
+            }
         }
     }
 
@@ -591,7 +661,9 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
     @Override
     public void onDrawerOpened(View drawerView) {
-
+        if (mMyClubs.size() < 1) {
+            asyncGetClubInfo();
+        }
     }
 
     @Override

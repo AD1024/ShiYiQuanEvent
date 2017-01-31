@@ -12,8 +12,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
-import ccoderad.bnds.shiyiquanevent.beans.ClubModel;
 import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.beans.ClubModel;
 
 /**
  * Created by CCoderAD on 16/5/12.
@@ -57,7 +57,14 @@ public class ClubListAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
         vh.tvFname.setText(mData.get(position).club_name);
-        vh.tvStatus.setText(mData.get(position).status);
+        String textStatus = "";
+        List<String> mStatus = mData.get(position).status;
+        int i;
+        for (i = 0; i < mStatus.size() - 1; ++i) {
+            textStatus = textStatus + mStatus.get(i) + " | ";
+        }
+        textStatus = textStatus + mStatus.get(i);
+        vh.tvStatus.setText(textStatus);
         vh.avatar.setImageURI(Uri.parse(mData.get(position).mediumAvatarURL));
 
         return convertView;
