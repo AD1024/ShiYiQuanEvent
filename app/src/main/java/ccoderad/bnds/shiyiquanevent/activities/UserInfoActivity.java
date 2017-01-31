@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import ccoderad.bnds.shiyiquanevent.R;
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
 
 public class UserInfoActivity extends AppCompatActivity {
@@ -33,17 +33,17 @@ public class UserInfoActivity extends AppCompatActivity {
         mLogout = (Button) findViewById(R.id.user_info_logout);
         mAvatar = (SimpleDraweeView) findViewById(R.id.user_info_avatar);
 
-        SharedPreferences SettingPref = getSharedPreferences(PreferencesConstances.SETTING_PREF, MODE_PRIVATE);
+        SharedPreferences SettingPref = getSharedPreferences(PreferencesConstants.SETTING_PREF, MODE_PRIVATE);
         SharedPreferences userInfo =
-                getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
-        String userName = userInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG, "Dummy");
-        String userEmail = userInfo.getString(PreferencesConstances.USER_EMAIL_TAG, "DummyEmail");
-        boolean isHighQuality = SettingPref.getBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
+                getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
+        String userName = userInfo.getString(PreferencesConstants.USER_REAL_NAME_TAG, "Dummy");
+        String userEmail = userInfo.getString(PreferencesConstants.USER_EMAIL_TAG, "DummyEmail");
+        boolean isHighQuality = SettingPref.getBoolean(PreferencesConstants.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
         String userAvatarUrl = userInfo.getString(isHighQuality ?
-                        PreferencesConstances.USER_RAW_AVATAR_URL_TAG
-                        : PreferencesConstances.USER_AVATAR_URL_TAG
+                        PreferencesConstants.USER_RAW_AVATAR_URL_TAG
+                        : PreferencesConstants.USER_AVATAR_URL_TAG
                 , "NULL");
-        userAvatarUrl = URLConstances.HOME_URL_WITHOUT_DASH + userAvatarUrl;
+        userAvatarUrl = URLConstants.HOME_URL_WITHOUT_DASH + userAvatarUrl;
 
         mUserName.setText("登录账户:" + userName);
         mUserEmail.setText("绑定邮箱:" + userEmail);
@@ -54,18 +54,18 @@ public class UserInfoActivity extends AppCompatActivity {
                 CookieSyncManager.createInstance(UserInfoActivity.this);
                 CookieManager manager = CookieManager.getInstance();
                 manager.removeAllCookie();
-                SharedPreferences.Editor del = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE).edit();
+                SharedPreferences.Editor del = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE).edit();
                 // del.remove("userName");
-                PreferenceUtils.Remove(UserInfoActivity.this, PreferencesConstances.LOGIN_INFO
-                        , new String[]{PreferencesConstances.USER_AVATAR_URL_TAG
-                                , PreferencesConstances.USER_EMAIL_TAG
-                                , PreferencesConstances.USER_NICK_NAME_TAG
-                                , PreferencesConstances.USER_REAL_NAME_TAG});
+                PreferenceUtils.Remove(UserInfoActivity.this, PreferencesConstants.LOGIN_INFO
+                        , new String[]{PreferencesConstants.USER_AVATAR_URL_TAG
+                                , PreferencesConstants.USER_EMAIL_TAG
+                                , PreferencesConstants.USER_NICK_NAME_TAG
+                                , PreferencesConstants.USER_REAL_NAME_TAG});
                 del.putBoolean("Logined", false);
                 del.apply();
-                getSharedPreferences(PreferencesConstances.HOST_ID_PREF, MODE_PRIVATE)
+                getSharedPreferences(PreferencesConstants.HOST_ID_PREF, MODE_PRIVATE)
                         .edit()
-                        .remove(PreferencesConstances.HOST_ID_TAG)
+                        .remove(PreferencesConstants.HOST_ID_TAG)
                         .apply();
                 setResult(8091);
                 finish();
