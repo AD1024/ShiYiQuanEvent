@@ -1,10 +1,12 @@
 package ccoderad.bnds.shiyiquanevent.activities;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -71,10 +73,12 @@ import java.util.List;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.EventListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
+import ccoderad.bnds.shiyiquanevent.broadcast.DownloadBroadcastReceiver;
 import ccoderad.bnds.shiyiquanevent.db.DataBaseManager;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.utils.DownloadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
 import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
@@ -85,7 +89,6 @@ import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
-    private static final String CurrentVersion = "1.13";
     private static final String URL_PREFIX = "<!-- 安卓版本";
     final long MAX_MEM = 30 * ByteConstants.MB;
     final long MAX_LOW_MEM = 10 * ByteConstants.MB;
@@ -93,9 +96,11 @@ public class MainActivity extends AppCompatActivity
     final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
     final int LOGIN_REQCODE = 8080;
     final int LOGOUT_REQCODE = 8090;
-    private final String REQ_URL = URLConstances.HOME_URL + "api/?category=event&time=latest";
+    private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest";
     private final String CACHE_FILE_NAME = "cacheEvent.json";
-    private final String HOME_URL = URLConstances.HOME_URL;
+    private final String HOME_URL = URLConstants.HOME_URL;
+    private String mNewVersionDownloadURL;
+
     private DiskLruCache mCache;
     private DiskCacheConfig mImageCacheConfig;
 
@@ -152,7 +157,7 @@ public class MainActivity extends AppCompatActivity
             headerText.setTextColor(Color.BLACK);
         }
 
-        if (!version.equals(CurrentVersion)) {
+        if (!version.equals(URLConstants.CURRENT_VERSION)) {
             new AlertDialog.Builder(this)
                     .setView(window)
                     .setCustomTitle(Header)
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             SharedPreferences.Editor edit = versionInfo.edit();
-                            edit.putString("VersionCode", CurrentVersion);
+                            edit.putString("VersionCode", URLConstants.CURRENT_VERSION);
                             edit.apply();
                         }
                     })
@@ -187,18 +192,25 @@ public class MainActivity extends AppCompatActivity
         mIsConnected = isNetWorkAvailable();
         ShowUpdateInfo();
 
+        /*
+        * Register Download brodcast listener for downloading the new version file
+        * */
+        DownloadBroadcastReceiver mReceiver = new DownloadBroadcastReceiver();
+        registerReceiver(mReceiver
+                , new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
         mDataBaseHelper = DataBaseManager.getInstance(this);
 
-        SettingPref = getSharedPreferences(PreferencesConstances.SETTING_PREF, MODE_PRIVATE);
-        final SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
+        SettingPref = getSharedPreferences(PreferencesConstants.SETTING_PREF, MODE_PRIVATE);
+        final SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         View nav_header = navView.getHeaderView(0);
         Nav_Header_stub = nav_header;
 
         TextView userName = (TextView) nav_header.findViewById(R.id.user_name_holder);
-        Logined = LoginInfo.getBoolean(PreferencesConstances.LOGIN_STATUS, false);
+        Logined = LoginInfo.getBoolean(PreferencesConstants.LOGIN_STATUS, false);
         if (Logined) {
-            String set = "登录账户:" + LoginInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG, "点击登录");
+            String set = "登录账户:" + LoginInfo.getString(PreferencesConstants.USER_REAL_NAME_TAG, "点击登录");
             userName.setText(set);
         } else {
             String set = userName.getText().toString() + "-" + "点击登录";
@@ -216,15 +228,18 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        boolean isHighQuality = SettingPref.getBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
+        boolean isHighQuality = SettingPref.getBoolean(PreferencesConstants.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
         String UserAvatarURL = LoginInfo.getString(isHighQuality ?
-                        PreferencesConstances.USER_RAW_AVATAR_URL_TAG
-                        : PreferencesConstances.USER_AVATAR_URL_TAG
+                        PreferencesConstants.USER_RAW_AVATAR_URL_TAG
+                        : PreferencesConstants.USER_AVATAR_URL_TAG
                 , "NULL");
         if (!UserAvatarURL.equals("NULL") && Logined) {
             Log.i("AVATAR", UserAvatarURL);
-            LoginClick.setImageURI(Uri.parse(URLConstances.HOME_URL_WITHOUT_DASH + UserAvatarURL));
+            LoginClick.setImageURI(Uri.parse(URLConstants.HOME_URL_WITHOUT_DASH + UserAvatarURL));
         } else {
+            /*
+            * Reset the SimpleDrawee View in the nav header
+            * */
             Resources r = this.getResources();
             LoginClick.setImageURI(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
                     + r.getResourcePackageName(R.mipmap.logo_2)
@@ -675,7 +690,7 @@ public class MainActivity extends AppCompatActivity
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
-                bean.eventURL = URLConstances.HOME_URL + URLConstances.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
+                bean.eventURL = URLConstants.HOME_URL + URLConstants.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 for (int j = 0; j < favd_stub.size(); j++) {
                     if (bean.eventTitle.equals(favd_stub.get(j).eventTitle)) {
@@ -764,17 +779,17 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, SettingActivity.class));
                 break;
             case R.id.go_to_square:
-                if(isNetWorkAvailable()){
+                if (isNetWorkAvailable()) {
                     startActivity(new Intent(this, ClubSquareActivity.class));
-                }else{
-                    ToastUtil.makeText("无网络连接，请连接网络后再操作",false);
+                } else {
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作", false);
                 }
                 break;
-            case R.id.go_to_moment:{
-                if(isNetWorkAvailable()){
+            case R.id.go_to_moment: {
+                if (isNetWorkAvailable()) {
                     startActivity(new Intent(this, MomentActivity.class));
-                }else{
-                    ToastUtil.makeText("无网络连接，请连接网络后再操作",false);
+                } else {
+                    ToastUtil.makeText("无网络连接，请连接网络后再操作", false);
                 }
             }
 
@@ -784,12 +799,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void updateCsrfToken(String rawHtml){
+    private void updateCsrfToken(String rawHtml) {
         String csrfToken = Utils.getCsrfToken(rawHtml);
-        Log.i("CSRF",csrfToken);
-        if(csrfToken.equals("error") || TextUtils.isEmpty(csrfToken)) return;
-        PreferenceUtils.initialize(this,PreferencesConstances.LOGIN_INFO,MODE_PRIVATE);
-        PreferenceUtils.putString(PreferencesConstances.CSRF_TOKEN_TAG,csrfToken);
+        Log.i("CSRF", csrfToken);
+        if (csrfToken.equals("error") || TextUtils.isEmpty(csrfToken)) return;
+        PreferenceUtils.initialize(this, PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
+        PreferenceUtils.putString(PreferencesConstants.CSRF_TOKEN_TAG, csrfToken);
     }
 
     /*
@@ -805,20 +820,20 @@ public class MainActivity extends AppCompatActivity
             ToastUtil.makeText("登录成功啦", true);
             Logined = true;
             TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
-            SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
-            String indicatorText = LoginInfo.getString(PreferencesConstances.USER_REAL_NAME_TAG, "NULL");
+            SharedPreferences LoginInfo = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
+            String indicatorText = LoginInfo.getString(PreferencesConstants.USER_REAL_NAME_TAG, "NULL");
             if (!indicatorText.equals("NULL")) {
                 tvName.setText("登录账户:" + indicatorText);
             } else {
                 tvName.setText("十一圈Event-点击登录");
             }
 
-            boolean isHighQuality = SettingPref.getBoolean(PreferencesConstances.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
+            boolean isHighQuality = SettingPref.getBoolean(PreferencesConstants.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
             String AvatarUrl = LoginInfo.getString((isHighQuality ?
-                            PreferencesConstances.USER_RAW_AVATAR_URL_TAG
-                            : PreferencesConstances.USER_AVATAR_URL_TAG)
-                    , URLConstances.HOME_URL + URLConstances.DEFAULT_AVATAR_URL);
-            LoginClick.setImageURI(Uri.parse(URLConstances.HOME_URL_WITHOUT_DASH + AvatarUrl));
+                            PreferencesConstants.USER_RAW_AVATAR_URL_TAG
+                            : PreferencesConstants.USER_AVATAR_URL_TAG)
+                    , URLConstants.HOME_URL + URLConstants.DEFAULT_AVATAR_URL);
+            LoginClick.setImageURI(Uri.parse(URLConstants.HOME_URL_WITHOUT_DASH + AvatarUrl));
             StringRequest csrfRequest = new StringRequest(HOME_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -943,6 +958,16 @@ public class MainActivity extends AppCompatActivity
                 for (int i = idx; HTML.charAt(i) >= '0' && HTML.charAt(i) <= '9' || HTML.charAt(i) == '.'; ++i) {
                     ret += HTML.charAt(i);
                 }
+                // Fetch file download url
+                idx = HTML.indexOf(URLConstants.FINAL_VERSION_URL_PREFIX);
+                idx += URLConstants.FINAL_VERSION_URL_PREFIX.length();
+                mNewVersionDownloadURL = "";
+                while (HTML.charAt(idx) >= '0' && HTML.charAt(idx) <= '9') {
+                    mNewVersionDownloadURL += HTML.charAt(idx++);
+                }
+                mNewVersionDownloadURL = URLConstants
+                        .FINAL_VERSION_URL_PREFIX + mNewVersionDownloadURL;
+                Log.i("Download URL", mNewVersionDownloadURL);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -953,8 +978,76 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (!s.equals(CurrentVersion) && !s.equals("NULL")) {
-                ToastUtil.makeText("有新版本，请在十一圈官网下载", true);
+
+            // Initialize Preference Utility
+            PreferenceUtils
+                    .initialize(MainActivity.this
+                            , PreferencesConstants.UPDATE_CHECKER_PREF
+                            , MODE_PRIVATE);
+            PreferenceUtils.putString(PreferencesConstants.UPDATE_CHECKER_NEW_VERSION_CODE, s);
+            if (!s.equals(URLConstants.CURRENT_VERSION) && !s.equals("NULL")) {
+
+                // Update needUpdate Tag to true
+                PreferenceUtils.putBoolean(PreferencesConstants.UPDATE_CHECKER_NEED_UPDATE, true);
+                PreferenceUtils.putString(PreferencesConstants.UPDATE_CHECKER_DOWNLOAD_LINK
+                        , mNewVersionDownloadURL);
+
+                // Check Configurations
+                PreferenceUtils.shiftTable(MainActivity.this, PreferencesConstants.SETTING_PREF, MODE_PRIVATE);
+
+                if (PreferenceUtils.getBool(PreferencesConstants.SETTING_ENABLE_AUTO_UPDATE_TAG, false)) {
+                    // Notification Header View
+                    View updateNotiHeader = ViewTools
+                            .Inflate(MainActivity.this, R.layout.update_info_header, null);
+
+                    TextView tvHeaderText = (TextView) updateNotiHeader
+                            .findViewById(R.id.update_info_header_text);
+                    tvHeaderText.setText("发现更新喵~");
+
+                    // Alert Content View
+                    View contentView = ViewTools
+                            .Inflate(MainActivity.this, R.layout.alert_update_download, null);
+                    TextView tvCurrentVersion = (TextView) contentView
+                            .findViewById(R.id.alert_update_download_current_version);
+                    TextView tvNewVersion = (TextView) contentView
+                            .findViewById(R.id.alert_update_download_new_version);
+                    tvCurrentVersion.setText(URLConstants.CURRENT_VERSION);
+                    tvNewVersion.setText(s);
+
+                    int[] color = ImageTools.RandomColor();
+                    tvHeaderText.setBackgroundColor(Color.rgb(color[0], color[1], color[2]));
+                    if (ImageTools.isDeepColor(color)) {
+                        tvHeaderText.setTextColor(Color.WHITE);
+                    }
+
+                    // Show Alert
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setCustomTitle(updateNotiHeader)
+                            .setView(contentView)
+                            .setPositiveButton("下载", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DownloadUtil.initialize(MainActivity.this);
+                                    DownloadManager.Request mRequest =
+                                            new DownloadUtil.RequestBuilder(mNewVersionDownloadURL)
+                                                    .setTitle("ShiYiQuanEvent-Update.apk")
+                                                    .setDescription("正在下载新版十一圈")
+                                                    .setDownloadDirectory(Environment.DIRECTORY_DOWNLOADS
+                                                            , "ShiYiQuanEvent-Update.apk")
+                                                    .setVisibilityInUi(true)
+                                                    .setMimeType("application/vnd.android.package-archive")
+                                                    .build();
+                                    DownloadUtil.startDownload(mRequest);
+
+                                }
+                            })
+                            .setNegativeButton("暂不下载", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            }).show();
+                }
             }
         }
     }
@@ -967,7 +1060,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(!mRefersh.isRefreshing()){
+            if (!mRefersh.isRefreshing()) {
                 mRefersh.setEnabled(false);
             }
             setTitle("加载中...");
@@ -1014,9 +1107,12 @@ public class MainActivity extends AppCompatActivity
             if (eventBeans.size() == 0) {
                 setTitle("加载失败了呢...QAQ");
                 ToastUtil.makeText("进入没有网络的异次元啦QAQ", false);
+                if (!mRefersh.isEnabled()) {
+                    mRefersh.setEnabled(true);
+                }
                 return;
             }
-            if(!mRefersh.isEnabled()){
+            if (!mRefersh.isEnabled()) {
                 mRefersh.setEnabled(true);
             }
             setTitle("十一活动");
