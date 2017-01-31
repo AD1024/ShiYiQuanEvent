@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -41,17 +42,19 @@ import java.util.Set;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.ClubSquareAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
-import ccoderad.bnds.shiyiquanevent.global.PreferencesConstances;
-import ccoderad.bnds.shiyiquanevent.global.URLConstances;
+import ccoderad.bnds.shiyiquanevent.global.MultiThreadConstants;
+import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
+import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 import ccoderad.bnds.shiyiquanevent.listeners.RecyclerViewItemClickListener;
 import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
+import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
 public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, RecyclerViewItemClickListener {
     //Constants
-    private final String REQUEST_URL = URLConstances.HOME_URL + URLConstances.QUARE_URL + "?api=True";
+    private final String REQUEST_URL = URLConstants.HOME_URL + URLConstants.QUARE_URL + "?api=True";
 
     // Plugins
     private XRecyclerView mClubList;
@@ -90,8 +93,8 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mDataList = new ArrayList<>();
         mClubListAdapter = new ClubSquareAdapter(this, mDataList);
         mClubListAdapter.setOnClubItemClickListener(this);
-        mPreference = getSharedPreferences(PreferencesConstances.LOGIN_INFO, MODE_PRIVATE);
-        islogined = mPreference.getBoolean(PreferencesConstances.LOGIN_INFO, false);
+        mPreference = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
+        islogined = mPreference.getBoolean(PreferencesConstants.LOGIN_INFO, false);
         mBackTop = (FloatingActionButton) findViewById(R.id.club_square_fab);
         mClubList = (XRecyclerView) findViewById(R.id.club_square_list);
         View headerView = mInflater.inflate(R.layout.club_square_header, null);
@@ -184,6 +187,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
+        mRequest.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
         mRequestQueue.add(mRequest);
     }
 
