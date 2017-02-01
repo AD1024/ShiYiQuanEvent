@@ -26,7 +26,6 @@ import java.io.File;
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
 import ccoderad.bnds.shiyiquanevent.global.URLConstants;
-import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
 import ccoderad.bnds.shiyiquanevent.utils.DownloadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;

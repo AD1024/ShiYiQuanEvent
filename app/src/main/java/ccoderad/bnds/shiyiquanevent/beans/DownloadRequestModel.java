@@ -4,7 +4,7 @@ package ccoderad.bnds.shiyiquanevent.beans;
  * Created by CCoderAD on 2017/1/9.
  */
 
-public class DownloadRequestModel{
+public class DownloadRequestModel {
     public String url;
 
     public String title;

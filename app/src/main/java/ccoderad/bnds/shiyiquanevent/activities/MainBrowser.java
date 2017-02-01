@@ -85,6 +85,7 @@ import terranovaproductions.newcomicreader.FloatingActionMenu;
 
 public class MainBrowser extends AppCompatActivity implements FloatingActionMenu.OnMenuItemClickListener, DrawerLayout.DrawerListener {
 
+    private final String HOME_URL = URLConstants.HOME_URL;
     /*
     * Primitive data type
     * */
@@ -93,8 +94,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private boolean ClubLoaded;
     private boolean isLogin;
     private boolean adminedLoaded;
-
-    private final String HOME_URL = URLConstants.HOME_URL;
     private String host_id = "";
 
     /*
@@ -111,42 +110,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private Handler getClub;
     private Runnable taskMain;
     private Runnable firstFetchTask;
-
-    /*
-    * Java Library variables
-    * */
-    private List<ClubModel> mMyClubs; // Club information list
-    private List<String> AdminedClubURLs = new ArrayList<>(); // Club urls that is managed by the user
-    private List<MenuEntity> myAdmined = new ArrayList<>(); // Menu entities
-    private Map<String, Integer> mClubNameIndex; // There might be several
-    // identities maintained by a user.
-
-    /*
-    * Views
-    * */
-    private WebView mDisplay;
-    private WebView mRelation;
-    private ListView mClubList;
-    private SweetSheet mChatChoice;
-    private SweetSheet mAddActivity;
-    private Toolbar toolbar;
-    private DrawerLayout mClubContainer;
-    private LinearLayout mClubListIndicatorContainer;
-    private FloatingActionMenu mFunctionGroupContainer;
-
-    /*
-    * Other variables
-    * */
-    private ImageLoaderConfiguration mConfiguration;
-
-    private DisplayImageOptions mDisplayOption;
-
-    private ValueCallback<Uri> mUploadMessage;
-
-    private SharedPreferences host_id_provider;
-
-    private RequestQueue mQueue;
-
     /*
     * Halt the thread that loop to fetch information
     * */
@@ -162,6 +125,34 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             super.handleMessage(msg);
         }
     };
+    /*
+    * Java Library variables
+    * */
+    private List<ClubModel> mMyClubs; // Club information list
+    private List<String> AdminedClubURLs = new ArrayList<>(); // Club urls that is managed by the user
+    private List<MenuEntity> myAdmined = new ArrayList<>(); // Menu entities
+    // identities maintained by a user.
+    private Map<String, Integer> mClubNameIndex; // There might be several
+    /*
+    * Views
+    * */
+    private WebView mDisplay;
+    private WebView mRelation;
+    private ListView mClubList;
+    private SweetSheet mChatChoice;
+    private SweetSheet mAddActivity;
+    private Toolbar toolbar;
+    private DrawerLayout mClubContainer;
+    private LinearLayout mClubListIndicatorContainer;
+    private FloatingActionMenu mFunctionGroupContainer;
+    /*
+    * Other variables
+    * */
+    private ImageLoaderConfiguration mConfiguration;
+    private DisplayImageOptions mDisplayOption;
+    private ValueCallback<Uri> mUploadMessage;
+    private SharedPreferences host_id_provider;
+    private RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -47,16 +47,14 @@ import ccoderad.bnds.shiyiquanevent.utils.Utils;
 public class FavEventActivity extends AppCompatActivity {
 
     private final String FAV_FILE = "FavedEvents.json";
-
-    private long timeGap = 0;
-
-    private Toolbar mToolbar;
     SearchBox mSearchBox;
+    FavEventListAdapter mAdapter;
+    private long timeGap = 0;
+    private Toolbar mToolbar;
     private List<EventBean> mData;
     private ListView mListView;
     private Map<String, Boolean> kv;
     private TextView mNoFavIndicator;
-    FavEventListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

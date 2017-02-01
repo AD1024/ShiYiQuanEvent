@@ -29,7 +29,7 @@ public class MomentListAdapter extends RecyclerView.Adapter<MomentListViewHolder
         mDataList = DataList;
     }
 
-    public void setListItemOnClickListener(RecyclerViewItemClickListener listItemOnClickListener){
+    public void setListItemOnClickListener(RecyclerViewItemClickListener listItemOnClickListener) {
         mListener = listItemOnClickListener;
     }
 
@@ -37,7 +37,7 @@ public class MomentListAdapter extends RecyclerView.Adapter<MomentListViewHolder
     public MomentListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MomentListViewHolder holder =
                 new MomentListViewHolder(ViewTools
-                        .Inflate(mParent, R.layout.moment_list_item,parent),mListener);
+                        .Inflate(mParent, R.layout.moment_list_item, parent), mListener);
         return holder;
     }
 

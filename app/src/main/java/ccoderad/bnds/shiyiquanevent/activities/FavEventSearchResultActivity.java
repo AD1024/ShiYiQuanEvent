@@ -1,17 +1,17 @@
 package ccoderad.bnds.shiyiquanevent.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.FavEventListAdapter;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
-import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.global.SearchTypeConstants;
 
 public class FavEventSearchResultActivity extends AppCompatActivity {
@@ -34,7 +34,7 @@ public class FavEventSearchResultActivity extends AppCompatActivity {
         mAdapter = new FavEventListAdapter(this, mSearchData);
         mSearchResultList.setAdapter(mAdapter);
         ViewType = intent.getIntExtra("ViewType", -1);
-        if(mSearchData.size() == 0){
+        if (mSearchData.size() == 0) {
             mNoResultIndicator.setVisibility(View.VISIBLE);
         }
         switch (ViewType) {

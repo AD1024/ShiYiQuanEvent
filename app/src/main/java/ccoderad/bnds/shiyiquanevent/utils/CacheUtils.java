@@ -54,7 +54,7 @@ public class CacheUtils {
         return ret;
     }
 
-    public static String getUpdateFileStoragePath(){
+    public static String getUpdateFileStoragePath() {
         return Environment.getExternalStorageDirectory()
                 + File.separator + UPDATE_FILE_STORAGE_PATH + File.separator;
     }

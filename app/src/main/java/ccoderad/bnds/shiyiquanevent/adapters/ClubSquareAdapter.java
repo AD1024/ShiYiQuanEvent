@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
 import ccoderad.bnds.shiyiquanevent.listeners.RecyclerViewItemClickListener;
-import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.viewholders.ClubSquareViewHolder;
 
 /**

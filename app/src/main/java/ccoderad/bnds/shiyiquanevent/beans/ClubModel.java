@@ -17,7 +17,7 @@ public class ClubModel {
     public String smallAvatarURL;
     public boolean isAdmin;
 
-    public ClubModel(){
+    public ClubModel() {
         status = new ArrayList<>();
         isAdmin = false;
     }

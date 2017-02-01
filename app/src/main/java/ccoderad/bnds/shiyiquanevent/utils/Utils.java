@@ -142,7 +142,7 @@ public class Utils {
                 mData.timeAgo = mRawData.getString("time_ago");
                 // Stub API : mData.headerText = mRawData.getString("head");
 
-                mData.tailText = mRawData.has("tail")?mRawData.getString("tail"):"";
+                mData.tailText = mRawData.has("tail") ? mRawData.getString("tail") : "";
                 mData.bodyText = mRawData.getString("body");
 
                 // Parse Major Data

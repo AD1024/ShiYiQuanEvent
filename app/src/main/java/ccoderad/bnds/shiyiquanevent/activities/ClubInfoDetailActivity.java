@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
 import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 
 public class ClubInfoDetailActivity extends AppCompatActivity {

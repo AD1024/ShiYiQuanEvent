@@ -17,8 +17,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
-    public DatabaseHelper(Context context){
-        super(context, DataBaseConstants.QUAN_DATABASENAME,null, DataBaseConstants.QUAN_DATABASEVERSIONCODE);
+    public DatabaseHelper(Context context) {
+        super(context, DataBaseConstants.QUAN_DATABASENAME, null, DataBaseConstants.QUAN_DATABASEVERSIONCODE);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ")";
 
         /*Debug Code Block*/
-        Log.i("Create SQL",Event_Create);
-        Log.i("Create SQL-1",SQUARE_Create);
+        Log.i("Create SQL", Event_Create);
+        Log.i("Create SQL-1", SQUARE_Create);
 
         db.execSQL(Event_Create);
         db.execSQL(SQUARE_Create);

@@ -3,7 +3,6 @@ package ccoderad.bnds.shiyiquanevent.utils;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -132,7 +131,7 @@ public class DownloadUtil {
             return this;
         }
 
-        public RequestBuilder setMimeType(String mimeType){
+        public RequestBuilder setMimeType(String mimeType) {
             mRequest.mimeType = mimeType;
             return this;
         }
@@ -153,13 +152,13 @@ public class DownloadUtil {
             } else {
                 mRet.setAllowedOverRoaming(false);
             }
-            if (mRequest.allowedOverMeter){
+            if (mRequest.allowedOverMeter) {
                 mRet.setAllowedOverMetered(true);
-            }else{
+            } else {
                 mRet.setAllowedOverMetered(false);
             }
             mRet.setAllowedNetworkTypes(mRequest.allowedNetworkFlag);
-            if(mRequest.mimeType != null && !TextUtils.isEmpty(mRequest.mimeType)){
+            if (mRequest.mimeType != null && !TextUtils.isEmpty(mRequest.mimeType)) {
                 mRet.setMimeType(mRequest.mimeType);
             }
             return mRet;

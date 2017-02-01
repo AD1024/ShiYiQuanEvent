@@ -31,9 +31,9 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
 import ccoderad.bnds.shiyiquanevent.global.URLConstants;
-import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ToastUtil.makeText("登录失败，请检查网络",true);
+                ToastUtil.makeText("登录失败，请检查网络", true);
                 mPgBar.setVisibility(View.GONE);
             }
         });
@@ -195,14 +195,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.login_register:
-                ViewTools.MakeToast(this,"正在转到注册页面",false);
-                Intent regIntent = new Intent(this,MainBrowser.class);
-                regIntent.putExtra("QR_CONTENT","http://shiyiquan.net/signup/");
+                ViewTools.MakeToast(this, "正在转到注册页面", false);
+                Intent regIntent = new Intent(this, MainBrowser.class);
+                regIntent.putExtra("QR_CONTENT", "http://shiyiquan.net/signup/");
                 startActivity(regIntent);
                 break;
             case R.id.login_signIn:
                 mPgBar.setVisibility(View.VISIBLE);
-                ToastUtil.makeText("登录中...",false);
+                ToastUtil.makeText("登录中...", false);
                 attemptLogin();
                 break;
         }

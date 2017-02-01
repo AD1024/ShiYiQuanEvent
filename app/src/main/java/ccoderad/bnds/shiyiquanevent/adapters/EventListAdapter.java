@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.R;
+import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 
 
 /**

@@ -18,23 +18,23 @@ public class DataBaseConstants {
     public static final String EVENT_TABLENAME = "quan_event";
     public static final String SQUARE_TABLENAME = "quan_square";
 
-    public static final String[] EVENT_COLNAME = {"_id","sponsor_sname","avatar","description","date","time","duration","location","num_follower"};
+    public static final String[] EVENT_COLNAME = {"_id", "sponsor_sname", "avatar", "description", "date", "time", "duration", "location", "num_follower"};
     public static final String[] EVENT_CREATE_PARAM = {PrimKey,
-                                                        UNICODE_TEXT,
-                                                        SHORT_TEXT,
-                                                        UNICODE_TEXT,
-                                                        SHORT_TEXT,
-                                                        SHORT_TEXT,
-                                                        SHORT_TEXT,
-                                                        UNICODE_TEXT,
-                                                        INT};
+            UNICODE_TEXT,
+            SHORT_TEXT,
+            UNICODE_TEXT,
+            SHORT_TEXT,
+            SHORT_TEXT,
+            SHORT_TEXT,
+            UNICODE_TEXT,
+            INT};
 
-    public static final String[] SQUARE_COLNAME = {"_id","sponsor_sname","avatar","short_intro","full_intro","num_follower","num_like"};
+    public static final String[] SQUARE_COLNAME = {"_id", "sponsor_sname", "avatar", "short_intro", "full_intro", "num_follower", "num_like"};
     public static final String[] SQUARE_CREATE_PARAM = {PrimKey,
-                                                        UNICODE_TEXT,
-                                                        SHORT_TEXT,
-                                                        UNICODE_TEXT,
-                                                        UNICODE_TEXT,
-                                                        INT,
-                                                        INT};
+            UNICODE_TEXT,
+            SHORT_TEXT,
+            UNICODE_TEXT,
+            UNICODE_TEXT,
+            INT,
+            INT};
 }

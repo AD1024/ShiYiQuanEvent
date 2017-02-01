@@ -441,10 +441,9 @@ public class MainActivity extends AppCompatActivity
     /*
     * Check App update
     * */
-    private String CheckUpdate() {
-        HTMLFetcher fetcher = new HTMLFetcher();
+    private void CheckUpdate() {
+        UpdateChecker fetcher = new UpdateChecker();
         fetcher.execute(HOME_URL);
-        return null;
     }
 
     /*
@@ -910,9 +909,6 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-
-    //Task recycler
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -935,10 +931,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Task recycler
+
     /*
     * Function: Check App Update By parsing HTML
     * */
-    private class HTMLFetcher extends AsyncTask<String, Void, String> {
+    private class UpdateChecker extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -1121,4 +1119,5 @@ public class MainActivity extends AppCompatActivity
             mListView.setAdapter(adapter);
         }
     }
+
 }

@@ -24,14 +24,14 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
  */
 public class ScannerActivity extends AppCompatActivity implements QRCodeView.Delegate {
 
-    private ZXingView mQRScanner;
-    private Button btnOpenFlash;
-    private boolean bFlashOpen;
-    private Button btnOpenGallery;
     private static final int SUCCESS_RESULT_CODE = 6666;
     private static final int FAIL_RESULT_CODE = 9999;
     private static final int SCANNER_BACK = 10086;
     private static final int CHOOSE_PICTURE_REQ = 7777; // %%%
+    private ZXingView mQRScanner;
+    private Button btnOpenFlash;
+    private boolean bFlashOpen;
+    private Button btnOpenGallery;
     private String QRContent;
 
     @Override

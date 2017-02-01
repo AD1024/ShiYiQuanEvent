@@ -47,6 +47,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
     private XRecyclerView mRecyclerView;
     private TextView mLoadingIndicator;
     private FloatingActionButton mBackToTop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
@@ -67,7 +68,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallScaleRippleMultiple);
         mRecyclerView.setLoadingMoreEnabled(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this
-                ,LinearLayoutManager.VERTICAL,false));
+                , LinearLayoutManager.VERTICAL, false));
         mRecyclerView.addItemDecoration(new BGASpaceItemDecoration(10));
         // RecyclerView Listeners
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -103,16 +104,16 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
 
     }
 
-    private void setErrorMsg(String msg,boolean changeTitle){
-        ToastUtil.makeText(msg,false);
-        if(changeTitle){
+    private void setErrorMsg(String msg, boolean changeTitle) {
+        ToastUtil.makeText(msg, false);
+        if (changeTitle) {
             setTitle(msg);
         }
     }
 
     private void handleRawMomentData(String data) {
         try {
-            Log.i("Moment Data",data);
+            Log.i("Moment Data", data);
             JSONObject dataObject = new JSONObject(data);
             List<MomentDataModel> mTemp = new ArrayList<>();
             mTemp = Utils.parseMoment(dataObject);
@@ -126,11 +127,11 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         if (mDataList.size() > 0) {
             mAdapter.notifyDataSetChanged();
         } else {
-            setErrorMsg("出现了蜜汁错误QAQ",true);
+            setErrorMsg("出现了蜜汁错误QAQ", true);
         }
         mRecyclerView.refreshComplete();
         mRecyclerView.loadMoreComplete();
-        if(mLoadingIndicator.getVisibility() == View.VISIBLE){
+        if (mLoadingIndicator.getVisibility() == View.VISIBLE) {
             mLoadingIndicator.setVisibility(View.GONE);
         }
         setTitle("天台");
@@ -141,13 +142,13 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
     * */
     private void getMomentData() {
         setTitle("嘿咻嘿咻~");
-        if(mDataList.size() == 0){
+        if (mDataList.size() == 0) {
             mLoadingIndicator.setVisibility(View.VISIBLE);
         }
         DecimalFormat format = new DecimalFormat("###0.000000");
         String param = format.format(time_last);
         param = "-" + param;
-        Log.i("TimeLast",param);
+        Log.i("TimeLast", param);
         String reqUrl = "";
         if (param.equals("0.0")) {
             reqUrl = URLConstants.MOMENT_URL;

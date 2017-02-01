@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class ViewTools {
     public static View Inflate(Context context, int id, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(id, parent,false);
+        return LayoutInflater.from(context).inflate(id, parent, false);
     }
 
     public static void ToastInfo(Context context, String msg, boolean islong) {

@@ -19,12 +19,13 @@ public class EventBean implements Serializable {
     public boolean isFaved;
     private boolean isParsed = false;
 
-    public EventBean(){
+    public EventBean() {
         isFaved = false;
     }
-    public void parseUrl(){
-        if(!isParsed) {
-            eventAvatar=eventAvatar.replace("medium","large");
+
+    public void parseUrl() {
+        if (!isParsed) {
+            eventAvatar = eventAvatar.replace("medium", "large");
             this.eventAvatar = "http://shiyiquan.net" + this.eventAvatar;
             isParsed = true;
         }

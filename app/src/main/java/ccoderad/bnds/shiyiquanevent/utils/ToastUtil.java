@@ -33,7 +33,8 @@ public class ToastUtil {
             mToast.show();
         }
     }
-    public static void cancel(){
+
+    public static void cancel() {
         mToast.cancel();
     }
 }
