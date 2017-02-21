@@ -59,17 +59,21 @@
     <item>@string/preferences_front_light_auto</item>
     <item>@string/preferences_front_light_off</item>
   </string-array>
-
-  <string-array name="club_square_category_names">
-    <item>全部</item>
-    <item>同好</item>
-    <item>流行文化</item>
-    <item>科技</item>
-    <item>传媒</item>
-    <item>体育</item>
-    <item>艺术</item>
-    <item>校园</item>
-    <item>慈善</item>
-    <item>其他</item>
-  </string-array>
+    <string-array name="club_square_category">
+        <item>社团一览</item>
+        <item>冻鳗</item>
+        <item>信息技术</item>
+        <item>影视新闻传媒</item>
+        <item>体育</item>
+        <item>艺术</item>
+        <item>校园管理</item>
+        <item>慈善</item>
+        <item>自然科学</item>
+        <item>商业</item>
+        <item>舞台设计</item>
+        <item>手工</item>
+        <item>文学</item>
+        <item>语言</item>
+        <item>其他</item>
+    </string-array>
 </resources>

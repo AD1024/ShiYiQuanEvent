@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="地点:" />
+                android:text="@string/event_location_indicator" />
 
             <TextView
                 android:id="@+id/event_list_item_location"
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="活动时长:" />
+                android:text="@string/event_duration" />
 
             <TextView
                 android:id="@+id/event_list_duration"
@@ -114,12 +114,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="关注人数:" />
+                android:text="@string/club_follow" />
 
             <TextView
                 android:id="@+id/event_list_item_follower"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="13"
                 android:layout_height="wrap_content"
                 android:text="Followers" />
 
@@ -129,12 +129,13 @@
                 android:orientation="horizontal"
                 android:layout_gravity="end"
                 android:paddingEnd="10sp"
-                android:paddingRight="20sp">
+                android:layout_weight="1"
+                android:paddingRight="30sp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="收藏该活动:" />
+                    android:text="@string/event_fav" />
 
                 <ImageView
                     android:id="@+id/event_list_item_fav"

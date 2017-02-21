@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="喜欢人数:" />
+                android:text="@string/club_favorite" />
 
             <TextView
                 android:id="@+id/club_info_detail_like_number"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10sp"
-                android:text="关注人数:" />
+                android:text="@string/club_follow" />
 
             <TextView
                 android:id="@+id/club_info_detail_follow_nuhmber"

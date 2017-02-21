@@ -4,24 +4,24 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/go_to_browser"
-            android:title="转到十一圈"
+            android:title="@string/menu_goto_shiyiquan"
             android:icon="@drawable/ic_web_light_blue_300_18dp"/>
         <item
             android:id="@+id/go_to_faved_events"
-            android:title="我收藏的活动"
+            android:title="@string/menu_my_fav"
             android:icon="@drawable/ic_favorite_indicator"/>
         <item
             android:id="@+id/go_to_scan"
-            android:title="扫一扫"
+            android:title="@string/menu_scanner"
             android:icon="@drawable/ic_scan"/>
         <item
             android:id="@+id/go_to_square"
-            android:title="社团广场"
+            android:title="@string/menu_clubsquare"
             android:icon="@drawable/ic_go_to_square"
             />
         <item
             android:id="@+id/go_to_moment"
-            android:title="天台动态"
+            android:title="@string/menu_moments"
             android:icon="@drawable/ic_cloud"
             />
         <item
@@ -30,7 +30,7 @@
             android:icon="@drawable/ic_settings"/>
         <item
             android:id="@+id/go_to_about_me"
-            android:title="关于作者"
+            android:title="@string/menu_aboutme"
             android:icon="@drawable/ic_me" />
     </group>
 

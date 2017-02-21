@@ -71,10 +71,20 @@
                     fab:fabSize="normal" />
 
                 <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_back_to_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_exit"
+                    android:contentDescription="返回主页面"
+                    fab:backgroundTint="@android:color/holo_blue_light"
+                    fab:fabSize="mini"
+                    />
+
+                <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="社团消息"
+                    android:contentDescription="@string/club_message"
                     android:src="@drawable/ic_chat_"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="18sp" />
@@ -84,7 +94,7 @@
                     android:id="@+id/fab_my_home_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="我的主页"
+                    android:contentDescription="@string/user_homepage"
                     android:src="@drawable/ic_me"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
@@ -93,7 +103,7 @@
                     android:id="@+id/fab_my_club"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="我的社团"
+                    android:contentDescription="@string/user_clubs"
                     android:src="@drawable/ic_club"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
@@ -102,7 +112,7 @@
                     android:id="@+id/fab_add_club_activity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="添加社团活动"
+                    android:contentDescription="@string/add_club_activity"
                     android:src="@drawable/ic_circle_add"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
@@ -111,7 +121,7 @@
                     android:id="@+id/fab_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="搜索"
+                    android:contentDescription="@string/open_search"
                     android:src="@drawable/ic_search"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
@@ -120,7 +130,7 @@
                     android:id="@+id/fab_go_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="十一圈主页"
+                    android:contentDescription="@string/shiyiquan_homepage"
                     android:src="@drawable/ic_home"
                     fab:fabSize="mini"
                     fab:pressedTranslationZ="@dimen/fab_mini_transitionZ" />
@@ -151,13 +161,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="请先" />
+                    android:layout_gravity="center"
+                    android:text="请先登录"
+                    android:textSize="20sp"/>
 
-                <TextView
-                    android:id="@+id/browser_club_list_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="登录" />
             </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>

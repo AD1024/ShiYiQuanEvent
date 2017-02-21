@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10sp"
-        android:text="更新信息"
+        android:text="@string/update_header_text"
         android:textSize="25sp" />
 
 </LinearLayout>

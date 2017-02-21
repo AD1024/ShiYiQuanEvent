@@ -48,6 +48,7 @@ import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
 import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
+import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 import cn.bingoogolapple.photopicker.util.BGASpaceItemDecoration;
 
 public class ClubSquareActivity extends AppCompatActivity implements View.OnClickListener, XRecyclerView.LoadingListener, RecyclerViewItemClickListener {
@@ -59,6 +60,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
     private Button mSearchClub;
     private FloatingActionButton mBackTop;
     private EditText mClubNameSearch;
+    private View mNoInfoIndicator;
     private Spinner mClubCategory;
     private RecyclerView.LayoutManager mLayoutManager;
     //Data sets
@@ -111,39 +113,26 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
                 mClubList.smoothScrollToPosition(0);
             }
         });
-
+        mNoInfoIndicator = findViewById(R.id.club_square_no_info_indicator);
         // Cache Configuration
         mCacheDir = Utils.getCacheFileDir(this);
         eventCacheDir = new File(mCacheDir, CacheUtils.CLUB_SQUARE_CACHE_DIR_NAME);
     }
 
     /*
-    * Global Onclick Listener
+    * Logic Methods
     * */
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.club_square_list_header_btn: {
-                // Stub
-                String ClubName = mClubNameSearch.getText().toString();
-                break;
-            }
-        }
-    }
 
     @NonNull
     private String GetClubType() {
         String TypeName = mClubCategory.getSelectedItem().toString();
-        if (TypeName.equals("全部")) {
+        if (TypeName.equals("社团一览")) {
             return "all";
-        } else if (TypeName.equals("同好")) {
-            return "intrest";
-        } else if (TypeName.equals("流行文化")) {
-            return "pop_culture";
-        } else if (TypeName.equals("科技")) {
+        } else if (TypeName.equals("冻鳗")) {
+            return "interest";
+        } else if (TypeName.equals("信息技术")) {
             return "technology";
-        } else if (TypeName.equals("传媒")) {
+        } else if (TypeName.equals("影视新闻传媒")) {
             return "media";
         } else if (TypeName.equals("体育")) {
             return "sport";
@@ -153,6 +142,22 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
             return "campus";
         } else if (TypeName.equals("慈善")) {
             return "charity";
+        } else if (TypeName.equals("自然科学")) {
+            return "nature-sci";
+        } else if (TypeName.equals("社会科学")) {
+            return "social-sci";
+        } else if (TypeName.equals("商业")) {
+            return "business";
+        } else if (TypeName.equals("舞台设计")) {
+            return "stage";
+        } else if (TypeName.equals("手工")) {
+            return "manufacture";
+        } else if (TypeName.equals("文学")) {
+            return "publishment";
+        } else if (TypeName.equals("语言")) {
+            return "language";
+        } else if (TypeName.equals("其他")) {
+            return "other";
         } else {
             return "other";
         }
@@ -209,6 +214,14 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         JSONObject ClubData;
         JSONArray Followee;
         JSONObject Info;
+        if (DataSet.length() == 0) {
+            setTitle("社团广场");
+            mNoInfoIndicator.setVisibility(View.VISIBLE);
+            mClubList.refreshComplete();
+            return;
+        }else{
+            mNoInfoIndicator.setVisibility(View.GONE);
+        }
         for (int i = 0; i < DataSet.length(); ++i) {
             try {
                 // Get Out One Club Data
@@ -253,7 +266,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
 
                 // Handle Avatar URL and HomePage URL
                 infoData.parseURL();
-                infoData.ChangeHomePage("/club/" + infoData.sname);
+                infoData.ChangeHomePage("club/" + infoData.sname);
 
                 // Insert data
                 mDataList.add(infoData);
@@ -263,6 +276,21 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
             mClubList.refreshComplete();
             mClubList.loadMoreComplete();
             setTitle("社团广场");
+        }
+    }
+
+    /*
+    * Global Onclick Listener
+    * */
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.club_square_list_header_btn: {
+                // Stub
+                String ClubName = mClubNameSearch.getText().toString();
+                break;
+            }
         }
     }
 

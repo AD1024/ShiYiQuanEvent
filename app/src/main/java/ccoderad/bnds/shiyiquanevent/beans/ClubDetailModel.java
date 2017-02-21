@@ -51,7 +51,7 @@ public class ClubDetailModel implements Serializable {
     * */
     public void ChangeHomePage(String uri) {
         if (!uri.contains(URLConstants.HOME_URL)) {
-            ClubHomePage = "http://shiyiquan.net" + uri;
+            ClubHomePage = URLConstants.HOME_URL + uri;
         }
     }
 }

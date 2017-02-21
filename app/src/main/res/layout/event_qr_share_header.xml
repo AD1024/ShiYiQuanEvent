@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15sp"
-        android:text="扫一扫前往活动页面"
+        android:text="@string/event_qrscan_indicator"
         android:textColor="#FFFFFF"
         android:textSize="25sp" />
 

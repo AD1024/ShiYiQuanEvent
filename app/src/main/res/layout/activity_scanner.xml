@@ -24,7 +24,7 @@
         app:qrcv_isShowTipTextAsSingleLine="false"
         app:qrcv_isTipTextBelowRect="false"
         app:qrcv_maskColor="#66000000"
-        app:qrcv_qrCodeTipText="将二维码放入框内，即可自动扫描"
+        app:qrcv_qrCodeTipText="@string/qrscanner_indicator"
         app:qrcv_rectWidth="200dp"
         app:qrcv_scanLineColor="@color/colorPrimaryDark"
         app:qrcv_scanLineMargin="0dp"
@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="66dp"
-        android:text="打开闪光灯" />
+        android:text="@string/qrscanner_openled" />
 
     <Button
         android:id="@+id/scanner_choose_photo"
@@ -52,6 +52,6 @@
         android:layout_alignStart="@+id/Scanner_OpenLight"
         android:layout_alignTop="@+id/Scanner_OpenLight"
         android:layout_marginTop="51dp"
-        android:text="从相册选择二维码" />
+        android:text="@string/qrscanner_select_photo" />
 
 </RelativeLayout>

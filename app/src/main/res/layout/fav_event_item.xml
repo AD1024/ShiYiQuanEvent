@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="地点:" />
+                android:text="@string/event_location_indicator" />
 
             <TextView
                 android:id="@+id/fav_event_list_item_location"
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="活动时长:" />
+                android:text="@string/event_duration" />
 
             <TextView
                 android:id="@+id/fav_event_list_duration"
@@ -114,7 +114,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="关注人数:" />
+                android:text="@string/club_follow" />
 
             <TextView
                 android:id="@+id/fav_event_list_item_follower"

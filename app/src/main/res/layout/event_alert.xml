@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="3sp"
-                    android:text="发起社团:"
+                    android:text="@string/event_sponsor_indicator"
                     android:textSize="15sp" />
 
                 <TextView
@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3sp"
-                        android:text="活动日期:" />
+                        android:text="@string/event_date" />
 
                     <TextView
                         android:id="@+id/event_alert_date"
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3sp"
-                        android:text="开始时间:" />
+                        android:text="@string/event_start_time" />
 
                     <TextView
                         android:id="@+id/event_alert_start"
@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="15sp"
-                        android:text="活动时长:" />
+                        android:text="@string/event_duration" />
 
                     <TextView
                         android:id="@+id/event_alert_duration"
@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="3sp"
-                    android:text="地点:" />
+                    android:text="@string/event_location_indicator" />
 
                 <TextView
                     android:id="@+id/event_alert_location"
@@ -158,7 +158,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="7sp"
-                android:text="活动说明:" />
+                android:text="@string/event_description_indiator" />
 
             <TextView
                 android:id="@+id/event_alert_description"

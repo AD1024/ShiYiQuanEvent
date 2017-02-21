@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20sp"
-        android:text="十一圈Event"
+        android:text="十一活动"
         android:paddingLeft="20sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_alignBottom="@+id/textView"

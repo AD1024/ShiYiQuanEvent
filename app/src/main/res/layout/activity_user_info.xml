@@ -45,7 +45,7 @@
                 android:id="@+id/user_info_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="登出" />
+                android:text="@string/user_logout" />
         </LinearLayout>
 
     </ScrollView>

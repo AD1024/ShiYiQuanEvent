@@ -28,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -158,13 +157,13 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
+        ToastUtil.initialize(this);
         mQueue = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_main_browser);
         mClubListIndicatorContainer = (LinearLayout) findViewById(R.id.browser_club_list_indicator_container);
-        TextView loginNav = (TextView) findViewById(R.id.browser_club_list_login);
         isLogin = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE).getBoolean(PreferencesConstants.LOGIN_STATUS, false);
+        if (!isLogin) mClubListIndicatorContainer.setVisibility(View.VISIBLE);
         init();
-        ToastUtil.makeText("连按三次返回可回到活动界面", false);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getIntents();
     }
@@ -174,7 +173,9 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         String Content = it.getStringExtra("QR_CONTENT");
         if (Content == null) return;
         if (!Content.equals("")) {
+            Log.i("PassURLValue", Content);
             if (!Content.contains("shiyiquan")) {
+                Log.e("None ShiyiquanURL", "非十一圈链接，跳过处理");
                 ToastUtil.makeText("啊哦，好像不是十一圈的链接哟", true);
                 mDisplay.loadUrl(HOME_URL);
             } else mDisplay.loadUrl(Content);
@@ -308,7 +309,6 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
             @Override
             public void onReceivedTitle(WebView view, String title) {
-//                super.onReceivedTitle(view, title);
                 toolbar.setTitle(title);
             }
         });
@@ -368,18 +368,19 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                 }
             }
         };
-        getClub.post(firstFetchTask);
+        if (isLogin) {
+            getClub.post(firstFetchTask);
 
-        updateTask = new Handler();
-        updateTask.post(taskMain);
+            updateTask = new Handler();
+            updateTask.post(taskMain);
 
-        updateId();
-        AddToAdminList();
-
+            updateId();
+            AddToAdminList();
+            asyncGetClubInfo();
+        }
         ClubLoaded = false;
         adminedLoaded = false;
 
-        asyncGetClubInfo();
     }
 
     /**
@@ -390,6 +391,9 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     void asyncGetClubInfo() {
         String URL_REQ = HOME_URL + "mobile/club/?host_id=" + host_id + "&time=" + newId();
         Log.i("CLUB_REQ", URL_REQ);
+        if (mMyClubs.size() > 0) {
+            mClubListIndicatorContainer.setVisibility(View.GONE);
+        }
 
         //Async Task->used to fetch info of the club that current user has engaged
         final JsonArrayRequest request = new JsonArrayRequest(URL_REQ,
@@ -554,13 +558,20 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
 
             //Switch to Home(If Logined)
             case R.id.fab_my_home_page:
-                mDisplay.loadUrl(HOME_URL + "user/");
+                if(isLogin)
+                    mDisplay.loadUrl(HOME_URL + "user/");
+                else
+                    ToastUtil.makeText("请先登录",true);
                 break;
 
             //Open drawer(it can be used to grab club list info while it hasn't been displayed in the list)
             case R.id.fab_my_club:
-                asyncGetClubInfo();
-                mClubContainer.openDrawer(GravityCompat.START);
+                if(isLogin) {
+                    asyncGetClubInfo();
+                    mClubContainer.openDrawer(GravityCompat.START);
+                }else{
+                    ToastUtil.makeText("请先登录",true);
+                }
                 break;
 
             //Club Info List
@@ -588,6 +599,9 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
                         adminedLoaded = false;
                     }
                 }
+                break;
+            case R.id.fab_back_to_main:
+                this.finish();
         }
     }
 
@@ -604,17 +618,14 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             mChatChoice.dismiss();
             return;
         }
-        if (System.currentTimeMillis() - last_back_press > 2000 && System.currentTimeMillis() - last_exit_press > 1000) {
-            if (mDisplay.canGoBack())
+        boolean maintain = false;
+        if (System.currentTimeMillis() - last_exit_press > 800) {
+            if (mDisplay.canGoBack()) {
                 mDisplay.goBack();
-            last_back_press = System.currentTimeMillis();
-        } else {
-            if (System.currentTimeMillis() - last_exit_press > 500) {
-                ToastUtil.makeText("再按一次返回", false);
-                last_exit_press = System.currentTimeMillis();
-            } else {
-                super.onBackPressed();
             }
+            last_exit_press = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
         }
     }
 

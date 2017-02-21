@@ -126,7 +126,6 @@ limitations under the License.\n\n"
 
 
     </string>
-    <string name="title_activity_open_source_info">开源许可信息</string>
     <string name="app_picker_name">Applications</string>
     <string name="bookmark_picker_name">Bookmarks</string>
     <string name="button_add_calendar">Add to calendar</string>
@@ -142,7 +141,7 @@ limitations under the License.\n\n"
     <string name="button_open_browser">Open browser</string>
     <string name="button_product_search">Product search</string>
     <string name="button_search_book_contents">Search contents</string>
-    <string name="button_share_app">Application</string>
+    <string name="button_share_app">ShiYiQuan</string>
     <string name="button_share_bookmark">Bookmark</string>
     <string name="button_share_by_email">Share via email</string>
     <string name="button_share_by_sms">Share via SMS</string>
@@ -165,91 +164,10 @@ limitations under the License.\n\n"
     <string name="history_empty_detail">No barcode scans have been recorded</string>
     <string name="history_send">Send history</string>
     <string name="history_title">History</string>
-    <string name="menu_encode_mecard">Use MECARD</string>
-    <string name="menu_encode_vcard">Use vCard</string>
     <string name="menu_help">Help</string>
     <string name="menu_history">History</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_share">Share</string>
-    <string name="msg_bulk_mode_scanned">Bulk mode: barcode scanned and saved</string>
-    <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.(请检查是否授予本App相机访问权限)</string>
-    <string name="msg_default_format">Format</string>
-    <string name="msg_default_meta">Metadata</string>
-    <string name="msg_default_mms_subject">Hi</string>
-    <string name="msg_default_status">Place a barcode inside the viewfinder rectangle to scan it.</string>
-    <string name="msg_default_time">Time</string>
-    <string name="msg_default_type">Type</string>
-    <string name="msg_encode_contents_failed">Could not encode a barcode from the data provided.</string>
-    <string name="msg_error">Error</string>
-    <string name="msg_google_books">Google</string>
-    <string name="msg_google_product">Google</string>
-    <string name="msg_intent_failed">Sorry, the requested application could not be launched. The barcode contents may be invalid.</string>
-    <string name="msg_invalid_value">Invalid value</string>
-    <string name="msg_redirect">Redirect</string>
-    <string name="msg_sbc_book_not_searchable">Sorry, this book is not searchable.</string>
-    <string name="msg_sbc_failed">Sorry, the search encountered a problem.</string>
-    <string name="msg_sbc_no_page_returned">No page returned</string>
-    <string name="msg_sbc_page">Page</string>
-    <string name="msg_sbc_results">Results</string>
-    <string name="msg_sbc_searching_book">Searching book\u2026</string>
-    <string name="msg_sbc_snippet_unavailable">Snippet not available</string>
-    <string name="msg_share_explanation">You can share data by displaying a barcode on your screen and scanning it with another phone.</string>
-    <string name="msg_share_text">Or type some text and press Enter</string>
-    <string name="msg_sure">Are you sure?</string>
-    <string name="msg_unmount_usb">Sorry, the SD card is not accessible.</string>
-    <string name="preferences_actions_title">When a barcode is found\u2026</string>
-    <string name="preferences_auto_focus_title">Use auto focus</string>
-    <string name="preferences_auto_open_web_title">Open web pages automatically</string>
-    <string name="preferences_bulk_mode_summary">Scan and save many barcodes continuously</string>
-    <string name="preferences_bulk_mode_title">Bulk scan mode</string>
-    <string name="preferences_copy_to_clipboard_title">Copy to clipboard</string>
-    <string name="preferences_custom_product_search_summary" formatted="false">Substitutions: %s = contents, %f = format, %t = type</string>
-    <string name="preferences_custom_product_search_title">Custom search URL</string>
-    <string name="preferences_decode_1D_industrial_title">1D Industrial</string>
-    <string name="preferences_decode_1D_product_title">1D Product</string>
-    <string name="preferences_decode_Aztec_title">Aztec</string>
-    <string name="preferences_decode_Data_Matrix_title">Data Matrix</string>
-    <string name="preferences_decode_PDF417_title">PDF417 (β)</string>
-    <string name="preferences_decode_QR_title">QR Codes</string>
-    <string name="preferences_device_bug_workarounds_title">Device Bug Workarounds</string>
-    <string name="preferences_disable_barcode_scene_mode_title">No barcode scene mode</string>
-    <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
-    <string name="preferences_disable_continuous_focus_title">No continuous focus</string>
-    <string name="preferences_disable_exposure_title">No exposure</string>
-    <string name="preferences_disable_metering_title">No metering</string>
-    <string name="preferences_front_light_summary">Improves scanning in low light on some phones, but may cause glare. Does not work on all phones.</string>
-    <string name="preferences_front_light_title">Use front light</string>
-    <string name="preferences_front_light_auto">Automatic</string>
-    <string name="preferences_front_light_off">Off</string>
-    <string name="preferences_front_light_on">On</string>
-    <string name="preferences_general_title">General settings</string>
-    <string name="preferences_history_summary">Store your scans in History</string>
-    <string name="preferences_history_title">Add to History</string>
-    <string name="preferences_invert_scan_title">Invert scan</string>
-    <string name="preferences_invert_scan_summary">Scan for white barcodes on black background. Not available on some devices.</string>
-    <string name="preferences_name">Settings</string>
-    <string name="preferences_orientation_title">No automatic rotation</string>
-    <string name="preferences_play_beep_title">Beep</string>
-    <string name="preferences_remember_duplicates_summary">Store multiple scans of the same barcode in History</string>
-    <string name="preferences_remember_duplicates_title">Remember duplicates</string>
-    <string name="preferences_result_title">Result settings</string>
-    <string name="preferences_scanning_title">When scanning for barcodes, decode\u2026</string>
-    <string name="preferences_search_country">Search country</string>
-    <string name="preferences_supplemental_summary">Try to retrieve more information about the barcode contents</string>
-    <string name="preferences_supplemental_title">Retrieve more info</string>
-    <string name="preferences_vibrate_title">Vibrate</string>
-    <string name="result_address_book">Found contact info</string>
-    <string name="result_calendar">Found calendar event</string>
-    <string name="result_email_address">Found email address</string>
-    <string name="result_geo">Found geographic coordinates</string>
-    <string name="result_isbn">Found book</string>
-    <string name="result_product">Found product</string>
-    <string name="result_sms">Found SMS address</string>
-    <string name="result_tel">Found phone number</string>
-    <string name="result_text">Found plain text</string>
-    <string name="result_uri">Found URL</string>
-    <string name="result_wifi">Found WLAN Configuration</string>
-    <string name="sbc_name">Google Book Search</string>
     <string name="wifi_changing_network">Requesting connection to network\u2026</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -262,92 +180,78 @@ limitations under the License.\n\n"
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="title_activity_aacc">Sign in</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="preferences_front_light_on">...</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="activity_settings_skip_splash">Skip Splash Screen</string>
     <string name="setting_clear_pic_cache">Clear Picture Cache</string>
     <string name="setting_clear_event_cache">Clear Offline Event Information(Unrecommended)</string>
     <string name="title_activity_club_info_detail">ClubInfoDetailActivity</string>
     <string name="faved_event_no_fav">No Favorite Event</string>
     <string name="content_update_info">
-        "新特性:
-        1. 头像添加背景图片(主页面)
-        2. 将滚动加载社团列表变为有界加载，节省流量(社团广场)
-        3. Toast消息不再重叠啦~~~（诸多界面）
-        4. 增加天台页面
-        5. 自动检查更新功能(可在设置中开启或关闭)
+        "
+        新特性：
+        1. 添加部分界面的英文翻译(神似毫无乱用)
+        2. 优化部分界面
 
         优化:
-        1. 添加一个半透明的黑色背景使社团名称能够看得更清楚(社团广场)
-        2. 删掉登录账户名称前面那个蜜汁减号(主页面导航栏)
+        1. 应用启动速度(关闭Instant Run)
 
         修复:
-        1. 收藏活动残留的Bug(活动收藏)
-        2. 跳过启动动画设置失效的Bug(设置)
-        3. 点击\"显示高质量头像图片\"卡片无效果的Bug"
+        1. 服务器API更新导致部分界面显示错误或无法显示的问题
+
+        公告:
+        自十一活动1.14版本起之后的每一次更新都将使用最新的App签名，若之后需要安装旧版本请先卸载再安装
+        "
     </string>
     <string name="setting_high_quality_avatar_indicator">Show High Quality Avatar</string>
     <string name="setting_enable_auto_update_check">Check Update When StartUp</string>
+    <string name="title_activity_open_source_info">Open Source Information</string>
+    <string name="preferences_front_light_auto">...</string>
+    <string name="preferences_front_light_off">...</string>
+    <string name="club_square_categories">Club Categories:</string>
+    <string name="search_result_null">No Result</string>
+    <string name="login_user_name">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="club_message">Club Operation</string>
+    <string name="user_homepage">My HomePage</string>
+    <string name="user_clubs">My Clubs</string>
+    <string name="add_club_activity">Add Event</string>
+    <string name="open_search">Search</string>
+    <string name="shiyiquan_homepage">ShiYiQuan Home</string>
+    <string name="qrscanner_indicator">Put QR in to Scan</string>
+    <string name="qrscanner_openled">TurnOn LED</string>
+    <string name="qrscanner_select_photo">Select Photo From Galary</string>
+    <string name="check_update">Check Update</string>
+    <string name="app_feature_indicator">Version Feature</string>
+    <string name="user_logout">LogOut</string>
+    <string name="qr_visit">Scan QR to Visit Club Homepage</string>
+    <string name="update_download_prompt">Download New version NOW ?</string>
+    <string name="update_current_version">CurrentVersion:</string>
+    <string name="update_new_version">New Version:</string>
+    <string name="my_club_indicator">My Clubs</string>
+    <string name="search_clubs">Search Clubs</string>
+    <string name="open_source_indicator">Open Source Information</string>
+    <string name="club_favorite">Favorite:</string>
+    <string name="club_follow">Followers:</string>
+    <string name="event_sponsor_indicator">Sponsor:</string>
+    <string name="event_date">Date:</string>
+    <string name="event_start_time">Start From:</string>
+    <string name="event_duration">Duration:</string>
+    <string name="event_location_indicator">Location:</string>
+    <string name="event_description_indiator">Description:</string>
+    <string name="event_header_text">Event Detail</string>
+    <string name="event_fav">Add to Favorite</string>
+    <string name="event_qrscan_indicator">Scan QR to see the webpage</string>
+    <string name="update_header_text">Update Info</string>
+    <string name="menu_goto_shiyiquan">Go To Shiyiquan</string>
+    <string name="menu_my_fav">My Favorite Events</string>
+    <string name="menu_scanner">QR Scanner</string>
+    <string name="menu_clubsquare">Club Square</string>
+    <string name="menu_moments">Moments</string>
+    <string name="menu_aboutme">About Me</string>
 
 </resources>

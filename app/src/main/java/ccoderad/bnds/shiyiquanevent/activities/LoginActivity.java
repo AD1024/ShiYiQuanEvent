@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.login_register:
-                ViewTools.MakeToast(this, "正在转到注册页面", false);
+                ViewTools.MakeToast(this, "正在转到注册页面", false).show();
                 Intent regIntent = new Intent(this, MainBrowser.class);
                 regIntent.putExtra("QR_CONTENT", "http://shiyiquan.net/signup/");
                 startActivity(regIntent);

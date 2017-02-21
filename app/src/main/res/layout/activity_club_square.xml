@@ -39,17 +39,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="社团分类:"
+            android:text="@string/club_square_categories"
             android:textSize="15sp" />
 
+        <!--<Spinner-->
+            <!--android:id="@+id/club_square_category"-->
+            <!--android:layout_width="match_parent"-->
+
+            <!--android:layout_height="wrap_content" />-->
+            <!--&lt;!&ndash;android:entries="@array/club_square_category_names">&ndash;&gt;-->
+
+        <!--</Spinner>-->
         <Spinner
             android:id="@+id/club_square_category"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
-            android:entries="@array/club_square_category_names">
+            android:entries="@array/club_square_category">
 
         </Spinner>
     </LinearLayout>
+    <TextView
+        android:id="@+id/club_square_no_info_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="无信息"
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

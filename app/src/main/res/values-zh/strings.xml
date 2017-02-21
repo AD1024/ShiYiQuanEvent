@@ -4,11 +4,11 @@
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录或注册</string>
     <string name="action_sign_in_short">登录</string>
-    <string name="app_picker_name"></string>
+    <string name="app_picker_name">应用</string>
     <string name="button_cancel">取消</string>
     <string name="button_ok">确定</string>
     <string name="button_open_browser">打开浏览器</string>
-    <string name="button_product_search"></string>
+    <string name="button_product_search">搜索产品</string>
     <string name="history_title">历史记录</string>
     <string name="history_empty">空</string>
     <string name="error_field_required">必填项</string>
@@ -25,22 +25,243 @@
     <string name="setting_clear_event_cache">清除离线活动数据(不建议)</string>
     <string name="faved_event_no_fav">没有收藏的活动呀~</string>
     <string name="content_update_info">
-        "新特性:
-        1. 头像添加背景图片(主页面)
-        2. 将滚动加载社团列表变为有界加载，节省流量(社团广场)
-        3. Toast消息不再重叠啦~~~（诸多界面）
-        4. 增加天台页面
-        5. 自动检查更新功能(可在设置中开启或关闭)
+        "
+        新特性：
+        1. 添加部分界面的英文翻译(神似毫无乱用)
+        2. 优化部分界面
 
         优化:
-        1. 添加一个半透明的黑色背景使社团名称能够看得更清楚(社团广场)
-        2. 删掉登录账户名称前面那个蜜汁减号(主页面导航栏)
+        1. 应用启动速度(关闭Instant Run)
 
         修复:
-        1. 收藏活动残留的Bug(活动收藏)
-        2. 跳过启动动画设置失效的Bug(设置)
-        3. 点击\"显示高质量头像图片\"卡片无效果的Bug"
+        1. 服务器API更新导致部分界面显示错误或无法显示的问题
+
+        公告:
+        自十一活动1.14版本起之后的每一次更新都将使用最新的App签名，若之后需要安装旧版本请先卸载再安装
+        "
     </string>
     <string name="setting_high_quality_avatar_indicator">显示高质量头像图片</string>
     <string name="setting_enable_auto_update_check">启动后自动检查更新</string>
+    <string name="title_activity_open_source_info">开源许可信息</string>
+    <string name="title_activity_club_info_detail">社团详细信息</string>
+    <string name="title_activity_settings">设置</string>
+    <string name="wifi_changing_network">正在请求连接到网络</string>
+    <string name="bookmark_picker_name">书签</string>
+    <string name="button_add_calendar">添加到日历</string>
+    <string name="button_add_contact">添加联系人</string>
+    <string name="button_book_search">搜索书目</string>
+    <string name="button_custom_product_search">自定义搜索</string>
+    <string name="button_dial">拨打号码</string>
+    <string name="button_email">发送邮件</string>
+    <string name="button_get_directions">获得地址</string>
+    <string name="button_mms">发送短信</string>
+    <string name="button_search_book_contents">搜索内容</string>
+    <string name="button_share_app">十一圈</string>
+    <string name="button_share_bookmark">书签</string>
+    <string name="button_share_by_email">通过邮件分享</string>
+    <string name="button_share_by_sms">通过短信分享</string>
+    <string name="button_share_clipboard">剪切板</string>
+    <string name="button_share_contact">联系人</string>
+    <string name="button_show_map">显示地图</string>
+    <string name="button_sms">发送短信息</string>
+    <string name="button_web_search">网络搜索</string>
+    <string name="button_wifi">连接到网络</string>
+    <string name="contents_contact">联系人信息</string>
+    <string name="contents_email">电邮地址</string>
+    <string name="contents_location">坐标</string>
+    <string name="contents_phone">电话号码</string>
+    <string name="contents_sms">短信息地址</string>
+    <string name="contents_text">纯文本</string>
+    <string name="hello_blank_fragment">...</string>
+    <string name="history_email_title">...</string>
+    <string name="history_empty_detail">...</string>
+    <string name="history_send">...</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_share">分享</string>
+    <string name="navigation_drawer_open">打开导航栏</string>
+    <string name="navigation_drawer_close">关闭导航栏</string>
+    <string name="menu_history">历史记录</string>
+    <string name="menu_help">帮助</string>
+   <string name="open_source_info">
+        "Copyright &#169; 2016 AD1024
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.\n\n\n"
+
+        "DiskLruCache\n"
+        "Copyright 2012 Jake Wharton
+Copyright 2011 The Android Open Source Project
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.\n\n\n"
+        "Fresco-0.5.2\n"
+        "BSD License"
+
+For Fresco software
+
+Copyright &#169; 2015-present, Facebook, Inc. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * Neither the name Facebook nor the names of its contributors may be used to
+   endorse or promote products derived from this software without specific
+   prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\n\n"
+
+        "FloatingActionMenu\n\n"
+        "Copyright 2016 Nightonke
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.\n\n"
+
+        "Universal-Image-Loader"
+        "Copyright &#169; AD1024
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License."
+
+        "Volley\n"
+        "Copyright &#169; 2016 Google
+        Original Optimization By AD1024
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License."
+
+
+    </string>
+    <string name="prompt_password">密码</string>
+    <string name="prompt_email">邮箱</string>
+    <string name="large_text">
+        "来自北京市十一学校高二学部的\n学生开发者——AD1024\n"
+        "QQ:1797609811 E-Mail:yoyo991214@126.com\n"
+        "欢迎对本App提出建设性建议及意见\n\n"
+        "最后打个广告:欢迎加入HCC社团!\n\n"
+        "Copyright &#169; 2016 AD1024 And \n HCC Computer Community\n All Rights Reserved."
+    </string>
+    <string name="preferences_front_light_on">...</string>
+    <string name="preferences_front_light_auto">...</string>
+    <string name="preferences_front_light_off">...</string>
+    <string-array name="club_square_category">
+        <item>社团一览</item>
+        <item>冻鳗</item>
+        <item>信息技术</item>
+        <item>影视新闻传媒</item>
+        <item>体育</item>
+        <item>艺术</item>
+        <item>校园管理</item>
+        <item>慈善</item>
+        <item>自然科学</item>
+        <item>商业</item>
+        <item>舞台设计</item>
+        <item>手工</item>
+        <item>文学</item>
+        <item>语言</item>
+        <item>其他</item>
+    </string-array>
+    <string name="club_square_categories">社团分类:</string>
+    <string name="search_result_null">无结果</string>
+    <string name="login_user_name">用户名</string>
+    <string name="login_password">密码</string>
+    <string name="login_sign_in">登录</string>
+    <string name="login_sign_up">注册</string>
+    <string name="club_message">社团宣传</string>
+    <string name="user_homepage">我的主页</string>
+    <string name="user_clubs">我的社团</string>
+    <string name="add_club_activity">添加社团活动</string>
+    <string name="open_search">搜索</string>
+    <string name="shiyiquan_homepage">十一圈主页</string>
+    <string name="qrscanner_indicator">将二维码放入框内，即可自动扫描</string>
+    <string name="qrscanner_openled">打开闪光灯</string>
+    <string name="qrscanner_select_photo">从相册选择二维码</string>
+    <string name="check_update">检查更新</string>
+    <string name="app_feature_indicator">版本特性</string>
+    <string name="user_logout">登出</string>
+    <string name="qr_visit">扫一扫参观社团</string>
+    <string name="update_download_prompt">发现更新，是否下载?</string>
+    <string name="update_current_version">当前版本:</string>
+    <string name="update_new_version">更新版本:</string>
+    <string name="my_club_indicator">我参加的社团</string>
+    <string name="search_clubs">搜索社团:</string>
+    <string name="open_source_indicator">开源许可证</string>
+    <string name="club_favorite">喜欢人数:</string>
+    <string name="club_follow">关注人数:</string>
+    <string name="event_sponsor_indicator">发起社团:</string>
+    <string name="event_date">活动日期:</string>
+    <string name="event_start_time">开始时间:</string>
+    <string name="event_duration">活动时长:</string>
+    <string name="event_location_indicator">地点:</string>
+    <string name="event_description_indiator">活动说明:</string>
+    <string name="event_header_text">活动详情</string>
+    <string name="event_fav">收藏该活动:</string>
+    <string name="event_qrscan_indicator">扫一扫前往活动页面</string>
+    <string name="update_header_text">更新信息</string>
+    <string name="menu_goto_shiyiquan">转到十一圈</string>
+    <string name="menu_my_fav">我收藏的活动</string>
+    <string name="menu_scanner">扫一扫</string>
+    <string name="menu_clubsquare">社团广场</string>
+    <string name="menu_moments">天台动态</string>
+    <string name="menu_aboutme">关于作者</string>
 </resources>

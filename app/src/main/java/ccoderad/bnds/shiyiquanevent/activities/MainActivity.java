@@ -78,6 +78,7 @@ import ccoderad.bnds.shiyiquanevent.db.DataBaseManager;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
 import ccoderad.bnds.shiyiquanevent.global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
 import ccoderad.bnds.shiyiquanevent.utils.DownloadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MD5Util;
@@ -89,16 +90,18 @@ import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
 
+    /*Constants*/
     private static final String URL_PREFIX = "<!-- 安卓版本";
-    final long MAX_MEM = 30 * ByteConstants.MB;
-    final long MAX_LOW_MEM = 10 * ByteConstants.MB;
-    final long MAX_VERY_LOW_MEM = 5 * ByteConstants.MB;
-    final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
-    final int LOGIN_REQCODE = 8080;
-    final int LOGOUT_REQCODE = 8090;
+    private final long MAX_MEM = 30 * ByteConstants.MB;
+    private final long MAX_LOW_MEM = 10 * ByteConstants.MB;
+    private final long MAX_VERY_LOW_MEM = 5 * ByteConstants.MB;
+    private final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
+    private final int LOGIN_REQCODE = 8080;
+    private final int LOGOUT_REQCODE = 8090;
     private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest";
     private final String CACHE_FILE_NAME = "cacheEvent.json";
     private final String HOME_URL = URLConstants.HOME_URL;
+
     private String mNewVersionDownloadURL;
 
     private DiskLruCache mCache;
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences SettingPref;
 
     private RequestQueue mRequestQueue;
+
+    private EventListAdapter mListAdapter;
 
     private void ShowUpdateInfo() {
         final SharedPreferences versionInfo = getSharedPreferences("VersionInfo", MODE_PRIVATE);
@@ -195,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         /*
         * Register Download brodcast listener for downloading the new version file
         * */
-        DownloadBroadcastReceiver mReceiver = new DownloadBroadcastReceiver();
+        final DownloadBroadcastReceiver mReceiver = new DownloadBroadcastReceiver();
         registerReceiver(mReceiver
                 , new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
@@ -210,10 +215,10 @@ public class MainActivity extends AppCompatActivity
         TextView userName = (TextView) nav_header.findViewById(R.id.user_name_holder);
         Logined = LoginInfo.getBoolean(PreferencesConstants.LOGIN_STATUS, false);
         if (Logined) {
-            String set = "登录账户:" + LoginInfo.getString(PreferencesConstants.USER_REAL_NAME_TAG, "点击登录");
+            String set = "登录账户:" + LoginInfo.getString(PreferencesConstants.USER_REAL_NAME_TAG, "点击头像登录");
             userName.setText(set);
         } else {
-            String set = userName.getText().toString() + "-" + "点击登录";
+            String set = userName.getText().toString() + "-" + "点击头像登录";
             userName.setText(set);
         }
 
@@ -269,6 +274,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         mListView = (ListView) findViewById(R.id.event_list);
         mListView.setOnItemClickListener(this);
+        mListAdapter = new EventListAdapter(this, null);
+
         favd_stub = new ArrayList<>();
 
         //ListView Motion Listener:
@@ -298,89 +305,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 isLongClicked = true;
+                // TODO:Save favourite events
                 ImageView alter = (ImageView) view.findViewById(R.id.event_list_item_fav);
                 if (mData.get(position).isFaved) {
                     Snackbar.make(view, "已取消收藏" + mData.get(position).eventTitle,
                             Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = false;
                     alter.setImageResource(R.drawable.ic_favorite_border);
-                    InputStream is;
-                    String saved;
-                    try {
-                        is = new FileInputStream(favedEvents);
-                        saved = ReadStringFromInputStream(is);
-                        JSONArray array;
-                        if (saved.isEmpty()) {
-                            array = new JSONArray();
-                        } else {
-                            array = new JSONArray(saved);
-                        }
-                        EventBean del = mData.get(position);
-                        JSONObject obj;
-                        JSONObject data;
-                        for (int i = 0; i < array.length(); i++) {
-                            if (array.get(i).equals(null)) continue;
-                            obj = array.getJSONObject(i);
-                            data = obj.getJSONObject("data");
-                            if (data.getString("content").equals(del.eventContent)
-                                    && obj.getString("sponsor_fname").equals(del.sponsorName)) {
-                                array.remove(i);
-                                break;
-                            }
-                        }
-                        saved = array.toString();
-                        PrintStream stream = new PrintStream(new FileOutputStream(favedEvents));
-                        favedEvents.createNewFile();
-                        stream.print(saved);
-                        LoadFav();
-                        stream.close();
-                        is.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    CacheUtils.removeFavEventCache(mData.get(position),mRawData,favedEvents,position);
                 } else {
                     Snackbar.make(view, "已收藏" + mData.get(position).eventTitle,
                             Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = true;
                     alter.setImageResource(R.drawable.ic_favorite);
-                    if (!favedEvents.exists()) {
-                        try {
-                            favedEvents.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    InputStream is;
-                    String saved;
-                    try {
-                        is = new FileInputStream(favedEvents);
-                        saved = ReadStringFromInputStream(is);
-                        JSONArray array;
-                        if (saved.isEmpty()) {
-                            array = new JSONArray();
-                        } else {
-                            array = new JSONArray(saved);
-                        }
-                        array.put(position, mRawData.get(position));
-                        saved = array.toString();
-                        favedEvents.createNewFile();
-                        PrintStream printer = new PrintStream(new FileOutputStream(favedEvents));
-                        printer.print(saved);
-                        Log.i("Fav", "Fav_Saved!");
-                        printer.close();
-                        is.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    CacheUtils.saveFavEventCache(mData.get(position), favedEvents, mRawData, position);
                 }
+                LoadFav();
                 return false;
             }
         });
@@ -544,7 +484,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * This Function is used to judge wether the network is available
      *
-     * @return NetWorkkStat
+     * @return NetWorkStat
      */
     private boolean isNetWorkAvailable() {
         Context currContext = this;
@@ -670,6 +610,7 @@ public class MainActivity extends AppCompatActivity
     public List<EventBean> parseEvent(JSONArray jsonArray) {
         JSONObject jsonObject;
         mRawData = jsonArray;
+        mListAdapter.setRawData(jsonArray);
         LoadFav();
         List<EventBean> ans = new ArrayList<>();
         try {
@@ -824,7 +765,7 @@ public class MainActivity extends AppCompatActivity
             if (!indicatorText.equals("NULL")) {
                 tvName.setText("登录账户:" + indicatorText);
             } else {
-                tvName.setText("十一圈Event-点击登录");
+                tvName.setText("十一圈Event-点击头像登录");
             }
 
             boolean isHighQuality = SettingPref.getBoolean(PreferencesConstants.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
@@ -867,7 +808,7 @@ public class MainActivity extends AppCompatActivity
         } else if (requestCode == LOGOUT_REQCODE && resultCode == 8091) {
             TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
             // Reset the label
-            tvName.setText("十一圈Event-点击登录");
+            tvName.setText("十一圈Event-点击头像登录");
             Resources r = this.getResources();
             LoginClick.setImageURI(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
                     + r.getResourcePackageName(R.mipmap.logo_2)
@@ -1115,8 +1056,8 @@ public class MainActivity extends AppCompatActivity
             }
             setTitle("十一活动");
             mData = eventBeans;
-            EventListAdapter adapter = new EventListAdapter(MainActivity.this, eventBeans);
-            mListView.setAdapter(adapter);
+            mListAdapter.setListData(mData);
+            mListView.setAdapter(mListAdapter);
         }
     }
 

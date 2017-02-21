@@ -8,7 +8,7 @@
         android:id="@+id/alert_update_download_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发现更新，是否下载?"
+        android:text="@string/update_download_prompt"
         />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="当前版本:"
+            android:text="@string/update_current_version"
             />
         <TextView
             android:id="@+id/alert_update_download_current_version"
@@ -35,7 +35,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="更新版本:"
+            android:text="@string/update_new_version"
             />
         <TextView
             android:id="@+id/alert_update_download_new_version"

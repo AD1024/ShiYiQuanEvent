@@ -14,6 +14,6 @@ public class URLConstants {
     public static final String QUARE_URL = "square/club/";
     public static final String EVENT_URL = "event/";
     public static final String DEFAULT_AVATAR_URL = "static/images/large/avatar-user-default.png";
-    public static final String CURRENT_VERSION = "1.13";
+    public static final String CURRENT_VERSION = "1.14";
     public static final String CSRF_PREFIX = "<input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'";
 }
