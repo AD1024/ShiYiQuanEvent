@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
@@ -188,5 +190,181 @@ public class Utils {
 
         }
         return false;
+    }
+
+    public static String generateSign(Map<String, String> paramList) {
+        String ret = "";
+        container hash = new container(paramList.size() + 100);
+        for (Map.Entry<String, String> param : paramList.entrySet()) {
+            GetParam P = new GetParam(param.getKey(), param.getValue());
+            hash.put(P);
+        }
+        while (hash.p > 0) {
+            GetParam parsed = hash.top();
+            hash.remLst();
+            ret += parsed.key + "=" + parsed.value + "&";
+        }
+        ret = ret.substring(0, ret.length() - 1);
+        ret = ret + "20ecf44a13386ad76239f75f3be476";
+        return MD5Util.HASH(ret);
+    }
+
+    public static long mogic(long x, int a) {
+        long base = x;
+        x = 1;
+        while (a != 0) {
+            if ((a & 1) == 1) {
+                x = x * base;
+            }
+            base *= base;
+            a >>= 1;
+        }
+        return x;
+    }
+
+    /*
+    * Do not add slash at the beginning and ending of param suburl
+    * */
+    public static String makeRequest(String subrul, String[] keys, String[] values) {
+        String ret = URLConstants.HOME_URL + subrul + '/';
+        GetParamBuilder builder = new Utils.GetParamBuilder()
+                .setKey(keys)
+                .setValue(values);
+        ret += builder.createGetParam();
+        ret += "&sign=";
+        ret += Utils.generateSign(builder.build());
+        return ret;
+    }
+
+    private static class GetParam {
+        String key;
+        String value;
+        long weight;
+
+        public GetParam(String K, String V) {
+            key = K;
+            value = V;
+            long self = (long) key.charAt(0);
+            weight = self ^ mogic(3, (int) mogic(3, 3));
+        }
+
+        public GetParam() {
+            key = "";
+            value = "";
+            weight = 0;
+        }
+    }
+
+    private static class container {
+        int p;
+        GetParam[] k;
+
+        public container(int size) {
+            p = 0;
+            k = new GetParam[size];
+        }
+
+        private int lson(int x) {
+            return x << 1;
+        }
+
+        private int rson(int x) {
+            return x << 1 | 1;
+        }
+
+        private int fa(int x) {
+            return x >> 1;
+        }
+
+        private void siftU(int i) {
+            while (fa(i) >= 1) {
+                if (k[i].weight < k[fa(i)].weight) {
+                    GetParam tmp = k[i];
+                    k[i] = k[fa(i)];
+                    k[fa(i)] = tmp;
+                    i = fa(i);
+                } else break;
+            }
+        }
+
+        private void siftD(int i) {
+            int c, l, r;
+            while (lson(i) <= p) {
+                c = i;
+                l = lson(i);
+                r = rson(i);
+                if (k[c].weight > k[l].weight) {
+                    c = l;
+                }
+                if (r <= p && k[c].weight > k[r].weight) {
+                    c = r;
+                }
+                if (c != i) {
+                    GetParam tmp = k[c];
+                    k[c] = k[i];
+                    k[i] = tmp;
+                    i = c;
+                } else break;
+            }
+        }
+
+        public void put(GetParam g) {
+            k[++p] = g;
+            siftU(p);
+        }
+
+        public void remLst() {
+            k[1] = k[p--];
+            siftD(1);
+        }
+
+        public GetParam top() {
+            return k[1];
+        }
+    }
+
+    public static class GetParamBuilder {
+        String[] key;
+        String[] value;
+
+        public GetParamBuilder setKey(String[] key) {
+            this.key = key;
+            return this;
+        }
+
+        public GetParamBuilder setValue(String[] value) {
+            this.value = value;
+            return this;
+        }
+
+        public Map<String, String> build() {
+            Map<String, String> mRet = new HashMap<>();
+            if (key == null || value == null || key.length == 0 || value.length == 0) {
+                return null;
+            } else if (key.length != value.length) return null;
+            else {
+                for (int i = 0; i < key.length; ++i) {
+                    if (key[i].equals("user-agent") && value[i].equals(URLConstants.USER_AGENT)) {
+                        mRet.put("user-agent", URLConstants.HASH_UA);
+                    } else {
+                        mRet.put(key[i], value[i]);
+                    }
+                }
+                return mRet;
+            }
+        }
+
+        public String createGetParam() {
+            String mRet = "?";
+            if (key == null || value == null || key.length == 0 || value.length == 0) {
+                return null;
+            } else if (key.length != value.length) return null;
+            else {
+                for (int i = 0; i < key.length; ++i) {
+                    mRet += key[i] + '=' + value[i] + '&';
+                }
+                return mRet.substring(0, mRet.length() - 1);
+            }
+        }
     }
 }
