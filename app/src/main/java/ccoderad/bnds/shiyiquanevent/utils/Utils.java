@@ -3,6 +3,7 @@ package ccoderad.bnds.shiyiquanevent.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -25,6 +26,7 @@ import java.util.Map;
 import ccoderad.bnds.shiyiquanevent.beans.EventBean;
 import ccoderad.bnds.shiyiquanevent.beans.MomentDataModel;
 import ccoderad.bnds.shiyiquanevent.global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.global.json.JsonConstants;
 
 /**
  * Created by CCoderAD on 16/7/9.
@@ -77,18 +79,6 @@ public class Utils {
         return ans;
     }
 
-    public static String getCsrfToken(String HTML) {
-        String ret = "";
-        int prefixPos = HTML.indexOf(URLConstants.CSRF_PREFIX);
-        if (prefixPos < 0) {
-            return "error";
-        }
-        while (HTML.charAt(prefixPos) != '\'') {
-            ret += HTML.charAt(prefixPos++);
-        }
-        return ret;
-    }
-
     public static List<EventBean> parseEvent(JSONArray jsonArray) {
         JSONObject jsonObject;
         List<EventBean> ans = new ArrayList<>();
@@ -125,6 +115,15 @@ public class Utils {
     }
 
     public static List<MomentDataModel> parseMoment(JSONObject jsonObject) {
+        try {
+            if (!jsonObject.getString("status").equals(JsonConstants.SUCCESS)) {
+                ToastUtil.makeText("出错啦", true);
+                return null;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         List<MomentDataModel> mRet = new ArrayList<>();
         MomentDataModel mData;
         JSONObject minorData, majorData;
@@ -172,6 +171,24 @@ public class Utils {
 
     public static String Double2String(double x) {
         return Double.toString(x);
+    }
+
+    public static int fromTextGetColor(String text){
+        if(text.equals("default")){
+            return Color.WHITE;
+        }else if(text.equals("primary")){
+            return Color.rgb(88,124,232);
+        }else if(text.equals("danger")){
+            return Color.RED;
+        }else if(text.equals("warning")){
+            return Color.parseColor("#FFC125");
+        }else if(text.equals("success")){
+            return Color.parseColor("#9ACD32");
+        }else if(text.equals("info")){
+            return Color.rgb(176,196,255);
+        }else{
+            return Color.WHITE;
+        }
     }
 
     /**
