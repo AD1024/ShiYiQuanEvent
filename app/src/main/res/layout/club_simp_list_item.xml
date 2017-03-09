@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15sp">
+
+    />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/club_simp_item_avatar"
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
+            fresco:fadeDuration="400"
+            fresco:roundAsCircle="true"
+            android:layout_width="60sp"
+            android:layout_height="60sp" />
+
+        <TextView
+            android:id="@+id/club_simp_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15sp"
+            android:paddingLeft="10sp"
+            android:text="ClubName"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="社团简介:" />
+
+        <TextView
+            android:id="@+id/club_simp_item_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IntroDuction" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的职位:" />
+
+        <TextView
+            android:id="@+id/club_simp_item_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Position" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注者人数:" />
+
+        <TextView
+            android:id="@+id/club_simp_item_followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Followers" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10sp"
+            android:text="成员人数:" />
+
+        <TextView
+            android:id="@+id/club_simp_item_members"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MemberNum" />
+    </LinearLayout>
+</LinearLayout>

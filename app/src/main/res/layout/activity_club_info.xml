@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_club_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ccoderad.bnds.shiyiquanevent.activities.ClubInfoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:translationZ="5sp"
+            app:cardCornerRadius="8sp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="5sp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/actvity_club_info_avatar"
+                    android:layout_width="150sp"
+                    android:layout_height="150sp"
+                    android:layout_gravity="center"
+                    app:fadeDuration="300"
+                    app:roundAsCircle="true" />
+
+                <TextView
+                    android:id="@+id/activity_club_info_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="10sp"
+                    android:text="加载中"
+                    android:textColor="#000000"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/activity_club_info_simp_intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="加载中"
+                    android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="5sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="关注人数:"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/activity_club_info_follower_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加载中"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10sp"
+                        android:text="社员人数:"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/activity_club_info_member_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加载中"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10sp"
+                        android:text="访客人数:"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/activity_club_info_visitor_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加载中"
+                        android:textColor="#000000" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            app:cardCornerRadius="8sp"
+            android:translationZ="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10sp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="社长:"
+                            android:textColor="#000000"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/activity_club_info_head"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="加载中"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="20sp"
+                            android:text="副社长:"
+                            android:textColor="#000000"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/activity_club_info_vice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="加载中"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:text="社团介绍:"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/activity_club_intro_full_intro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20sp"
+                    android:paddingTop="10sp"
+                    android:text="加载中" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/activity_club_info_badge_container"
+            app:cardCornerRadius="8sp"
+            android:translationZ="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10sp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/activity_club_info_badge_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="社团徽章:"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+                <GridView
+                    android:id="@+id/activity_club_info_badge_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="150sp"
+                    android:layout_marginTop="10sp"
+                    android:horizontalSpacing="5sp"
+                    android:numColumns="4"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10sp">
+
+                </GridView>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <cn.bingoogolapple.bgabanner.BGABanner xmlns:bga="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/activity_club_info_presentation_banner"
+            android:layout_width="match_parent"
+            android:layout_height="150sp"
+            android:layout_marginTop="40sp"
+            bga:banner_pageChangeDuration="300"
+            bga:banner_pointAutoPlayAble="true"
+            bga:banner_transitionEffect="defaultEffect">
+
+        </cn.bingoogolapple.bgabanner.BGABanner>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/activity_club_info_event"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:layout_marginTop="20sp"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="查看近期活动" />
+        </android.support.v7.widget.CardView>
+
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/activity_club_info_share"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60sp"-->
+        <!--android:layout_marginTop="10sp"-->
+        <!--android:foreground="?android:attr/selectableItemBackground">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="查看社团分享" />-->
+        <!--</android.support.v7.widget.CardView>-->
+
+    </LinearLayout>
+
+
+</ScrollView>
