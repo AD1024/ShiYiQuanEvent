@@ -14,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.beans.ClubDetailModel;
+import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
 import ccoderad.bnds.shiyiquanevent.utils.Utils;
 
 public class ClubInfoDetailActivity extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class ClubInfoDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ToastUtil.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_info_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,8 +56,12 @@ public class ClubInfoDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent IntentJump = new Intent(ClubInfoDetailActivity.this, MainBrowser.class);
-                IntentJump.putExtra("QR_CONTENT", CLUB_HOME);
+                if (!Utils.isNetWorkAvailable(ClubInfoDetailActivity.this)) {
+                    ToastUtil.makeText("无网络连接", true);
+                    return;
+                }
+                Intent IntentJump = new Intent(ClubInfoDetailActivity.this, ClubInfoActivity.class);
+                IntentJump.putExtra("clubUrl", Data.sname);
                 Log.i("ClubURL", Data.ClubHomePage);
                 startActivity(IntentJump);
             }

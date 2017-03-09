@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ShiyiquanEvent</string>
-
+    <string name="app_name2">QuanEvent</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -192,17 +192,10 @@ limitations under the License.\n\n"
     <string name="content_update_info">
         "
         新特性：
-        1. 添加部分界面的英文翻译(神似毫无乱用)
-        2. 优化部分界面
+        转到十一圈界面中隐藏网页中的导航栏
 
-        优化:
-        1. 应用启动速度(关闭Instant Run)
-
-        修复:
-        1. 服务器API更新导致部分界面显示错误或无法显示的问题
-
-        公告:
-        自十一活动1.14版本起之后的每一次更新都将使用最新的App签名，若之后需要安装旧版本请先卸载再安装
+        修复：
+        因混淆代码导致Scanner中选择照片打不开的问题
         "
     </string>
     <string name="setting_high_quality_avatar_indicator">Show High Quality Avatar</string>

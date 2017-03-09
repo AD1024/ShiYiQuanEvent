@@ -1,5 +1,6 @@
 package ccoderad.bnds.shiyiquanevent.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import ccoderad.bnds.shiyiquanevent.global.URLConstants;
 /**
  * Created by CCoderAD on 16/5/12.
  */
-public class ClubModel {
+public class ClubModel implements Serializable{
     public String club_name;
     public List<String> status;
     public String sname;
@@ -16,6 +17,11 @@ public class ClubModel {
     public String mediumAvatarURL;
     public String smallAvatarURL;
     public boolean isAdmin;
+
+    // For userInfo
+    public String memberCount;
+    public String followerCount;
+    public String simpIntro;
 
     public ClubModel() {
         status = new ArrayList<>();

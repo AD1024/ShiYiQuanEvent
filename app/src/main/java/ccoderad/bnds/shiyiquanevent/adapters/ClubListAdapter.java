@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -22,10 +23,23 @@ public class ClubListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<ClubModel> mData;
+    private LinearLayout loadingIndicator;
 
     public ClubListAdapter(Context context, List<ClubModel> clubData) {
         mInflater = LayoutInflater.from(context);
         mData = clubData;
+    }
+
+    public void setLoadingIndicator(LinearLayout indicator){
+        loadingIndicator = indicator;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if(mData.size() !=0 ){
+            loadingIndicator.setVisibility(View.GONE);
+        }
     }
 
     @Override

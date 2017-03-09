@@ -74,11 +74,10 @@
                     android:id="@+id/fab_back_to_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_exit"
                     android:contentDescription="返回主页面"
+                    android:src="@drawable/ic_exit"
                     fab:backgroundTint="@android:color/holo_blue_light"
-                    fab:fabSize="mini"
-                    />
+                    fab:fabSize="mini" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_sender"
@@ -163,9 +162,27 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="请先登录"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/browser_club_list_loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="加载中..."
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
         </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

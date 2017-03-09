@@ -192,7 +192,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         ToastUtil.makeText("已删除活动缓存", false);
     }
 
-    private void showUpdateDownloadAlert() {
+    private void showUpdateDownloadAlert(final String newVersionCode) {
         PreferenceUtils.shiftTable(this, PreferencesConstants.UPDATE_CHECKER_PREF, MODE_PRIVATE);
 
         // Notification Header View
@@ -236,7 +236,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     public void onClick(DialogInterface dialog, int which) {
                         DownloadUtil.initialize(SettingActivity.this);
                         DownloadManager.Request mRequest = new DownloadUtil.RequestBuilder(fileUrl)
-                                .setTitle("ShiYiQuanEvent" + URLConstants.CURRENT_VERSION + ".apk")
+                                .setTitle("ShiYiQuanEvent" + newVersionCode + ".apk")
                                 .setDescription("正在下载新版十一圈")
                                 .setDownloadDirectory(Environment.DIRECTORY_DOWNLOADS
                                         , "ShiYiQuanEvent-Update.apk")
@@ -304,7 +304,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         .getString(PreferencesConstants.UPDATE_CHECKER_NEW_VERSION_CODE
                                 , URLConstants.CURRENT_VERSION);
                 if (!URLConstants.CURRENT_VERSION.equals(newVersion)) {
-                    showUpdateDownloadAlert();
+                    showUpdateDownloadAlert(newVersion);
                 } else {
                     ToastUtil.makeText("当前为最新版本", false);
                 }

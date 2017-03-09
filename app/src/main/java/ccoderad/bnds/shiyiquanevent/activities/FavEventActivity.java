@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -329,6 +330,17 @@ public class FavEventActivity extends AppCompatActivity {
                 startActivity(jump);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == SearchBox.VOICE_RECOGNITION_CODE && resultCode == RESULT_OK){
+            ArrayList<String> voiceData = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String msg = voiceData.get(0);
+            String real = msg.substring(0,msg.length()-1);
+            mSearchBox.populateEditText(real);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

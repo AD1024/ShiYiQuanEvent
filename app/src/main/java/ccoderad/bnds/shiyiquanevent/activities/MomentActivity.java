@@ -75,12 +75,12 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
             @Override
             public void onRefresh() {
                 time_last = 0.0;
-                getMomentData();
+                getMomentData(true);
             }
 
             @Override
             public void onLoadMore() {
-                getMomentData();
+                getMomentData(false);
             }
         });
         mAdapter.setListItemOnClickListener(this);
@@ -92,7 +92,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
             }
         });
 
-        getMomentData();
+        getMomentData(false);
     }
 
     /*
@@ -111,8 +111,11 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         }
     }
 
-    private void handleRawMomentData(String data) {
+    private void handleRawMomentData(String data,boolean isRefresh) {
         try {
+            if(isRefresh){
+                mDataList.clear();
+            }
             Log.i("Moment Data", data);
             JSONObject dataObject = new JSONObject(data);
             List<MomentDataModel> mTemp = new ArrayList<>();
@@ -140,7 +143,7 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
     /*
     * Get Moment String from beta.shiyiquan.net
     * */
-    private void getMomentData() {
+    private void getMomentData(final boolean isRefresh) {
         setTitle("嘿咻嘿咻~");
         if (mDataList.size() == 0) {
             mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -148,17 +151,18 @@ public class MomentActivity extends AppCompatActivity implements RecyclerViewIte
         DecimalFormat format = new DecimalFormat("###0.000000");
         String param = format.format(time_last);
         param = "-" + param;
-        Log.i("TimeLast", param);
         String reqUrl = "";
-        if (param.equals("0.0")) {
-            reqUrl = URLConstants.MOMENT_URL;
+        if (param.equals("-0.000000")) {
+            reqUrl = URLConstants.MOMENT_URL + "?user-agent=" + URLConstants.USER_AGENT;
         } else {
-            reqUrl = URLConstants.MOMENT_URL + "?time_update=" + param;
+            reqUrl = URLConstants.MOMENT_URL + "?time_update=" + param
+                    + "&user-agent=" +URLConstants.USER_AGENT;
         }
+        Log.i("Req",reqUrl);
         StringRequest request = new StringRequest(reqUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                handleRawMomentData(response);
+                handleRawMomentData(response, isRefresh);
             }
         }, new Response.ErrorListener() {
             @Override

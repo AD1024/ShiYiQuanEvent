@@ -17,10 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
@@ -34,8 +37,10 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import ccoderad.bnds.shiyiquanevent.R;
@@ -167,12 +172,21 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
         mClubList.setLoadingMoreEnabled(true);
         setTitle("少女祈祷中...");
         String RequestURL = "";
-        RequestURL = REQUEST_URL + "&index=" + Utils.Int2String(mIndex) + "&category=" + GetClubType();
+        // RequestURL = REQUEST_URL + "&index=" + Utils.Int2String(mIndex) + "&category=" + GetClubType();
+        RequestURL = Utils.makeRequest("square/club", new String[]{"index","category","user-agent"}
+                ,new String[]{Utils.Int2String(mIndex),GetClubType(), URLConstants.USER_AGENT});
         Log.i("RequestURL", RequestURL);
-        JsonArrayRequest mRequest = new JsonArrayRequest(RequestURL, new Response.Listener<JSONArray>() {
+        StringRequest mRequest = new StringRequest(Request.Method.GET, RequestURL, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
-                HandleSquareData(response);
+            public void onResponse(String response) {
+                Log.i("Resp",response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    HandleSquareData(obj.getJSONArray("show_club"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -180,12 +194,19 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
                 Log.e("ErrorFetchingData", error.toString());
                 ToastUtil.makeText("好似出现了些小问题QAQ", false);
                 if (Utils.isNetWorkAvailable(ClubSquareActivity.this)) {
-                    setTitle("AD1024被折寿1s");
+                    setTitle("AD1024或者EricStdlib被折寿1s");
                 } else {
                     setTitle("进入了没有网络的异次元...");
                 }
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> extraHeader = new HashMap<>();
+                extraHeader.put("Json","true");
+                return extraHeader;
+            }
+        };
         mRequest.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
         mRequestQueue.add(mRequest);
     }
@@ -349,6 +370,7 @@ public class ClubSquareActivity extends AppCompatActivity implements View.OnClic
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mIndex = 1;
                 mDataList.clear();
+                mRecoder.clear();
                 GetSquareData();
                 mClubListAdapter.notifyDataSetChanged();
             }

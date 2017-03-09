@@ -42,8 +42,8 @@ import ccoderad.bnds.shiyiquanevent.utils.ViewTools;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
-    private final String REQ_URL = "http://shiyiquan.net/api/login";
-    private final String HOME_URL = "http://shiyiquan.net/";
+    private final String REQ_URL = URLConstants.HOME_URL + "api/login/";
+    private final String HOME_URL = URLConstants.HOME_URL;
     private final String AVATAR_URL_LARGE_PREFIX = "/large";
 
     private AutoCompleteTextView mUserName;

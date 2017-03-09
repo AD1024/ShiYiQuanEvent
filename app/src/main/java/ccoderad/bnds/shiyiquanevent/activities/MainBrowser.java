@@ -33,7 +33,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -79,6 +79,7 @@ import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
 import ccoderad.bnds.shiyiquanevent.utils.MultiThreadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.PreferenceUtils;
 import ccoderad.bnds.shiyiquanevent.utils.ToastUtil;
+import ccoderad.bnds.shiyiquanevent.utils.Utils;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import terranovaproductions.newcomicreader.FloatingActionMenu;
 
@@ -132,6 +133,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private List<MenuEntity> myAdmined = new ArrayList<>(); // Menu entities
     // identities maintained by a user.
     private Map<String, Integer> mClubNameIndex; // There might be several
+    private Map<String, String> mHttpExraHeader;
     /*
     * Views
     * */
@@ -144,6 +146,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     private DrawerLayout mClubContainer;
     private LinearLayout mClubListIndicatorContainer;
     private FloatingActionMenu mFunctionGroupContainer;
+    private LinearLayout mDataLoadingIndicator;
     /*
     * Other variables
     * */
@@ -161,8 +164,11 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mQueue = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_main_browser);
         mClubListIndicatorContainer = (LinearLayout) findViewById(R.id.browser_club_list_indicator_container);
+        mDataLoadingIndicator = (LinearLayout) findViewById(R.id.browser_club_list_loading_indicator);
         isLogin = getSharedPreferences(PreferencesConstants.LOGIN_INFO, MODE_PRIVATE).getBoolean(PreferencesConstants.LOGIN_STATUS, false);
         if (!isLogin) mClubListIndicatorContainer.setVisibility(View.VISIBLE);
+        mHttpExraHeader = new HashMap<>();
+        mHttpExraHeader.put("Mobile-Avoid-Nav", "True");
         init();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getIntents();
@@ -177,8 +183,8 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             if (!Content.contains("shiyiquan")) {
                 Log.e("None ShiyiquanURL", "非十一圈链接，跳过处理");
                 ToastUtil.makeText("啊哦，好像不是十一圈的链接哟", true);
-                mDisplay.loadUrl(HOME_URL);
-            } else mDisplay.loadUrl(Content);
+                mDisplay.loadUrl(HOME_URL, mHttpExraHeader);
+            } else mDisplay.loadUrl(Content, mHttpExraHeader);
         }
     }
 
@@ -196,7 +202,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
     }
 
     private void updateId() {
-        mRelation.loadUrl("http://www.shiyiquan.net/mobile/save/?host_id=" + host_id);
+        mRelation.loadUrl(URLConstants.HOME_URL + "mobile/save/?host_id=" + host_id);
         Log.i("UpdateId", host_id);
     }
 
@@ -268,6 +274,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mClubNameIndex = new HashMap<>();
 
         mAdapter = new ClubListAdapter(this, mMyClubs);
+        mAdapter.setLoadingIndicator(mDataLoadingIndicator);
         mClubContainer = (DrawerLayout) findViewById(R.id.club_list_drawer);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mClubContainer, toolbar
                 , R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -291,12 +298,12 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mClubContainer.closeDrawer(GravityCompat.START);
-                mDisplay.loadUrl(HOME_URL + "club/" + mMyClubs.get(position - 1).sname);
+                mDisplay.loadUrl(HOME_URL + "club/" + mMyClubs.get(position - 1).sname, mHttpExraHeader);
             }
         });
 
 
-        mDisplay.loadUrl("http://www.shiyiquan.net/");
+        mDisplay.loadUrl(HOME_URL, mHttpExraHeader);
         mDisplay.setWebChromeClient(new WebChromeClient() {
 
             public void openFileChooser(ValueCallback<Uri> uploadMsg,
@@ -320,7 +327,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         mDisplay.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                view.loadUrl(url, mHttpExraHeader);
                 return true;
             }
         });
@@ -370,7 +377,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         };
         if (isLogin) {
             getClub.post(firstFetchTask);
-
+            if (mMyClubs.size() == 0) mDataLoadingIndicator.setVisibility(View.VISIBLE);
             updateTask = new Handler();
             updateTask.post(taskMain);
 
@@ -389,105 +396,213 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
      */
 
     void asyncGetClubInfo() {
-        String URL_REQ = HOME_URL + "mobile/club/?host_id=" + host_id + "&time=" + newId();
+        String URL_REQ = HOME_URL + "mobile/club/?host_id=" + host_id + "&time=" + newId() + "&user-agent=" + URLConstants.USER_AGENT;
         Log.i("CLUB_REQ", URL_REQ);
         if (mMyClubs.size() > 0) {
             mClubListIndicatorContainer.setVisibility(View.GONE);
         }
 
         //Async Task->used to fetch info of the club that current user has engaged
-        final JsonArrayRequest request = new JsonArrayRequest(URL_REQ,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        if (ClubLoaded && mMyClubs.size() != 0) return;
-                        ClubLoaded = true;
-                        for (int i = 0; i < response.length(); i++) {
-                            ClubModel bean = new ClubModel();
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(i);
-                                bean.club_name = jsonObject.getString("fname");
-                                bean.sname = jsonObject.getString("sname");
-                                if (mClubNameIndex.containsKey(bean.sname)) {
-                                    int idx = mClubNameIndex.get(bean.sname);
-                                    mMyClubs.get(idx).status
-                                            .add(jsonObject
-                                                    .getJSONArray("status")
-                                                    .getString(1));
-                                } else {
-                                    JSONArray status = jsonObject.getJSONArray("status");
-                                    bean.LargeAvatarURL = HOME_URL
-                                            + "media/images/avatar/large/"
-                                            + "club-" + bean.sname
-                                            + ".png";
-                                    bean.mediumAvatarURL = HOME_URL
-                                            + "media/images/avatar/"
-                                            + "club-"
-                                            + bean.sname
-                                            + ".png";
+
+//        final JsonArrayRequest request = new JsonArrayRequest(URL_REQ,
+//                new Response.Listener<JSONArray>() {
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//                        if (ClubLoaded && mMyClubs.size() != 0) return;
+//                        mClubListIndicatorContainer.setVisibility(View.GONE);
+//                        ClubLoaded = true;
+//                        for (int i = 0; i < response.length(); i++) {
+//                            ClubModel bean = new ClubModel();
+//                            try {
+//                                JSONObject jsonObject = response.getJSONObject(i);
+//                                bean.club_name = jsonObject.getString("fname");
+//                                bean.sname = jsonObject.getString("sname");
+//                                if (mClubNameIndex.containsKey(bean.sname)) {
+//                                    int idx = mClubNameIndex.get(bean.sname);
+//                                    mMyClubs.get(idx).status
+//                                            .add(jsonObject
+//                                                    .getJSONArray("status")
+//                                                    .getString(1));
+//                                } else {
+//                                    JSONArray status = jsonObject.getJSONArray("status");
+//                                    bean.LargeAvatarURL = HOME_URL
+//                                            + "media/images/avatar/large/"
+//                                            + "club-" + bean.sname
+//                                            + ".png";
+//                                    bean.mediumAvatarURL = HOME_URL
+//                                            + "media/images/avatar/"
+//                                            + "club-"
+//                                            + bean.sname
+//                                            + ".png";
+//                                /*
+//                                * 0: Key : Status indicator(Might be useless for Client)
+//                                * 1: Value: Real value of the status
+//                                *
+//                                * */
+//                                    bean.status.add(status.getString(1));
+//                                /*
+//                                * Optimization for administrability(:P) check
+//                                * */
+//                                    if (status.getString(0).equals("head")
+//                                            || status.getString(0).equals("vice")) {
+//                                        bean.isAdmin = true;
+//                                    }
+//                                    mClubNameIndex.put(bean.sname, i);
+//                                    mMyClubs.add(bean);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        //Notify the listview in drawer to update its views.
+//                        mAdapter.notifyDataSetChanged();
+//
+//                        //Write Club Data to Stroage
+//                        if (mMyClubs.size() != 0) {
+//                            JSONArray my_club_info = new JSONArray();
+//                            for (int i = 0; i < mMyClubs.size(); i++) {
+//                                ClubModel model = mMyClubs.get(i);
+//                                String club_name = model.club_name;
+//                                JSONObject club = new JSONObject();
+//                                try {
+//                                    club.put("club_name", club_name);
+//                                    my_club_info.put(club);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                            File file = new File(Environment.getExternalStorageDirectory().toString()
+//                                    + File.separator + "ShiYiQuan");
+//                            if (!file.exists()) file.mkdirs();
+//                            File JSON = new File(file.toString() + File.separator + "MyClub.json");
+//                            if (!JSON.exists()) try {
+//                                JSON.createNewFile();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            PrintStream writer = null;
+//                            try {
+//                                writer = new PrintStream(new FileOutputStream(JSON));
+//                                writer.print(my_club_info.toString());
+//                            } catch (FileNotFoundException e) {
+//                                e.printStackTrace();
+//                            } finally {
+//                                if (writer != null) writer.close();
+//                            }
+//
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                ToastUtil.makeText("请检查网络连接", true);
+//            }
+//        });
+        StringRequest request = new StringRequest(URL_REQ, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String resp) {
+                JSONArray response = new JSONArray();
+                JSONObject obj = new JSONObject();
+                try {
+                    obj = new JSONObject(resp);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    response = obj.getJSONArray("club_list");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (ClubLoaded && mMyClubs.size() != 0) return;
+                mClubListIndicatorContainer.setVisibility(View.GONE);
+                ClubLoaded = true;
+                for (int i = 0; i < response.length(); i++) {
+                    ClubModel bean = new ClubModel();
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        bean.club_name = jsonObject.getString("fname");
+                        bean.sname = jsonObject.getString("sname");
+                        if (mClubNameIndex.containsKey(bean.sname)) {
+                            int idx = mClubNameIndex.get(bean.sname);
+                            mMyClubs.get(idx).status
+                                    .add(jsonObject
+                                            .getJSONArray("status")
+                                            .getString(1));
+                        } else {
+                            JSONArray status = jsonObject.getJSONArray("status");
+                            bean.LargeAvatarURL = HOME_URL
+                                    + "media/images/avatar/large/"
+                                    + "club-" + bean.sname
+                                    + ".png";
+                            bean.mediumAvatarURL = HOME_URL
+                                    + "media/images/avatar/"
+                                    + "club-"
+                                    + bean.sname
+                                    + ".png";
                                 /*
                                 * 0: Key : Status indicator(Might be useless for Client)
                                 * 1: Value: Real value of the status
                                 *
                                 * */
-                                    bean.status.add(status.getString(1));
+                            bean.status.add(status.getString(1));
                                 /*
                                 * Optimization for administrability(:P) check
                                 * */
-                                    if (status.getString(0).equals("head")
-                                            || status.getString(0).equals("vice")) {
-                                        bean.isAdmin = true;
-                                    }
-                                    mClubNameIndex.put(bean.sname, i);
-                                    mMyClubs.add(bean);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if (status.getString(0).equals("head")
+                                    || status.getString(0).equals("vice")) {
+                                bean.isAdmin = true;
                             }
+                            mClubNameIndex.put(bean.sname, i);
+                            mMyClubs.add(bean);
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                        //Notify the listview in drawer to update its views.
-                        mAdapter.notifyDataSetChanged();
+                //Notify the listview in drawer to update its views.
+                mAdapter.notifyDataSetChanged();
 
-                        //Write Club Data to Stroage
-                        if (mMyClubs.size() != 0) {
-                            JSONArray my_club_info = new JSONArray();
-                            for (int i = 0; i < mMyClubs.size(); i++) {
-                                ClubModel model = mMyClubs.get(i);
-                                String club_name = model.club_name;
-                                JSONObject club = new JSONObject();
-                                try {
-                                    club.put("club_name", club_name);
-                                    my_club_info.put(club);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            File file = new File(Environment.getExternalStorageDirectory().toString()
-                                    + File.separator + "ShiYiQuan");
-                            if (!file.exists()) file.mkdirs();
-                            File JSON = new File(file.toString() + File.separator + "MyClub.json");
-                            if (!JSON.exists()) try {
-                                JSON.createNewFile();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            PrintStream writer = null;
-                            try {
-                                writer = new PrintStream(new FileOutputStream(JSON));
-                                writer.print(my_club_info.toString());
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } finally {
-                                if (writer != null) writer.close();
-                            }
-
+                //Write Club Data to Stroage
+                if (mMyClubs.size() != 0) {
+                    JSONArray my_club_info = new JSONArray();
+                    for (int i = 0; i < mMyClubs.size(); i++) {
+                        ClubModel model = mMyClubs.get(i);
+                        String club_name = model.club_name;
+                        JSONObject club = new JSONObject();
+                        try {
+                            club.put("club_name", club_name);
+                            my_club_info.put(club);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
+                    File file = new File(Environment.getExternalStorageDirectory().toString()
+                            + File.separator + "ShiYiQuan");
+                    if (!file.exists()) file.mkdirs();
+                    File JSON = new File(file.toString() + File.separator + "MyClub.json");
+                    if (!JSON.exists()) try {
+                        JSON.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    PrintStream writer = null;
+                    try {
+                        writer = new PrintStream(new FileOutputStream(JSON));
+                        writer.print(my_club_info.toString());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (writer != null) writer.close();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                ToastUtil.makeText("请检查网络连接", true);
+                ToastUtil.makeText("请检查网络", true);
             }
         });
         request.setRetryPolicy(MultiThreadUtil.createDefaultRetryPolicy());
@@ -533,7 +648,7 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
             mAddActivity.setOnMenuItemClickListener(new SweetSheet.OnMenuItemClickListener() {
                 @Override
                 public boolean onItemClick(int position, MenuEntity menuEntity) {
-                    mDisplay.loadUrl(AdminedClubURLs.get(position));
+                    mDisplay.loadUrl(AdminedClubURLs.get(position), mHttpExraHeader);
                     return true;
                 }
             });
@@ -547,37 +662,41 @@ public class MainBrowser extends AppCompatActivity implements FloatingActionMenu
         switch (id) {
             //Switch to the search page
             case R.id.fab_search:
-                mDisplay.loadUrl(HOME_URL + "search/");
+                mDisplay.loadUrl(HOME_URL + "search/", mHttpExraHeader);
                 break;
 
             //Switch to HOME_URL
             case R.id.fab_go_home:
                 mDisplay.clearHistory();
-                mDisplay.loadUrl(HOME_URL);
+                mDisplay.loadUrl(HOME_URL, mHttpExraHeader);
                 break;
 
             //Switch to Home(If Logined)
             case R.id.fab_my_home_page:
-                if(isLogin)
-                    mDisplay.loadUrl(HOME_URL + "user/");
+                if (isLogin)
+                    mDisplay.loadUrl(HOME_URL + "user/", mHttpExraHeader);
                 else
-                    ToastUtil.makeText("请先登录",true);
+                    ToastUtil.makeText("请先登录", true);
                 break;
 
             //Open drawer(it can be used to grab club list info while it hasn't been displayed in the list)
             case R.id.fab_my_club:
-                if(isLogin) {
+                if (isLogin) {
                     asyncGetClubInfo();
                     mClubContainer.openDrawer(GravityCompat.START);
-                }else{
-                    ToastUtil.makeText("请先登录",true);
+                } else {
+                    ToastUtil.makeText("请先登录", true);
                 }
                 break;
 
             //Club Info List
             case R.id.fab_sender:
-                if (mMyClubs.size() == 0) {
+                Log.i("Club Num" , Utils.Int2String(mMyClubs.size()));
+                if (mMyClubs.size() == 0 && !isLogin) {
                     ToastUtil.makeText("请先登录", true);
+                    break;
+                } else if (mMyClubs.size() == 0) {
+                    ToastUtil.makeText("无信息...", false);
                     break;
                 }
                 LoadClub2Choice();

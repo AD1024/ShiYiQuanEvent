@@ -15,3 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontskipnonpubliclibraryclasses # 不忽略非公共的库类
+-optimizationpasses 5            # 指定代码的压缩级别
+-dontusemixedcaseclassnames      # 是否使用大小写混合
+-dontpreverify                   # 混淆时是否做预校验
+-verbose                         # 混淆时是否记录日志
+-keepattributes *Annotation*     # 保持注解
+-ignorewarning                   # 忽略警告
+-dontoptimize                    # 优化不优化输入的类文件
+
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*

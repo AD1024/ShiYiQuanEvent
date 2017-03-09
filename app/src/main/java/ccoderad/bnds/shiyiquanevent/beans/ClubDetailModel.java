@@ -25,6 +25,7 @@ public class ClubDetailModel implements Serializable {
     public String LargeAvatarURL;
     public String mediumAvatarURL;
     public String smallAvatarURL;
+    public String visitorNum;
 
     public ClubDetailModel() {
         Followee = new ArrayList<>();

@@ -25,7 +25,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,9 +38,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.util.ByteConstants;
@@ -69,6 +65,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ccoderad.bnds.shiyiquanevent.R;
 import ccoderad.bnds.shiyiquanevent.adapters.EventListAdapter;
@@ -78,6 +75,7 @@ import ccoderad.bnds.shiyiquanevent.db.DataBaseManager;
 import ccoderad.bnds.shiyiquanevent.db.DatabaseHelper;
 import ccoderad.bnds.shiyiquanevent.global.PreferencesConstants;
 import ccoderad.bnds.shiyiquanevent.global.URLConstants;
+import ccoderad.bnds.shiyiquanevent.global.json.JsonConstants;
 import ccoderad.bnds.shiyiquanevent.utils.CacheUtils;
 import ccoderad.bnds.shiyiquanevent.utils.DownloadUtil;
 import ccoderad.bnds.shiyiquanevent.utils.ImageTools;
@@ -98,7 +96,8 @@ public class MainActivity extends AppCompatActivity
     private final long MAX_STRING_CACHE = 3 * ByteConstants.MB;
     private final int LOGIN_REQCODE = 8080;
     private final int LOGOUT_REQCODE = 8090;
-    private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest";
+    private final String REQ_URL = URLConstants.HOME_URL + "api/?category=event&time=latest&number=15" +
+            "&user-agent=Andriod%20APP%207ac0ce241d0b78af164e58d7e712e053";
     private final String CACHE_FILE_NAME = "cacheEvent.json";
     private final String HOME_URL = URLConstants.HOME_URL;
 
@@ -196,7 +195,14 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         mIsConnected = isNetWorkAvailable();
         ShowUpdateInfo();
-
+        /*
+        * Debug code block
+        */
+        Map<String, String> param = new Utils.GetParamBuilder()
+                .setKey(new String[]{"a", "b", "c"})
+                .setValue(new String[]{"1", "2", "3"})
+                .build();
+        String k = Utils.generateSign(param);
         /*
         * Register Download brodcast listener for downloading the new version file
         * */
@@ -262,7 +268,7 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        setTitle("十一活动");
+        setTitle("最新活动");
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,7 +318,7 @@ public class MainActivity extends AppCompatActivity
                             Snackbar.LENGTH_SHORT).show();
                     mData.get(position).isFaved = false;
                     alter.setImageResource(R.drawable.ic_favorite_border);
-                    CacheUtils.removeFavEventCache(mData.get(position),mRawData,favedEvents,position);
+                    CacheUtils.removeFavEventCache(mData.get(position), mRawData, favedEvents, position);
                 } else {
                     Snackbar.make(view, "已收藏" + mData.get(position).eventTitle,
                             Snackbar.LENGTH_SHORT).show();
@@ -470,9 +476,11 @@ public class MainActivity extends AppCompatActivity
             in = new FileInputStream(cacheEvent);
             String result = ReadStringFromInputStream(in);
             JSONArray cachedData = new JSONArray(result);
-            mcacheData = parseEvent(cachedData);
+            JSONObject obj = new JSONObject();
+            obj.put("e",cachedData);
+            mcacheData = parseEvent(obj);
             mListView.setAdapter(new EventListAdapter(MainActivity.this, mcacheData));
-            setTitle("十一活动");
+            setTitle("最新活动");
             mData = mcacheData;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -546,7 +554,20 @@ public class MainActivity extends AppCompatActivity
         tvDuration.setText(bean.eventDuration);
         tvLocation.setText(bean.eventLocation);
         bean.parseUrl();
+        final String clubUrl = bean.sponsorSname;
         pic.setImageURI(Uri.parse(bean.eventAvatar));
+        pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!Utils.isNetWorkAvailable(MainActivity.this)){
+                    ToastUtil.makeText("无网络连接~~",true);
+                    return;
+                }
+                Intent it = new Intent(MainActivity.this, ClubInfoActivity.class);
+                it.putExtra("clubUrl", clubUrl);
+                startActivity(it);
+            }
+        });
         new AlertDialog.Builder(this).setView(window)
                 .setCustomTitle(Header)
                 .setNegativeButton("朕晓得了", new DialogInterface.OnClickListener() {
@@ -607,19 +628,23 @@ public class MainActivity extends AppCompatActivity
     /*
     * Function: Parse JSONArray to List(Used in GetEventTask)
     * */
-    public List<EventBean> parseEvent(JSONArray jsonArray) {
+    public List<EventBean> parseEvent(JSONObject eventObj) {
         JSONObject jsonObject;
-        mRawData = jsonArray;
-        mListAdapter.setRawData(jsonArray);
         LoadFav();
         List<EventBean> ans = new ArrayList<>();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
+            if (eventObj.getString("status").equals(JsonConstants.ERROR)) {
+                ToastUtil.makeText("出错啦", true);
+            }
+            JSONArray realData = eventObj.getJSONArray("e");
+            mRawData = realData;
+            mListAdapter.setRawData(realData);
+            for (int i = 0; i < realData.length(); i++) {
                 if (mTask.isCancelled()) {
                     return null;
                 }
                 EventBean bean = new EventBean();
-                jsonObject = jsonArray.getJSONObject(i);
+                jsonObject = realData.getJSONObject(i);
                 JSONObject content = jsonObject.getJSONObject("data");
                 bean.eventTitle = content.getString("subject");
                 bean.eventContent = content.getString("content");
@@ -630,6 +655,7 @@ public class MainActivity extends AppCompatActivity
                 bean.eventTime = jsonObject.getString("time_set");
                 bean.eventDuration = jsonObject.getString("time_last");
                 bean.eventFollower = jsonObject.getInt("follower");
+                bean.sponsorSname = jsonObject.getString("sponsor");
                 bean.eventURL = URLConstants.HOME_URL + URLConstants.EVENT_URL + Integer.toString(content.getInt("id")) + "/";
                 bean.parseUrl();
                 for (int j = 0; j < favd_stub.size(); j++) {
@@ -739,14 +765,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void updateCsrfToken(String rawHtml) {
-        String csrfToken = Utils.getCsrfToken(rawHtml);
-        Log.i("CSRF", csrfToken);
-        if (csrfToken.equals("error") || TextUtils.isEmpty(csrfToken)) return;
-        PreferenceUtils.initialize(this, PreferencesConstants.LOGIN_INFO, MODE_PRIVATE);
-        PreferenceUtils.putString(PreferencesConstants.CSRF_TOKEN_TAG, csrfToken);
-    }
-
     /*
     * Activity Result handler
     * 8081: login request
@@ -765,7 +783,7 @@ public class MainActivity extends AppCompatActivity
             if (!indicatorText.equals("NULL")) {
                 tvName.setText("登录账户:" + indicatorText);
             } else {
-                tvName.setText("十一圈Event-点击头像登录");
+                tvName.setText("十一活动-点击头像登录");
             }
 
             boolean isHighQuality = SettingPref.getBoolean(PreferencesConstants.SETTING_HIGH_QUALITY_AVATAR_TAG, false);
@@ -774,18 +792,6 @@ public class MainActivity extends AppCompatActivity
                             : PreferencesConstants.USER_AVATAR_URL_TAG)
                     , URLConstants.HOME_URL + URLConstants.DEFAULT_AVATAR_URL);
             LoginClick.setImageURI(Uri.parse(URLConstants.HOME_URL_WITHOUT_DASH + AvatarUrl));
-            StringRequest csrfRequest = new StringRequest(HOME_URL, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    updateCsrfToken(response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            });
-            mRequestQueue.add(csrfRequest);
             SharedPreferences LoginStatus = getSharedPreferences("LoginInfo", MODE_PRIVATE);
             if (LoginStatus.getBoolean("Logined", false) && LoginStatus.getBoolean("cookieNeedSync", false)) {
                 CookieSyncManager.createInstance(this);
@@ -808,7 +814,7 @@ public class MainActivity extends AppCompatActivity
         } else if (requestCode == LOGOUT_REQCODE && resultCode == 8091) {
             TextView tvName = (TextView) Nav_Header_stub.findViewById(R.id.user_name_holder);
             // Reset the label
-            tvName.setText("十一圈Event-点击头像登录");
+            tvName.setText("十一活动-点击头像登录");
             Resources r = this.getResources();
             LoginClick.setImageURI(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
                     + r.getResourcePackageName(R.mipmap.logo_2)
@@ -890,7 +896,6 @@ public class MainActivity extends AppCompatActivity
                 while ((tmp = br.readLine()) != null) {
                     HTML += tmp;
                 }
-                updateCsrfToken(HTML);
                 int idx = HTML.indexOf(URL_PREFIX);
                 idx += URL_PREFIX.length();
                 ret = "";
@@ -1023,9 +1028,9 @@ public class MainActivity extends AppCompatActivity
                 }
                 mCache.flush();
                 String result = ReadStringFromInputStream(is);
-                JSONArray jsonArray = new JSONArray(result);
-                SaveToCache(jsonArray);
-                ans = parseEvent(jsonArray);
+                JSONObject jsonObject = new JSONObject(result);
+                SaveToCache(jsonObject.getJSONArray("e"));
+                ans = parseEvent(jsonObject);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("NetWorkError", "CheckNetWork");
@@ -1054,11 +1059,10 @@ public class MainActivity extends AppCompatActivity
             if (!mRefersh.isEnabled()) {
                 mRefersh.setEnabled(true);
             }
-            setTitle("十一活动");
+            setTitle("最新活动");
             mData = eventBeans;
             mListAdapter.setListData(mData);
             mListView.setAdapter(mListAdapter);
         }
     }
-
 }

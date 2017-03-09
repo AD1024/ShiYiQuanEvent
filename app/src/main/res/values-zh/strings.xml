@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">十一活动</string>
+    <string name="app_name2">掌上十一圈</string>
     <string name="action_settings">设置</string>
     <string name="action_sign_in">登录或注册</string>
     <string name="action_sign_in_short">登录</string>
@@ -25,19 +26,12 @@
     <string name="setting_clear_event_cache">清除离线活动数据(不建议)</string>
     <string name="faved_event_no_fav">没有收藏的活动呀~</string>
     <string name="content_update_info">
-        "
+          "
         新特性：
-        1. 添加部分界面的英文翻译(神似毫无乱用)
-        2. 优化部分界面
+        转到十一圈界面中隐藏网页中的导航栏
 
-        优化:
-        1. 应用启动速度(关闭Instant Run)
-
-        修复:
-        1. 服务器API更新导致部分界面显示错误或无法显示的问题
-
-        公告:
-        自十一活动1.14版本起之后的每一次更新都将使用最新的App签名，若之后需要安装旧版本请先卸载再安装
+        修复：
+        因混淆代码导致Scanner中选择照片打不开的问题
         "
     </string>
     <string name="setting_high_quality_avatar_indicator">显示高质量头像图片</string>

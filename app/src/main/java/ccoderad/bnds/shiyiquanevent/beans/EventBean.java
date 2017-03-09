@@ -16,7 +16,13 @@ public class EventBean implements Serializable {
     public String eventAvatar;
     public String eventURL;
     public int eventFollower;
+    public String sponsorSname;
     public boolean isFaved;
+    /*
+    * timeBegin and timeEnd are only used in UserInfoActivity
+    * */
+    public long timeBegin;
+    public long timeEnd;
     private boolean isParsed = false;
 
     public EventBean() {
