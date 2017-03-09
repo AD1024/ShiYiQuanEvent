@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -25,7 +26,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.MainBrowser"
@@ -45,20 +45,20 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="登录十一圈" />
+            android:label="登录十一圈"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.UserInfoActivity"
             android:label="个人中心" />
         <activity
             android:name=".activities.ScannerActivity"
             android:label="扫扫码"
-            android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SplashScreen"
-            android:label="十一活动"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -69,24 +69,30 @@
         </activity>
         <activity
             android:name=".activities.SettingActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="@string/action_settings" />
+            android:label="@string/action_settings"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.ClubSquareActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="社团广场" />
+            android:label="社团广场"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.ClubInfoDetailActivity"
             android:label="@string/title_activity_club_info_detail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.FavEventSearchResultActivity"
-            android:label="搜索结果"></activity>
+            android:label="搜索结果" />
         <activity
             android:name=".activities.MomentActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="天台">
-        </activity>
+            android:label="天台"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.ClubSimpListActivity"
+            android:parentActivityName=".activities.UserInfoActivity" />
+        <activity android:name=".activities.ClubInfoActivity" />
+        <activity
+            android:name=".activities.EventSimpListActivity"
+            android:parentActivityName=".activities.ClubInfoActivity"></activity>
     </application>
 
 </manifest>
