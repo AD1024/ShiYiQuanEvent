@@ -13,7 +13,7 @@
   * EVENT_URL：最新活动API请求地址；
   * DEFAULT_AVATAR_URL：用于没有设置头像的人；
   * CURRENT_VERSION：当前版本号，用于更新判断；
-  * CSRF_PREFIX(未使用)：用于抓取页面的csrf_token
+  * CSRF_PREFIX(deprecated)：用于抓取页面的csrf_token
 
 #### PreferencesConstants
   **PreferenceName**
@@ -22,5 +22,6 @@
   * SETTING_PREF：用于存储用户的设置信息；
   * UPDATE_CHECKER_PREF：用于存储更新信息；
 
+  @施工中
   **Preferences**
-  1.
+  
